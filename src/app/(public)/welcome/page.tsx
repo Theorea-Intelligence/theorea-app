@@ -1,43 +1,85 @@
-export default function Home() {
+"use client";
+
+import { useState } from "react";
+import { supabase } from "@/lib/supabase/client";
+
+export default function WelcomePage() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/dashboard`,
+      },
+    });
+
+    if (error) {
+      setMessage(error.message);
+    } else {
+      setMessage("Check your email for the magic link.");
+    }
+    setLoading(false);
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-page">
       {/* Hero */}
       <section className="flex flex-col items-center text-center max-w-2xl mx-auto py-breath">
-        <p className="text-ink-muted text-sm tracking-[0.2em] uppercase mb-6">
+        <p className="text-ink-muted text-sm tracking-[0.2em] uppercase mb-6 animate-fade-in-up">
           Maison Théorea
         </p>
 
-        <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-light tracking-tight mb-8">
+        <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-light tracking-tight mb-8 animate-fade-in-up animation-delay-100">
           Tea as Ritual
         </h1>
 
-        <p className="text-ink-light text-lg md:text-xl leading-relaxed mb-12 max-w-lg">
+        <p className="text-ink-light text-lg md:text-xl leading-relaxed mb-12 max-w-lg animate-fade-in-up animation-delay-200">
           A connoisseur-grade platform for those who believe tea is not a
           beverage — it is a practice. Discover exceptional teas, deepen your
           ritual, and connect with the world&apos;s finest sommeliers.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4">
-          <a
-            href="#waitlist"
-            className="inline-flex items-center justify-center px-8 py-3.5 bg-jade text-porcelain text-sm tracking-wide rounded-subtle transition-all duration-gentle hover:bg-jade-dark hover:shadow-soft"
+        {/* Magic Link Sign In */}
+        <form
+          onSubmit={handleSignIn}
+          className="w-full max-w-sm flex flex-col gap-3 animate-fade-in-up animation-delay-300"
+        >
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="your@email.com"
+            className="w-full px-4 py-3.5 bg-porcelain border border-steam rounded-subtle text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-jade transition-colors duration-gentle"
+            required
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full px-8 py-3.5 bg-jade text-porcelain text-sm tracking-wide rounded-subtle transition-all duration-gentle hover:bg-jade-dark hover:shadow-soft disabled:opacity-50"
           >
-            Join the Waitlist
-          </a>
-          <a
-            href="#discover"
-            className="inline-flex items-center justify-center px-8 py-3.5 border border-steam text-ink-light text-sm tracking-wide rounded-subtle transition-all duration-gentle hover:border-ink-muted hover:text-ink"
-          >
-            Discover More
-          </a>
-        </div>
+            {loading ? "Sending..." : "Enter with Magic Link"}
+          </button>
+          {message && (
+            <p
+              className={`text-xs text-center mt-1 ${
+                message.includes("Check") ? "text-jade" : "text-oolong-dark"
+              }`}
+            >
+              {message}
+            </p>
+          )}
+        </form>
       </section>
 
       {/* Philosophy */}
-      <section
-        id="discover"
-        className="w-full max-w-3xl mx-auto py-section text-center"
-      >
+      <section className="w-full max-w-3xl mx-auto py-section text-center">
         <h2 className="font-serif text-3xl md:text-4xl font-light mb-8">
           Intelligence Through Stillness
         </h2>
@@ -74,34 +116,6 @@ export default function Home() {
             </p>
           </div>
         </div>
-      </section>
-
-      {/* Waitlist */}
-      <section
-        id="waitlist"
-        className="w-full max-w-md mx-auto py-section text-center"
-      >
-        <h2 className="font-serif text-3xl font-light mb-4">
-          Begin Your Ritual
-        </h2>
-        <p className="text-ink-muted text-sm mb-8">
-          Join the waitlist for early access to Théorea.
-        </p>
-
-        <form className="flex flex-col sm:flex-row gap-3">
-          <input
-            type="email"
-            placeholder="your@email.com"
-            className="flex-1 px-4 py-3 bg-porcelain border border-steam rounded-subtle text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-jade transition-colors duration-gentle"
-            required
-          />
-          <button
-            type="submit"
-            className="px-6 py-3 bg-jade text-porcelain text-sm tracking-wide rounded-subtle transition-all duration-gentle hover:bg-jade-dark hover:shadow-soft"
-          >
-            Join
-          </button>
-        </form>
       </section>
 
       {/* Footer */}

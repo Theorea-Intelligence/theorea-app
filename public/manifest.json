@@ -1,0 +1,28 @@
+{
+  "name": "Théorea — Tea as Ritual",
+  "short_name": "Théorea",
+  "description": "Your pocket tea sommelier. Discover exceptional teas, deepen your ritual.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#faf8f5",
+  "theme_color": "#5a7a6a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
