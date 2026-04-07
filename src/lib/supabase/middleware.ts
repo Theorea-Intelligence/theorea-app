@@ -1,7 +1,12 @@
 import { createServerClient, type CookieMethodsServer } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-type CookiesToSet = Parameters<CookieMethodsServer["setAll"]>[0];
+// Define the type manually to bypass the TypeScript inference error in Next.js 15.5
+type CookiesToSet = {
+  name: string;
+  value: string;
+  options?: any;
+}[];
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
