@@ -16,7 +16,7 @@ export default function WelcomePage() {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
@@ -29,101 +29,76 @@ export default function WelcomePage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-page">
-      {/* Hero */}
-      <section className="flex flex-col items-center text-center max-w-2xl mx-auto py-breath">
-        <p className="text-ink-muted text-sm tracking-[0.2em] uppercase mb-6 animate-fade-in-up">
+    <main className="flex min-h-[100dvh] flex-col items-center justify-between px-8 py-12 safe-top safe-bottom bg-parchment">
+      {/* Top spacer */}
+      <div />
+
+      {/* Centre: Brand + breathing orb */}
+      <div className="flex flex-col items-center text-center">
+        {/* Breathing orb — Lou's presence */}
+        <div className="relative flex items-center justify-center mb-10">
+          <div className="absolute h-28 w-28 rounded-full bg-oolong/10 animate-breathe-ring" />
+          <div className="absolute h-20 w-20 rounded-full animate-breathe-glow" />
+          <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-oolong to-oolong-dark animate-breathe shadow-lift">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-porcelain">
+              <path d="M11 20A7 7 0 019.8 6.9C15.5 4.9 20 .5 20 .5s-1.5 5-4.5 8.5c-2 2.3-4.5 3.5-4.5 3.5" />
+              <path d="M6.7 17.3c3-3 4.3-7.3 4.3-7.3" />
+            </svg>
+          </div>
+          {/* Steam wisps */}
+          <div className="absolute -top-2 left-1/2 -translate-x-1/2">
+            <div className="w-[2px] h-4 bg-oolong/25 rounded-full animate-steam mx-auto" />
+          </div>
+          <div className="absolute -top-1 left-1/2 -translate-x-[5px]">
+            <div className="w-[2px] h-3 bg-oolong/15 rounded-full animate-steam-delayed" />
+          </div>
+          <div className="absolute -top-1 left-1/2 translate-x-[3px]">
+            <div className="w-[1.5px] h-2.5 bg-oolong/15 rounded-full animate-steam-slow" />
+          </div>
+        </div>
+
+        <p className="text-ink-muted text-[11px] tracking-[0.25em] uppercase mb-3 animate-fade-in-up">
           Maison Théorea
         </p>
 
-        <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-light tracking-tight mb-8 animate-fade-in-up animation-delay-100">
-          Tea as Ritual
+        <h1 className="font-serif text-3xl font-light tracking-tight text-ink mb-2 animate-fade-in-up animation-delay-100">
+          Théorea
         </h1>
 
-        <p className="text-ink-light text-lg md:text-xl leading-relaxed mb-12 max-w-lg animate-fade-in-up animation-delay-200">
-          A connoisseur-grade platform for those who believe tea is not a
-          beverage — it is a practice. Discover exceptional teas, deepen your
-          ritual, and connect with the world&apos;s finest sommeliers.
+        <p className="text-ink-muted text-sm leading-relaxed max-w-[260px] animate-fade-in-up animation-delay-200">
+          Your pocket tea sommelier.
+          Discover, taste, reflect.
         </p>
+      </div>
 
-        {/* Magic Link Sign In */}
-        <form
-          onSubmit={handleSignIn}
-          className="w-full max-w-sm flex flex-col gap-3 animate-fade-in-up animation-delay-300"
-        >
+      {/* Bottom: Sign-in form */}
+      <div className="w-full max-w-[320px] animate-fade-in-up animation-delay-300">
+        <form onSubmit={handleSignIn} className="space-y-3">
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="your@email.com"
-            className="w-full px-4 py-3.5 bg-porcelain border border-steam rounded-subtle text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-jade transition-colors duration-gentle"
+            placeholder="Email address"
+            className="w-full px-4 py-3.5 bg-porcelain border border-steam rounded-2xl text-sm text-ink text-center placeholder:text-ink-muted/50 focus:outline-none focus:border-oolong/40 transition-colors duration-gentle"
             required
           />
           <button
             type="submit"
             disabled={loading}
-            className="w-full px-8 py-3.5 bg-jade text-porcelain text-sm tracking-wide rounded-subtle transition-all duration-gentle hover:bg-jade-dark hover:shadow-soft disabled:opacity-50"
+            className="w-full px-4 py-3.5 bg-ink text-porcelain text-sm font-medium tracking-wide rounded-2xl transition-all duration-gentle hover:bg-ink/90 active:scale-[0.98] disabled:opacity-50"
           >
-            {loading ? "Sending..." : "Enter with Magic Link"}
+            {loading ? "Sending..." : "Continue"}
           </button>
-          {message && (
-            <p
-              className={`text-xs text-center mt-1 ${
-                message.includes("Check") ? "text-jade" : "text-oolong-dark"
-              }`}
-            >
-              {message}
-            </p>
-          )}
         </form>
-      </section>
-
-      {/* Philosophy */}
-      <section className="w-full max-w-3xl mx-auto py-section text-center">
-        <h2 className="font-serif text-3xl md:text-4xl font-light mb-8">
-          Intelligence Through Stillness
-        </h2>
-
-        <p className="text-ink-light text-lg leading-relaxed mb-16">
-          Théorea is where ancient tea wisdom meets modern intelligence. Our
-          pocket tea sommelier, Lou, guides your journey — from your first steep
-          to your thousandth. Every recommendation refined. Every ritual
-          honoured.
+        {message && (
+          <p className={`text-xs text-center mt-3 ${message.includes("Check") ? "text-jade" : "text-oolong-dark"}`}>
+            {message}
+          </p>
+        )}
+        <p className="text-[11px] text-ink-muted/50 text-center mt-4">
+          We&apos;ll send you a magic link to sign in.
         </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-          <div className="p-6">
-            <h3 className="font-serif text-xl mb-3">Lou</h3>
-            <p className="text-ink-muted text-sm leading-relaxed">
-              Your pocket tea sommelier. A digital connoisseur who learns your
-              palate, guides your brewing, and deepens your practice.
-            </p>
-          </div>
-
-          <div className="p-6">
-            <h3 className="font-serif text-xl mb-3">Ritual</h3>
-            <p className="text-ink-muted text-sm leading-relaxed">
-              Track your tea journey. Log sessions, tasting notes, and
-              mindfulness reflections. Build a living record of your practice.
-            </p>
-          </div>
-
-          <div className="p-6">
-            <h3 className="font-serif text-xl mb-3">Marketplace</h3>
-            <p className="text-ink-muted text-sm leading-relaxed">
-              A curated collection of exceptional teas — from our signature Da
-              Hong Pao and Jasmin Snow Buds to sommelier-selected treasures.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="w-full max-w-3xl mx-auto py-section border-t border-steam text-center">
-        <p className="text-ink-muted text-xs tracking-wide">
-          &copy; {new Date().getFullYear()} Maison Théorea. All rights reserved.
-        </p>
-      </footer>
+      </div>
     </main>
   );
 }

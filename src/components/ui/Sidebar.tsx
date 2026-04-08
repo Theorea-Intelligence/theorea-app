@@ -80,8 +80,8 @@ function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-steam bg-porcelain/95 backdrop-blur-md md:hidden safe-bottom">
-      <ul className="flex items-center justify-around px-2 py-1">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-porcelain/80 backdrop-blur-xl border-t border-black/[0.04] md:hidden safe-bottom">
+      <ul className="flex items-center justify-around px-1 pt-1.5 pb-1">
         {navItems.map((item) => {
           const isActive =
             item.href === "/dashboard"
@@ -92,11 +92,11 @@ function MobileNav() {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className={`flex flex-col items-center gap-0.5 px-3 py-2 text-[10px] transition-colors duration-gentle ${
-                  isActive ? "text-jade" : "text-ink-muted"
+                className={`flex flex-col items-center gap-[2px] px-3 py-1.5 text-[10px] font-medium transition-colors duration-200 ${
+                  isActive ? "text-oolong-dark" : "text-ink-muted/60"
                 }`}
               >
-                <span>{item.icon}</span>
+                <span className={`transition-transform duration-200 ${isActive ? "scale-110" : ""}`}>{item.icon}</span>
                 <span>{item.label}</span>
               </Link>
             </li>

@@ -1,78 +1,76 @@
 export default function ProfilePage() {
   return (
-    <div className="space-y-8">
-      <header>
-        <h1 className="font-serif text-2xl font-light text-ink">Profile</h1>
-        <p className="mt-1 text-sm text-ink-muted">
-          Your tea identity
-        </p>
-      </header>
-
-      {/* Profile card */}
-      <section className="rounded-soft border border-steam bg-porcelain p-6 shadow-whisper">
-        <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-parchment-warm text-ink-muted font-serif text-xl">
+    <div className="space-y-4">
+      {/* Profile header card */}
+      <section className="rounded-2xl bg-porcelain p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] animate-fade-in-up">
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-oolong to-oolong-dark text-porcelain font-serif text-lg">
             K
           </div>
           <div>
-            <h2 className="text-base font-medium text-ink">Kim</h2>
-            <p className="text-sm text-ink-muted">Tea enthusiast</p>
+            <h1 className="text-[17px] font-medium text-ink">Kim</h1>
+            <p className="text-[13px] text-ink-muted">Tea enthusiast</p>
           </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      {/* Stats row — compact widgets */}
+      <div className="grid grid-cols-3 gap-2.5 animate-fade-in-up animation-delay-100">
         {[
-          { label: "Rituals logged", value: "12" },
-          { label: "Teas explored", value: "2" },
-          { label: "Days active", value: "7" },
+          { label: "Rituals", value: "12" },
+          { label: "Teas", value: "2" },
+          { label: "Days", value: "7" },
         ].map((stat, i) => (
           <div
             key={i}
-            className="rounded-soft border border-steam bg-porcelain p-5 text-center shadow-whisper"
+            className="rounded-2xl bg-porcelain p-3.5 text-center shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
           >
-            <p className="font-serif text-2xl text-ink">{stat.value}</p>
-            <p className="text-xs text-ink-muted mt-1">{stat.label}</p>
+            <p className="font-serif text-[22px] text-ink">{stat.value}</p>
+            <p className="text-[11px] text-ink-muted mt-0.5">{stat.label}</p>
           </div>
         ))}
       </div>
 
-      {/* Preferences */}
-      <section className="rounded-soft border border-steam bg-porcelain p-6 shadow-whisper">
-        <h2 className="font-serif text-lg text-ink mb-4">Tea Preferences</h2>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between py-2 border-b border-steam">
-            <span className="text-sm text-ink-light">Preferred types</span>
-            <span className="text-sm text-ink">Oolong, Green</span>
-          </div>
-          <div className="flex items-center justify-between py-2 border-b border-steam">
-            <span className="text-sm text-ink-light">Flavour profile</span>
-            <span className="text-sm text-ink">Floral, Mineral, Roasted</span>
-          </div>
-          <div className="flex items-center justify-between py-2">
-            <span className="text-sm text-ink-light">Ritual style</span>
-            <span className="text-sm text-ink">Gongfu</span>
-          </div>
+      {/* Preferences — iOS settings style */}
+      <section className="rounded-2xl bg-porcelain shadow-[0_1px_3px_rgba(0,0,0,0.04)] animate-fade-in-up animation-delay-200">
+        <div className="px-4 pt-4 pb-2">
+          <h2 className="text-[11px] font-medium text-ink-muted uppercase tracking-wider">Tea Preferences</h2>
+        </div>
+        <div className="divide-y divide-black/[0.04]">
+          {[
+            { label: "Preferred types", value: "Oolong, Green" },
+            { label: "Flavour profile", value: "Floral, Mineral, Roasted" },
+            { label: "Ritual style", value: "Gongfu" },
+          ].map((pref, i) => (
+            <div key={i} className="flex items-center justify-between px-4 py-3">
+              <span className="text-[13px] text-ink">{pref.label}</span>
+              <span className="text-[13px] text-ink-muted">{pref.value}</span>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Settings links */}
-      <section className="rounded-soft border border-steam bg-porcelain p-6 shadow-whisper">
-        <h2 className="font-serif text-lg text-ink mb-4">Settings</h2>
-        <ul className="space-y-1">
-          {["Account", "Notifications", "Privacy", "Help & Support"].map(
-            (item) => (
-              <li key={item}>
-                <button className="flex w-full items-center justify-between rounded-subtle px-3 py-2.5 text-sm text-ink-light hover:bg-parchment hover:text-ink transition-colors duration-gentle">
-                  {item}
-                  <span className="text-ink-muted">&rarr;</span>
-                </button>
-              </li>
-            )
-          )}
-        </ul>
+      {/* Settings — iOS list style */}
+      <section className="rounded-2xl bg-porcelain shadow-[0_1px_3px_rgba(0,0,0,0.04)] animate-fade-in-up animation-delay-300">
+        <div className="divide-y divide-black/[0.04]">
+          {["Account", "Notifications", "Privacy", "Help & Support"].map((item) => (
+            <button
+              key={item}
+              className="flex w-full items-center justify-between px-4 py-3.5 active:bg-parchment transition-colors"
+            >
+              <span className="text-[14px] text-ink">{item}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-ink-muted/30">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+          ))}
+        </div>
       </section>
+
+      {/* Sign out */}
+      <button className="w-full rounded-2xl bg-porcelain py-3.5 text-[14px] text-oolong-dark font-medium shadow-[0_1px_3px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform duration-200 animate-fade-in-up animation-delay-400">
+        Sign Out
+      </button>
     </div>
   );
 }

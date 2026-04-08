@@ -1,36 +1,35 @@
 export default function SommeliersPage() {
   return (
-    <div className="space-y-8">
-      <header>
-        <h1 className="font-serif text-2xl font-light text-ink">
-          Sommeliers
-        </h1>
-        <p className="mt-1 text-sm text-ink-muted">
-          Connect with tea masters and connoisseurs
-        </p>
+    <div className="space-y-4">
+      {/* Header */}
+      <header className="animate-fade-in-up">
+        <h1 className="font-serif text-[22px] font-light text-ink">Sommeliers</h1>
       </header>
 
-      {/* Coming soon state */}
-      <section className="flex flex-col items-center justify-center py-20 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-oolong/10 text-oolong mb-6">
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M23 21v-2a4 4 0 00-3-3.87" />
-            <path d="M16 3.13a4 4 0 010 7.75" />
-          </svg>
+      {/* Coming soon — centred card */}
+      <section className="rounded-2xl bg-porcelain p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] animate-fade-in-up animation-delay-100">
+        <div className="flex flex-col items-center text-center py-8">
+          <div className="relative flex items-center justify-center mb-5">
+            <div className="absolute h-16 w-16 rounded-full bg-oolong/10 animate-breathe-ring" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-oolong/80 to-oolong-dark/80">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-porcelain">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                <path d="M16 3.13a4 4 0 010 7.75" />
+              </svg>
+            </div>
+          </div>
+          <h2 className="font-serif text-[17px] font-light text-ink mb-1.5">
+            The community is brewing
+          </h2>
+          <p className="text-[13px] text-ink-muted max-w-[260px] leading-relaxed">
+            Tea sommeliers and experts will share tasting notes, curate collections, and guide your palate.
+          </p>
+          <button className="mt-5 rounded-2xl bg-ink px-5 py-2.5 text-[13px] font-medium text-porcelain active:scale-[0.97] transition-transform duration-200">
+            Notify me
+          </button>
         </div>
-        <h2 className="font-serif text-xl text-ink mb-2">
-          The community is brewing
-        </h2>
-        <p className="text-sm text-ink-muted max-w-md leading-relaxed">
-          Soon, tea sommeliers and experts will share their knowledge here —
-          publishing tasting notes, curating collections, and guiding your
-          palate. A contemplative space for those who take tea seriously.
-        </p>
-        <button className="mt-6 rounded-subtle border border-steam px-5 py-2.5 text-sm text-ink-muted hover:border-jade hover:text-jade transition-colors duration-gentle">
-          Notify me when it launches
-        </button>
       </section>
     </div>
   );
