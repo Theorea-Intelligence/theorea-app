@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useTeaContext } from "@/lib/context/useTeaContext";
+import LouOrb from "@/components/ui/LouOrb";
 
 /** Compact weather icon */
 function WeatherIcon({ code, isDay }: { code: number; isDay: boolean }) {
@@ -63,22 +64,9 @@ export default function Dashboard() {
           <div className="absolute top-3 left-4 h-16 w-16 rounded-full bg-oolong/20 blur-xl animate-breathe" />
 
           <div className="relative flex items-start gap-4">
-            {/* Breathing orb */}
-            <div className="relative flex shrink-0 items-center justify-center mt-0.5">
-              <div className="absolute h-12 w-12 rounded-full bg-oolong/20 animate-breathe-ring" />
-              <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-oolong to-oolong-dark animate-breathe">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-porcelain">
-                  <path d="M11 20A7 7 0 019.8 6.9C15.5 4.9 20 .5 20 .5s-1.5 5-4.5 8.5c-2 2.3-4.5 3.5-4.5 3.5" />
-                  <path d="M6.7 17.3c3-3 4.3-7.3 4.3-7.3" />
-                </svg>
-              </div>
-              {/* Steam wisps */}
-              <div className="absolute -top-1.5 left-1/2 -translate-x-1/2">
-                <div className="w-[1.5px] h-3 bg-oolong/30 rounded-full animate-steam mx-auto" />
-              </div>
-              <div className="absolute -top-1 left-1/2 -translate-x-[3px]">
-                <div className="w-[1.5px] h-2 bg-oolong/20 rounded-full animate-steam-delayed" />
-              </div>
+            {/* Breathing dual-leaf orb */}
+            <div className="shrink-0 mt-0.5">
+              <LouOrb variant="card" />
             </div>
 
             <div className="min-w-0 flex-1">

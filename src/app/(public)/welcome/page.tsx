@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
+import Link from "next/link";
+import LouOrb from "@/components/ui/LouOrb";
 
 export default function WelcomePage() {
   const [email, setEmail] = useState("");
@@ -33,28 +35,10 @@ export default function WelcomePage() {
       {/* Top spacer */}
       <div />
 
-      {/* Centre: Brand + breathing orb */}
+      {/* Centre: Brand + breathing dual-leaf orb */}
       <div className="flex flex-col items-center text-center">
-        {/* Breathing orb — Lou's presence */}
-        <div className="relative flex items-center justify-center mb-10">
-          <div className="absolute h-28 w-28 rounded-full bg-oolong/10 animate-breathe-ring" />
-          <div className="absolute h-20 w-20 rounded-full animate-breathe-glow" />
-          <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-oolong to-oolong-dark animate-breathe shadow-lift">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-porcelain">
-              <path d="M11 20A7 7 0 019.8 6.9C15.5 4.9 20 .5 20 .5s-1.5 5-4.5 8.5c-2 2.3-4.5 3.5-4.5 3.5" />
-              <path d="M6.7 17.3c3-3 4.3-7.3 4.3-7.3" />
-            </svg>
-          </div>
-          {/* Steam wisps */}
-          <div className="absolute -top-2 left-1/2 -translate-x-1/2">
-            <div className="w-[2px] h-4 bg-oolong/25 rounded-full animate-steam mx-auto" />
-          </div>
-          <div className="absolute -top-1 left-1/2 -translate-x-[5px]">
-            <div className="w-[2px] h-3 bg-oolong/15 rounded-full animate-steam-delayed" />
-          </div>
-          <div className="absolute -top-1 left-1/2 translate-x-[3px]">
-            <div className="w-[1.5px] h-2.5 bg-oolong/15 rounded-full animate-steam-slow" />
-          </div>
+        <div className="mb-10">
+          <LouOrb variant="hero" />
         </div>
 
         <p className="text-ink-muted text-[11px] tracking-[0.25em] uppercase mb-3 animate-fade-in-up">
@@ -71,7 +55,7 @@ export default function WelcomePage() {
         </p>
       </div>
 
-      {/* Bottom: Sign-in form */}
+      {/* Bottom: Sign-in form + skip link */}
       <div className="w-full max-w-[320px] animate-fade-in-up animation-delay-300">
         <form onSubmit={handleSignIn} className="space-y-3">
           <input
@@ -95,9 +79,12 @@ export default function WelcomePage() {
             {message}
           </p>
         )}
-        <p className="text-[11px] text-ink-muted/50 text-center mt-4">
-          We&apos;ll send you a magic link to sign in.
-        </p>
+        <Link
+          href="/dashboard"
+          className="block text-[12px] text-oolong-dark/60 text-center mt-4 active:text-oolong-dark transition-colors"
+        >
+          Skip for now &rarr;
+        </Link>
       </div>
     </main>
   );

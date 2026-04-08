@@ -1,24 +1,13 @@
+import LouOrb from "@/components/ui/LouOrb";
+
 export default function LouPage() {
   return (
     <div className="flex flex-col h-[calc(100dvh-7.5rem)] md:h-[calc(100dvh-4rem)]">
       {/* Chat area — empty state */}
       <div className="flex-1 flex flex-col items-center justify-center animate-fade-in-up">
-        {/* Breathing orb */}
-        <div className="relative flex items-center justify-center mb-6">
-          <div className="absolute h-20 w-20 rounded-full bg-oolong/15 animate-breathe-ring" />
-          <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-oolong to-oolong-dark animate-breathe">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-porcelain">
-              <path d="M11 20A7 7 0 019.8 6.9C15.5 4.9 20 .5 20 .5s-1.5 5-4.5 8.5c-2 2.3-4.5 3.5-4.5 3.5" />
-              <path d="M6.7 17.3c3-3 4.3-7.3 4.3-7.3" />
-            </svg>
-          </div>
-          {/* Steam wisps */}
-          <div className="absolute -top-1.5 left-1/2 -translate-x-1/2">
-            <div className="w-[1.5px] h-3 bg-oolong/25 rounded-full animate-steam mx-auto" />
-          </div>
-          <div className="absolute -top-1 left-1/2 -translate-x-[3px]">
-            <div className="w-[1.5px] h-2 bg-oolong/15 rounded-full animate-steam-delayed" />
-          </div>
+        {/* Breathing dual-leaf orb */}
+        <div className="mb-6">
+          <LouOrb variant="chat" />
         </div>
 
         <h2 className="font-serif text-[18px] font-light text-ink mb-1.5">

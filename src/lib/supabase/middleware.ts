@@ -41,27 +41,28 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protected routes: redirect to /welcome if not authenticated
-  const isProtectedRoute =
-    request.nextUrl.pathname.startsWith("/dashboard") ||
-    request.nextUrl.pathname.startsWith("/lou") ||
-    request.nextUrl.pathname.startsWith("/rituals") ||
-    request.nextUrl.pathname.startsWith("/marketplace") ||
-    request.nextUrl.pathname.startsWith("/sommeliers") ||
-    request.nextUrl.pathname.startsWith("/profile");
-
-  if (isProtectedRoute && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/welcome";
-    return NextResponse.redirect(url);
-  }
-
-  // Redirect authenticated users away from /welcome
-  if (request.nextUrl.pathname === "/welcome" && user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
-  }
+  // ──── AUTH BYPASS (temporary for development / testing) ────
+  // TODO: Re-enable auth protection before launch
+  //
+  // const isProtectedRoute =
+  //   request.nextUrl.pathname.startsWith("/dashboard") ||
+  //   request.nextUrl.pathname.startsWith("/lou") ||
+  //   request.nextUrl.pathname.startsWith("/rituals") ||
+  //   request.nextUrl.pathname.startsWith("/marketplace") ||
+  //   request.nextUrl.pathname.startsWith("/sommeliers") ||
+  //   request.nextUrl.pathname.startsWith("/profile");
+  //
+  // if (isProtectedRoute && !user) {
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = "/welcome";
+  //   return NextResponse.redirect(url);
+  // }
+  //
+  // if (request.nextUrl.pathname === "/welcome" && user) {
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = "/dashboard";
+  //   return NextResponse.redirect(url);
+  // }
 
   return supabaseResponse;
 }
