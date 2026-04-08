@@ -38,6 +38,19 @@ export const event = ({
   });
 };
 
+/** Auth & login events */
+export const trackLogin = (method: string): void => {
+  event({ action: "login", category: "auth", label: method });
+};
+
+export const trackSignUp = (method: string): void => {
+  event({ action: "sign_up", category: "auth", label: method });
+};
+
+export const trackLoginError = (method: string, error: string): void => {
+  event({ action: "login_error", category: "auth", label: `${method}: ${error}` });
+};
+
 /** Théorea-specific events */
 export const trackRitualLogged = (teaName: string): void => {
   event({ action: "ritual_logged", category: "rituals", label: teaName });

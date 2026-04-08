@@ -1,15 +1,58 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase, signOut } from "@/lib/supabase/client";
+
 export default function ProfilePage() {
+  const router = useRouter();
+  const [user, setUser] = useState<{ email?: string; name?: string; avatar?: string; provider?: string } | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user: u } }) => {
+      if (u) {
+        setUser({
+          email: u.email,
+          name: u.user_metadata?.full_name || u.user_metadata?.name || u.email?.split("@")[0],
+          avatar: u.user_metadata?.avatar_url,
+          provider: u.app_metadata?.provider || "email",
+        });
+      }
+    });
+  }, []);
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/welcome");
+  };
+
+  const displayName = user?.name || "Tea Enthusiast";
+  const initial = displayName.charAt(0).toUpperCase();
+
   return (
     <div className="space-y-4">
       {/* Profile header card */}
       <section className="rounded-2xl bg-porcelain p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] animate-fade-in-up">
         <div className="flex items-center gap-3.5">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-oolong to-oolong-dark text-porcelain font-serif text-lg">
-            K
-          </div>
+          {user?.avatar ? (
+            <img
+              src={user.avatar}
+              alt={displayName}
+              className="h-14 w-14 rounded-full object-cover"
+            />
+          ) : (
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-oolong to-oolong-dark text-porcelain font-serif text-lg">
+              {initial}
+            </div>
+          )}
           <div>
-            <h1 className="text-[17px] font-medium text-ink">Kim</h1>
-            <p className="text-[13px] text-ink-muted">Tea enthusiast</p>
+            <h1 className="text-[17px] font-medium text-ink">{displayName}</h1>
+            <p className="text-[13px] text-ink-muted">
+              {user?.email || "Guest"}
+              {user?.provider && user.provider !== "email" && (
+                <span className="text-ink-muted/40"> &middot; {user.provider}</span>
+              )}
+            </p>
           </div>
         </div>
       </section>
@@ -68,7 +111,10 @@ export default function ProfilePage() {
       </section>
 
       {/* Sign out */}
-      <button className="w-full rounded-2xl bg-porcelain py-3.5 text-[14px] text-oolong-dark font-medium shadow-[0_1px_3px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform duration-200 animate-fade-in-up animation-delay-400">
+      <button
+        onClick={handleSignOut}
+        className="w-full rounded-2xl bg-porcelain py-3.5 text-[14px] text-oolong-dark font-medium shadow-[0_1px_3px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform duration-200 animate-fade-in-up animation-delay-400"
+      >
         Sign Out
       </button>
     </div>

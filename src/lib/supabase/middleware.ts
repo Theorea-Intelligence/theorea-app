@@ -41,28 +41,17 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // ──── AUTH BYPASS (temporary for development / testing) ────
-  // TODO: Re-enable auth protection before launch
-  //
-  // const isProtectedRoute =
-  //   request.nextUrl.pathname.startsWith("/dashboard") ||
-  //   request.nextUrl.pathname.startsWith("/lou") ||
-  //   request.nextUrl.pathname.startsWith("/rituals") ||
-  //   request.nextUrl.pathname.startsWith("/marketplace") ||
-  //   request.nextUrl.pathname.startsWith("/sommeliers") ||
-  //   request.nextUrl.pathname.startsWith("/profile");
-  //
-  // if (isProtectedRoute && !user) {
-  //   const url = request.nextUrl.clone();
-  //   url.pathname = "/welcome";
-  //   return NextResponse.redirect(url);
-  // }
-  //
-  // if (request.nextUrl.pathname === "/welcome" && user) {
-  //   const url = request.nextUrl.clone();
-  //   url.pathname = "/dashboard";
-  //   return NextResponse.redirect(url);
-  // }
+  // Protected routes — allow guest browsing but redirect to welcome
+  // only for routes that genuinely require auth (e.g. profile actions).
+  // For now, all main routes allow guest access so the app is explorable.
+  // The profile page handles sign-out client-side.
+
+  // Redirect authenticated users away from /welcome to dashboard
+  if (request.nextUrl.pathname === "/welcome" && user) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
 
   return supabaseResponse;
 }
