@@ -5,13 +5,17 @@ import { useSearchParams, useRouter } from "next/navigation";
 import {
   signInWithEmail,
   signInWithGoogle,
+  supabase,
 } from "@/lib/supabase/client";
-import { trackLogin, trackLoginError } from "@/lib/analytics/gtag";
+import { trackLogin, trackSignUp, trackLoginError } from "@/lib/analytics/gtag";
 import LouOrb from "@/components/ui/LouOrb";
 
-/** Inner component that uses useSearchParams (must be inside Suspense) */
+type AuthMode = "login" | "signup";
+
 function WelcomeContent() {
+  const [mode, setMode] = useState<AuthMode>("signup");
   const [email, setEmail] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState<"email" | "google" | null>(null);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error">("success");
@@ -26,28 +30,59 @@ function WelcomeContent() {
       setMessage(decodeURIComponent(error));
       setMessageType("error");
     }
+    // If redirected with mode=login
+    const modeParam = searchParams.get("mode");
+    if (modeParam === "login" || modeParam === "signup") {
+      setMode(modeParam);
+    }
   }, [searchParams]);
 
-  const handleEmailSignIn = async (e: React.FormEvent) => {
+  const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading("email");
     setMessage("");
 
-    const { error } = await signInWithEmail(email);
+    if (mode === "signup") {
+      // Sign up with OTP + metadata
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: {
+            full_name: displayName || email.split("@")[0],
+            signup_source: "web",
+            signup_date: new Date().toISOString(),
+          },
+        },
+      });
 
-    if (error) {
-      setMessage(error.message);
-      setMessageType("error");
-      trackLoginError("email", error.message);
+      if (error) {
+        setMessage(error.message);
+        setMessageType("error");
+        trackLoginError("email_signup", error.message);
+      } else {
+        setMessage("Check your email for a verification link.");
+        setMessageType("success");
+        trackSignUp("email");
+      }
     } else {
-      setMessage("Check your email for the magic link.");
-      setMessageType("success");
-      trackLogin("email_otp");
+      // Login with OTP (no extra metadata)
+      const { error } = await signInWithEmail(email);
+
+      if (error) {
+        setMessage(error.message);
+        setMessageType("error");
+        trackLoginError("email_login", error.message);
+      } else {
+        setMessage("Check your email for your sign-in link.");
+        setMessageType("success");
+        trackLogin("email_otp");
+      }
     }
     setLoading(null);
   };
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleAuth = async () => {
     setLoading("google");
     setMessage("");
 
@@ -58,17 +93,25 @@ function WelcomeContent() {
       setMessageType("error");
       trackLoginError("google", error.message);
       setLoading(null);
+    } else {
+      if (mode === "signup") {
+        trackSignUp("google");
+      } else {
+        trackLogin("google");
+      }
     }
   };
+
+  const isSignup = mode === "signup";
 
   return (
     <main className="flex min-h-[100dvh] flex-col items-center justify-between px-8 py-12 safe-top safe-bottom bg-parchment">
       {/* Top spacer */}
       <div />
 
-      {/* Centre: Brand + breathing dual-leaf orb */}
+      {/* Centre: Brand */}
       <div className="flex flex-col items-center text-center">
-        <div className="mb-10">
+        <div className="mb-8">
           <LouOrb variant="hero" />
         </div>
 
@@ -76,23 +119,24 @@ function WelcomeContent() {
           Maison Théorea
         </p>
 
-        <h1 className="font-serif text-3xl font-light tracking-tight text-ink mb-2 animate-fade-in-up animation-delay-100">
-          Théorea
+        <h1 className="font-serif text-[26px] font-light tracking-tight text-ink mb-1.5 animate-fade-in-up animation-delay-100">
+          {isSignup ? "Begin your tea journey" : "Welcome back"}
         </h1>
 
-        <p className="text-ink-muted text-sm leading-relaxed max-w-[260px] animate-fade-in-up animation-delay-200">
-          Your pocket tea sommelier.
-          Discover, taste, reflect.
+        <p className="text-ink-muted text-[13px] leading-relaxed max-w-[260px] animate-fade-in-up animation-delay-200">
+          {isSignup
+            ? "Create your account to meet Lou, your personal tea sommelier."
+            : "Sign in to continue your ritual."}
         </p>
       </div>
 
-      {/* Bottom: Sign-in options */}
+      {/* Bottom: Auth form */}
       <div className="w-full max-w-[320px] animate-fade-in-up animation-delay-300">
         {/* Google OAuth */}
         <button
-          onClick={handleGoogleSignIn}
+          onClick={handleGoogleAuth}
           disabled={loading !== null}
-          className="flex w-full items-center justify-center gap-3 rounded-2xl bg-porcelain px-4 py-3.5 text-[14px] font-medium text-ink shadow-[0_1px_3px_rgba(0,0,0,0.06)] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 mb-4"
+          className="flex w-full items-center justify-center gap-3 rounded-2xl bg-porcelain px-4 py-3.5 text-[14px] font-medium text-ink shadow-[0_1px_3px_rgba(0,0,0,0.06)] active:scale-[0.98] transition-all duration-200 disabled:opacity-50"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -100,7 +144,11 @@ function WelcomeContent() {
             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
           </svg>
-          {loading === "google" ? "Connecting..." : "Continue with Google"}
+          {loading === "google"
+            ? "Connecting..."
+            : isSignup
+              ? "Sign up with Google"
+              : "Sign in with Google"}
         </button>
 
         {/* Divider */}
@@ -110,8 +158,20 @@ function WelcomeContent() {
           <div className="flex-1 h-px bg-black/[0.06]" />
         </div>
 
-        {/* Email magic link */}
-        <form onSubmit={handleEmailSignIn} className="space-y-2.5">
+        {/* Email form */}
+        <form onSubmit={handleEmailAuth} className="space-y-2.5">
+          {/* Name field — signup only */}
+          {isSignup && (
+            <input
+              type="text"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              placeholder="Your name"
+              className="w-full px-4 py-3.5 bg-porcelain border border-black/[0.06] rounded-2xl text-[14px] text-ink text-center placeholder:text-ink-muted/40 focus:outline-none focus:border-oolong/40 transition-colors duration-200"
+              disabled={loading !== null}
+            />
+          )}
+
           <input
             type="email"
             value={email}
@@ -121,12 +181,17 @@ function WelcomeContent() {
             required
             disabled={loading !== null}
           />
+
           <button
             type="submit"
             disabled={loading !== null}
-            className="w-full px-4 py-3.5 border border-black/[0.08] text-ink text-[14px] font-medium rounded-2xl transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
+            className="w-full px-4 py-3.5 bg-ink text-porcelain text-[14px] font-medium rounded-2xl transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
           >
-            {loading === "email" ? "Sending..." : "Continue with email"}
+            {loading === "email"
+              ? "Sending..."
+              : isSignup
+                ? "Create account"
+                : "Send sign-in link"}
           </button>
         </form>
 
@@ -141,16 +206,41 @@ function WelcomeContent() {
           </p>
         )}
 
-        {/* Skip link */}
+        {/* Toggle signup / login */}
+        <p className="text-[12px] text-ink-muted/60 text-center mt-5">
+          {isSignup ? (
+            <>
+              Already have an account?{" "}
+              <button
+                onClick={() => { setMode("login"); setMessage(""); }}
+                className="text-oolong-dark font-medium active:text-oolong transition-colors"
+              >
+                Sign in
+              </button>
+            </>
+          ) : (
+            <>
+              New to Théorea?{" "}
+              <button
+                onClick={() => { setMode("signup"); setMessage(""); }}
+                className="text-oolong-dark font-medium active:text-oolong transition-colors"
+              >
+                Create account
+              </button>
+            </>
+          )}
+        </p>
+
+        {/* Guest browse */}
         <button
           onClick={() => router.push("/dashboard")}
-          className="block w-full text-[11px] text-ink-muted/30 text-center mt-5 active:text-ink-muted transition-colors"
+          className="block w-full text-[11px] text-ink-muted/25 text-center mt-3 active:text-ink-muted transition-colors"
         >
           Browse as guest
         </button>
 
         {/* Legal */}
-        <p className="text-[10px] text-ink-muted/30 text-center mt-3 leading-relaxed">
+        <p className="text-[10px] text-ink-muted/25 text-center mt-3 leading-relaxed">
           By continuing, you agree to our Terms of Service and Privacy Policy.
         </p>
       </div>
@@ -158,7 +248,6 @@ function WelcomeContent() {
   );
 }
 
-/** Wrapper with Suspense boundary (required by Next.js 15 for useSearchParams) */
 export default function WelcomePage() {
   return (
     <Suspense
