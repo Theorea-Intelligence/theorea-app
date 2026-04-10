@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
 import PWARegister from "@/components/PWARegister";
+import { LocaleProvider } from "@/i18n/LocaleContext";
 import "@/styles/globals.css";
 
 const inter = Inter({
@@ -63,7 +64,7 @@ export default function RootLayout({
       <body className="bg-parchment text-ink antialiased">
         <GoogleAnalytics />
         <PWARegister />
-        {children}
+        <LocaleProvider>{children}</LocaleProvider>
       </body>
     </html>
   );

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useTeaContext } from "@/lib/context/useTeaContext";
 import LouOrb from "@/components/ui/LouOrb";
+import { useLocale } from "@/i18n/LocaleContext";
 
 /** Compact weather icon */
 function WeatherIcon({ code, isDay }: { code: number; isDay: boolean }) {
@@ -40,6 +41,7 @@ function WeatherIcon({ code, isDay }: { code: number; isDay: boolean }) {
 export default function Dashboard() {
   const { time, weather, season, recommendation, isLoading, locationName } =
     useTeaContext();
+  const { t } = useLocale();
 
   return (
     <div className="space-y-4">
@@ -60,18 +62,16 @@ export default function Dashboard() {
       {/* Lou card — hero element */}
       <Link href="/lou" className="block animate-fade-in-up animation-delay-100">
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-ink via-ink/95 to-ink-light p-5">
-          {/* Breathing glow behind orb */}
           <div className="absolute top-3 left-4 h-16 w-16 rounded-full bg-oolong/20 blur-xl animate-breathe" />
 
           <div className="relative flex items-start gap-4">
-            {/* Breathing dual-leaf orb */}
             <div className="shrink-0 mt-0.5">
               <LouOrb variant="card" />
             </div>
 
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-[11px] font-medium text-porcelain/70 uppercase tracking-wider">Lou suggests</span>
+                <span className="text-[11px] font-medium text-porcelain/70 uppercase tracking-wider">{t.dashboard.louSuggests}</span>
               </div>
               {isLoading ? (
                 <div className="space-y-2 mt-1">
@@ -89,7 +89,7 @@ export default function Dashboard() {
                 </>
               )}
               <div className="flex items-center gap-1 mt-3">
-                <span className="text-[12px] text-oolong-light font-medium">Start a session</span>
+                <span className="text-[12px] text-oolong-light font-medium">{t.dashboard.startSession}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-oolong-light">
                   <polyline points="9 18 15 12 9 6" />
                 </svg>
@@ -99,7 +99,7 @@ export default function Dashboard() {
         </div>
       </Link>
 
-      {/* Quick actions — iOS widget style */}
+      {/* Quick actions */}
       <div className="grid grid-cols-2 gap-3 animate-fade-in-up animation-delay-200">
         <Link href="/rituals" className="group">
           <div className="flex flex-col items-start gap-2 rounded-2xl bg-porcelain p-4 active:scale-[0.97] transition-transform duration-200 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
@@ -110,8 +110,8 @@ export default function Dashboard() {
               </svg>
             </div>
             <div>
-              <p className="text-[13px] font-medium text-ink">Log Ritual</p>
-              <p className="text-[11px] text-ink-muted mt-0.5">Record a session</p>
+              <p className="text-[13px] font-medium text-ink">{t.dashboard.logRitual}</p>
+              <p className="text-[11px] text-ink-muted mt-0.5">{t.dashboard.recordSession}</p>
             </div>
           </div>
         </Link>
@@ -125,26 +125,26 @@ export default function Dashboard() {
               </svg>
             </div>
             <div>
-              <p className="text-[13px] font-medium text-ink">Browse Teas</p>
-              <p className="text-[11px] text-ink-muted mt-0.5">Explore the collection</p>
+              <p className="text-[13px] font-medium text-ink">{t.dashboard.browseTeas}</p>
+              <p className="text-[11px] text-ink-muted mt-0.5">{t.dashboard.exploreCollection}</p>
             </div>
           </div>
         </Link>
       </div>
 
-      {/* Recent rituals — compact list */}
+      {/* Recent rituals */}
       <section className="rounded-2xl bg-porcelain p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] animate-fade-in-up animation-delay-300">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-[15px] font-semibold text-ink">Recent</h2>
+          <h2 className="text-[15px] font-semibold text-ink">{t.dashboard.recent}</h2>
           <Link href="/rituals" className="text-[12px] text-oolong-dark font-medium">
-            See all
+            {t.dashboard.seeAll}
           </Link>
         </div>
         <div className="divide-y divide-black/[0.04]">
           {[
-            { tea: "Da Hong Pao", time: "Today, 10:30", mood: "Focused", note: "Roasted chestnut, lingering sweetness" },
-            { tea: "Jasmin Snow Buds", time: "Yesterday, 16:00", mood: "Calm", note: "Floral, clean, meditative" },
-            { tea: "Da Hong Pao", time: "2 Apr, 09:15", mood: "Present", note: "Rich mineral body" },
+            { tea: "Da Hong Pao", time: `${t.dashboard.today}, 10:30`, mood: t.dashboard.focused, note: "Roasted chestnut, lingering sweetness" },
+            { tea: "Jasmin Snow Buds", time: `${t.dashboard.yesterday}, 16:00`, mood: t.dashboard.calm, note: "Floral, clean, meditative" },
+            { tea: "Da Hong Pao", time: "2 Apr, 09:15", mood: t.dashboard.present, note: "Rich mineral body" },
           ].map((ritual, i) => (
             <div key={i} className="flex items-center py-3 first:pt-0 last:pb-0 active:bg-parchment -mx-1 px-1 rounded-lg transition-colors">
               <div className="min-w-0 flex-1">
@@ -165,15 +165,15 @@ export default function Dashboard() {
       {/* Marketplace peek */}
       <section className="rounded-2xl bg-porcelain p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] animate-fade-in-up animation-delay-400">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-[15px] font-semibold text-ink">Marketplace</h2>
+          <h2 className="text-[15px] font-semibold text-ink">{t.dashboard.marketplace}</h2>
           <Link href="/marketplace" className="text-[12px] text-oolong-dark font-medium">
-            Browse
+            {t.dashboard.browse}
           </Link>
         </div>
         <div className="divide-y divide-black/[0.04]">
           {[
-            { tea: "Da Hong Pao", type: "Oolong", price: "£28", origin: "Wuyi, Fujian" },
-            { tea: "Jasmin Snow Buds", type: "Green Tea", price: "£24", origin: "Fuding, Fujian" },
+            { tea: "Da Hong Pao", type: t.marketplace.oolong, price: "£28", origin: "Wuyi, Fujian" },
+            { tea: "Jasmin Snow Buds", type: t.marketplace.greenTeaScented, price: "£24", origin: "Fuding, Fujian" },
           ].map((tea, i) => (
             <div key={i} className="flex items-center justify-between py-3 first:pt-0 last:pb-0 active:bg-parchment -mx-1 px-1 rounded-lg transition-colors">
               <div className="min-w-0">

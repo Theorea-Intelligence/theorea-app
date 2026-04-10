@@ -1,12 +1,18 @@
+"use client";
+
+import { useLocale } from "@/i18n/LocaleContext";
+
 export default function SommeliersPage() {
+  const { t } = useLocale();
+
   return (
     <div className="space-y-4">
       {/* Header */}
       <header className="animate-fade-in-up">
-        <h1 className="font-serif text-[22px] font-light text-ink">Sommeliers</h1>
+        <h1 className="font-serif text-[22px] font-light text-ink">{t.sommeliers.title}</h1>
       </header>
 
-      {/* Coming soon — centred card */}
+      {/* Coming soon */}
       <section className="rounded-2xl bg-porcelain p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] animate-fade-in-up animation-delay-100">
         <div className="flex flex-col items-center text-center py-8">
           <div className="relative flex items-center justify-center mb-5">
@@ -21,13 +27,13 @@ export default function SommeliersPage() {
             </div>
           </div>
           <h2 className="font-serif text-[17px] font-light text-ink mb-1.5">
-            The community is brewing
+            {t.sommeliers.communityBrewing}
           </h2>
           <p className="text-[13px] text-ink-muted max-w-[260px] leading-relaxed">
-            Tea sommeliers and experts will share tasting notes, curate collections, and guide your palate.
+            {t.sommeliers.description}
           </p>
           <button className="mt-5 rounded-2xl bg-ink px-5 py-2.5 text-[13px] font-medium text-porcelain active:scale-[0.97] transition-transform duration-200">
-            Notify me
+            {t.sommeliers.notifyMe}
           </button>
         </div>
       </section>

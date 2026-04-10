@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import LouOrb from "@/components/ui/LouOrb";
+import { useLocale } from "@/i18n/LocaleContext";
 
 type Message = {
   id: string;
@@ -16,6 +17,7 @@ export default function LouPage() {
   const [error, setError] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { t } = useLocale();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -104,9 +106,9 @@ export default function LouPage() {
           }
         }
       }
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
-      // Remove the empty assistant message on error
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : t.lou.errorFallback;
+      setError(msg);
       setMessages((prev) => prev.filter((m) => m.id !== assistantMessage.id));
     } finally {
       setIsStreaming(false);
@@ -133,20 +135,15 @@ export default function LouPage() {
             </div>
 
             <h2 className="font-serif text-[18px] font-light text-ink mb-1.5">
-              What shall we explore?
+              {t.lou.whatExplore}
             </h2>
             <p className="text-[13px] text-ink-muted text-center max-w-[260px] leading-relaxed mb-5">
-              Tea varieties, brewing techniques, flavour profiles, or a mindful ritual.
+              {t.lou.subtitle}
             </p>
 
             {/* Quick suggestion chips */}
             <div className="flex flex-wrap justify-center gap-2 max-w-[320px]">
-              {[
-                "How do I brew Da Hong Pao?",
-                "What tea suits this evening?",
-                "Compare your two teas",
-                "Guide me through a ritual",
-              ].map((chip) => (
+              {t.lou.chips.map((chip) => (
                 <button
                   key={chip}
                   onClick={() => sendMessage(chip)}
@@ -217,7 +214,7 @@ export default function LouPage() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask Lou anything..."
+              placeholder={t.lou.askPlaceholder}
               className="flex-1 bg-transparent text-[14px] text-ink placeholder:text-ink-muted/50 focus:outline-none"
               disabled={isStreaming}
             />

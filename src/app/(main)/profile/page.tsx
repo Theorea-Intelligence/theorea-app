@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase, signOut } from "@/lib/supabase/client";
+import { useLocale } from "@/i18n/LocaleContext";
+import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { t } = useLocale();
   const [user, setUser] = useState<{ email?: string; name?: string; avatar?: string; provider?: string } | null>(null);
 
   useEffect(() => {
@@ -26,7 +29,7 @@ export default function ProfilePage() {
     router.push("/welcome");
   };
 
-  const displayName = user?.name || "Tea Enthusiast";
+  const displayName = user?.name || t.profile.guest;
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
@@ -57,12 +60,12 @@ export default function ProfilePage() {
         </div>
       </section>
 
-      {/* Stats row — compact widgets */}
+      {/* Stats row */}
       <div className="grid grid-cols-3 gap-2.5 animate-fade-in-up animation-delay-100">
         {[
-          { label: "Rituals", value: "12" },
-          { label: "Teas", value: "2" },
-          { label: "Days", value: "7" },
+          { label: t.profile.rituals, value: "12" },
+          { label: t.profile.teas, value: "2" },
+          { label: t.profile.days, value: "7" },
         ].map((stat, i) => (
           <div
             key={i}
@@ -74,16 +77,16 @@ export default function ProfilePage() {
         ))}
       </div>
 
-      {/* Preferences — iOS settings style */}
+      {/* Tea Preferences */}
       <section className="rounded-2xl bg-porcelain shadow-[0_1px_3px_rgba(0,0,0,0.04)] animate-fade-in-up animation-delay-200">
         <div className="px-4 pt-4 pb-2">
-          <h2 className="text-[11px] font-medium text-ink-muted uppercase tracking-wider">Tea Preferences</h2>
+          <h2 className="text-[11px] font-medium text-ink-muted uppercase tracking-wider">{t.profile.teaPreferences}</h2>
         </div>
         <div className="divide-y divide-black/[0.04]">
           {[
-            { label: "Preferred types", value: "Oolong, Green" },
-            { label: "Flavour profile", value: "Floral, Mineral, Roasted" },
-            { label: "Ritual style", value: "Gongfu" },
+            { label: t.profile.preferredTypes, value: "Oolong, Green" },
+            { label: t.profile.flavourProfile, value: "Floral, Mineral, Roasted" },
+            { label: t.profile.ritualStyle, value: "Gongfu" },
           ].map((pref, i) => (
             <div key={i} className="flex items-center justify-between px-4 py-3">
               <span className="text-[13px] text-ink">{pref.label}</span>
@@ -93,10 +96,10 @@ export default function ProfilePage() {
         </div>
       </section>
 
-      {/* Settings — iOS list style */}
+      {/* Settings — includes Language Switcher */}
       <section className="rounded-2xl bg-porcelain shadow-[0_1px_3px_rgba(0,0,0,0.04)] animate-fade-in-up animation-delay-300">
         <div className="divide-y divide-black/[0.04]">
-          {["Account", "Notifications", "Privacy", "Help & Support"].map((item) => (
+          {[t.profile.account, t.profile.notifications, t.profile.privacy, t.profile.helpSupport].map((item) => (
             <button
               key={item}
               className="flex w-full items-center justify-between px-4 py-3.5 active:bg-parchment transition-colors"
@@ -107,6 +110,8 @@ export default function ProfilePage() {
               </svg>
             </button>
           ))}
+          {/* Language switcher — inline in settings list */}
+          <LanguageSwitcher />
         </div>
       </section>
 
@@ -115,7 +120,7 @@ export default function ProfilePage() {
         onClick={handleSignOut}
         className="w-full rounded-2xl bg-porcelain py-3.5 text-[14px] text-oolong-dark font-medium shadow-[0_1px_3px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform duration-200 animate-fade-in-up animation-delay-400"
       >
-        Sign Out
+        {t.profile.signOut}
       </button>
     </div>
   );

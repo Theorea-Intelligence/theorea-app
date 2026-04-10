@@ -9,6 +9,7 @@ import {
 } from "@/lib/supabase/client";
 import { trackLogin, trackSignUp, trackLoginError } from "@/lib/analytics/gtag";
 import LouOrb from "@/components/ui/LouOrb";
+import { useLocale } from "@/i18n/LocaleContext";
 
 type AuthMode = "login" | "signup";
 
@@ -22,6 +23,7 @@ function WelcomeContent() {
 
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { t } = useLocale();
 
   // Pick up OAuth error from callback redirect
   useEffect(() => {
@@ -30,7 +32,6 @@ function WelcomeContent() {
       setMessage(decodeURIComponent(error));
       setMessageType("error");
     }
-    // If redirected with mode=login
     const modeParam = searchParams.get("mode");
     if (modeParam === "login" || modeParam === "signup") {
       setMode(modeParam);
@@ -43,7 +44,6 @@ function WelcomeContent() {
     setMessage("");
 
     if (mode === "signup") {
-      // Sign up with OTP + metadata
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
@@ -61,12 +61,11 @@ function WelcomeContent() {
         setMessageType("error");
         trackLoginError("email_signup", error.message);
       } else {
-        setMessage("Check your email for a verification link.");
+        setMessage(t.welcome.checkEmailSignup);
         setMessageType("success");
         trackSignUp("email");
       }
     } else {
-      // Login with OTP (no extra metadata)
       const { error } = await signInWithEmail(email);
 
       if (error) {
@@ -74,7 +73,7 @@ function WelcomeContent() {
         setMessageType("error");
         trackLoginError("email_login", error.message);
       } else {
-        setMessage("Check your email for your sign-in link.");
+        setMessage(t.welcome.checkEmailLogin);
         setMessageType("success");
         trackLogin("email_otp");
       }
@@ -116,17 +115,15 @@ function WelcomeContent() {
         </div>
 
         <p className="text-ink-muted text-[11px] tracking-[0.25em] uppercase mb-3 animate-fade-in-up">
-          Maison Théorea
+          {t.welcome.brand}
         </p>
 
         <h1 className="font-serif text-[26px] font-light tracking-tight text-ink mb-1.5 animate-fade-in-up animation-delay-100">
-          {isSignup ? "Begin your tea journey" : "Welcome back"}
+          {isSignup ? t.welcome.beginJourney : t.welcome.welcomeBack}
         </h1>
 
         <p className="text-ink-muted text-[13px] leading-relaxed max-w-[260px] animate-fade-in-up animation-delay-200">
-          {isSignup
-            ? "Create your account to meet Lou, your personal tea sommelier."
-            : "Sign in to continue your ritual."}
+          {isSignup ? t.welcome.createAccountSub : t.welcome.signInSub}
         </p>
       </div>
 
@@ -145,28 +142,27 @@ function WelcomeContent() {
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
           </svg>
           {loading === "google"
-            ? "Connecting..."
+            ? t.welcome.connecting
             : isSignup
-              ? "Sign up with Google"
-              : "Sign in with Google"}
+              ? t.welcome.signUpGoogle
+              : t.welcome.signInGoogle}
         </button>
 
         {/* Divider */}
         <div className="flex items-center gap-3 my-4">
           <div className="flex-1 h-px bg-black/[0.06]" />
-          <span className="text-[11px] text-ink-muted/50 uppercase tracking-wider">or</span>
+          <span className="text-[11px] text-ink-muted/50 uppercase tracking-wider">{t.welcome.or}</span>
           <div className="flex-1 h-px bg-black/[0.06]" />
         </div>
 
         {/* Email form */}
         <form onSubmit={handleEmailAuth} className="space-y-2.5">
-          {/* Name field — signup only */}
           {isSignup && (
             <input
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              placeholder="Your name"
+              placeholder={t.welcome.yourName}
               className="w-full px-4 py-3.5 bg-porcelain border border-black/[0.06] rounded-2xl text-[14px] text-ink text-center placeholder:text-ink-muted/40 focus:outline-none focus:border-oolong/40 transition-colors duration-200"
               disabled={loading !== null}
             />
@@ -176,7 +172,7 @@ function WelcomeContent() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email address"
+            placeholder={t.welcome.emailAddress}
             className="w-full px-4 py-3.5 bg-porcelain border border-black/[0.06] rounded-2xl text-[14px] text-ink text-center placeholder:text-ink-muted/40 focus:outline-none focus:border-oolong/40 transition-colors duration-200"
             required
             disabled={loading !== null}
@@ -188,10 +184,10 @@ function WelcomeContent() {
             className="w-full px-4 py-3.5 bg-ink text-porcelain text-[14px] font-medium rounded-2xl transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
           >
             {loading === "email"
-              ? "Sending..."
+              ? t.welcome.sending
               : isSignup
-                ? "Create account"
-                : "Send sign-in link"}
+                ? t.welcome.createAccount
+                : t.welcome.sendSignInLink}
           </button>
         </form>
 
@@ -210,22 +206,22 @@ function WelcomeContent() {
         <p className="text-[12px] text-ink-muted/60 text-center mt-5">
           {isSignup ? (
             <>
-              Already have an account?{" "}
+              {t.welcome.alreadyHaveAccount}{" "}
               <button
                 onClick={() => { setMode("login"); setMessage(""); }}
                 className="text-oolong-dark font-medium active:text-oolong transition-colors"
               >
-                Sign in
+                {t.welcome.signIn}
               </button>
             </>
           ) : (
             <>
-              New to Théorea?{" "}
+              {t.welcome.newToTheorea}{" "}
               <button
                 onClick={() => { setMode("signup"); setMessage(""); }}
                 className="text-oolong-dark font-medium active:text-oolong transition-colors"
               >
-                Create account
+                {t.welcome.createAccount}
               </button>
             </>
           )}
@@ -236,12 +232,12 @@ function WelcomeContent() {
           onClick={() => router.push("/dashboard")}
           className="block w-full text-[11px] text-ink-muted/25 text-center mt-3 active:text-ink-muted transition-colors"
         >
-          Browse as guest
+          {t.welcome.browseAsGuest}
         </button>
 
         {/* Legal */}
         <p className="text-[10px] text-ink-muted/25 text-center mt-3 leading-relaxed">
-          By continuing, you agree to our Terms of Service and Privacy Policy.
+          {t.welcome.legal}
         </p>
       </div>
     </main>
