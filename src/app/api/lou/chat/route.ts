@@ -10,9 +10,15 @@
  *  - Mindful tea rituals and wellness
  *
  * Uses Server-Sent Events (SSE) for real-time streaming.
+ *
+ * Access tiers:
+ *  - Guest (unauthenticated): sign-in required (401)
+ *  - Free member: 10 messages / calendar month (429 when exceeded)
+ *  - Théorea Member / Admin: unlimited
  */
 
 import { NextRequest } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 
@@ -55,6 +61,38 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    // ── 1. Authentication ──────────────────────────────────────────────────
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return new Response(
+        JSON.stringify({ error: "Sign in to chat with Lou.", code: "SIGN_IN_REQUIRED" }),
+        { status: 401, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // ── 2. Usage gate ──────────────────────────────────────────────────────
+    const { data: usageData, error: usageError } = await supabase.rpc(
+      "lou_check_and_increment",
+      { p_user_id: user.id }
+    );
+
+    if (usageError) {
+      // Fail open — log but don't block the user if the usage check fails
+      console.error("Lou usage check error:", usageError);
+    } else if (usageData && !usageData.allowed) {
+      return new Response(
+        JSON.stringify({
+          error: "Monthly message limit reached.",
+          code: "LIMIT_REACHED",
+          usage: usageData,
+        }),
+        { status: 429, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // ── 3. Parse request ───────────────────────────────────────────────────
     const { messages } = await request.json();
 
     if (!messages || !Array.isArray(messages)) {
@@ -64,7 +102,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call Anthropic Claude API with streaming
+    // ── 4. Stream from Anthropic ───────────────────────────────────────────
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -93,7 +131,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Stream the response as SSE
+    // Pass usage info in response headers so the client can update its counter
+    const usageHeaders: Record<string, string> = {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+    };
+    if (usageData) {
+      usageHeaders["X-Lou-Usage-Count"] = String(usageData.count);
+      usageHeaders["X-Lou-Usage-Limit"] = String(usageData.limit);
+      usageHeaders["X-Lou-Tier"] = String(usageData.tier);
+    }
+
     const encoder = new TextEncoder();
     const decoder = new TextDecoder();
 
@@ -152,13 +201,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return new Response(stream, {
-      headers: {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
-      },
-    });
+    return new Response(stream, { headers: usageHeaders });
   } catch (error) {
     console.error("Lou API error:", error);
     return new Response(

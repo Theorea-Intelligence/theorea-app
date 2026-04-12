@@ -7,14 +7,42 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // ─── Auth helpers ───────────────────────────────────────────
 
-/** Magic link sign-in (email OTP) */
-export async function signInWithEmail(email: string) {
-  return supabase.auth.signInWithOtp({
+/** Sign up with email + password */
+export async function signUpWithPassword(
+  email: string,
+  password: string,
+  metadata?: { full_name?: string; marketing_consent?: boolean }
+) {
+  return supabase.auth.signUp({
     email,
+    password,
     options: {
       emailRedirectTo: `${window.location.origin}/auth/callback`,
+      data: {
+        full_name: metadata?.full_name || email.split("@")[0],
+        marketing_consent: metadata?.marketing_consent ?? false,
+        signup_source: "web",
+        signup_date: new Date().toISOString(),
+      },
     },
   });
+}
+
+/** Sign in with email + password */
+export async function signInWithPassword(email: string, password: string) {
+  return supabase.auth.signInWithPassword({ email, password });
+}
+
+/** Send password reset email */
+export async function resetPassword(email: string) {
+  return supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
+  });
+}
+
+/** Update password (for reset flow, user must be authenticated) */
+export async function updatePassword(newPassword: string) {
+  return supabase.auth.updateUser({ password: newPassword });
 }
 
 /** Google OAuth sign-in */

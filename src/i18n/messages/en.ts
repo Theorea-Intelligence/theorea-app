@@ -29,6 +29,23 @@ const en = {
     newToTheorea: "New to Théorea?",
     browseAsGuest: "Browse as guest",
     legal: "By continuing, you agree to our Terms of Service and Privacy Policy.",
+    password: "Password",
+    confirmPassword: "Confirm password",
+    newPassword: "New password",
+    forgotPassword: "Forgot password?",
+    resetPassword: "Reset your password",
+    resetPasswordSub: "Enter your email and we'll send you a link to reset your password.",
+    sendResetLink: "Send reset link",
+    checkEmailReset: "Check your email for a password reset link.",
+    chooseNewPassword: "Choose a new password",
+    chooseNewPasswordSub: "At least 8 characters. You'll be signed in automatically.",
+    updatePassword: "Update password",
+    passwordUpdated: "Password updated. Signing you in...",
+    passwordTooShort: "Password must be at least 8 characters.",
+    passwordMismatch: "Passwords do not match.",
+    verifyingLink: "Verifying your link...",
+    backToSignIn: "Back to sign in",
+    marketingConsent: "Keep me informed about new teas, rituals and Théorea stories.",
   },
   dashboard: {
     louSuggests: "Lou suggests",
@@ -58,6 +75,14 @@ const en = {
       "Compare your two teas",
       "Guide me through a ritual",
     ],
+    signInRequired: "Sign in to chat with Lou",
+    signInRequiredSub: "Create a free account to begin your tea journey.",
+    signInButton: "Sign in",
+    limitReached: "You've reached your monthly limit",
+    limitReachedSub: "Free members enjoy 10 conversations with Lou each month.",
+    becomeMember: "Become a Théorea Member",
+    memberPitch: "Unlimited access to Lou for £4.99 / month",
+    messagesRemaining: (n: number) => n === 1 ? "1 message remaining this month" : `${n} messages remaining this month`,
   },
   marketplace: {
     title: "Marketplace",
@@ -137,6 +162,23 @@ export interface Messages {
     newToTheorea: string;
     browseAsGuest: string;
     legal: string;
+    password: string;
+    confirmPassword: string;
+    newPassword: string;
+    forgotPassword: string;
+    resetPassword: string;
+    resetPasswordSub: string;
+    sendResetLink: string;
+    checkEmailReset: string;
+    chooseNewPassword: string;
+    chooseNewPasswordSub: string;
+    updatePassword: string;
+    passwordUpdated: string;
+    passwordTooShort: string;
+    passwordMismatch: string;
+    verifyingLink: string;
+    backToSignIn: string;
+    marketingConsent: string;
   };
   dashboard: {
     louSuggests: string;
@@ -161,6 +203,14 @@ export interface Messages {
     askPlaceholder: string;
     errorFallback: string;
     chips: string[];
+    signInRequired: string;
+    signInRequiredSub: string;
+    signInButton: string;
+    limitReached: string;
+    limitReachedSub: string;
+    becomeMember: string;
+    memberPitch: string;
+    messagesRemaining: (n: number) => string;
   };
   marketplace: {
     title: string;
