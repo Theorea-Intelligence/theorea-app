@@ -1,9 +1,11 @@
 "use client";
 
+import { useState, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useTeaContext } from "@/lib/context/useTeaContext";
-import LouOrb from "@/components/ui/LouOrb";
 import { useLocale } from "@/i18n/LocaleContext";
+import { ALL_PRODUCTS, type TeaProduct } from "@/lib/data/products";
 
 /** Compact weather icon */
 function WeatherIcon({ code, isDay }: { code: number; isDay: boolean }) {
@@ -38,14 +40,197 @@ function WeatherIcon({ code, isDay }: { code: number; isDay: boolean }) {
   );
 }
 
+// ── Lou suggestion card ───────────────────────────────────────────────────────
+
+function LouSuggestionCard({
+  product,
+  reason,
+  isActive,
+}: {
+  product: TeaProduct;
+  reason: string;
+  isActive: boolean;
+}) {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <Link
+      href="/marketplace"
+      className="shrink-0 w-full rounded-[22px] overflow-hidden bg-ink shadow-[0_6px_28px_rgba(0,0,0,0.14)] active:scale-[0.98] transition-all duration-300 block"
+    >
+      {/* Photo */}
+      <div className="relative w-full h-[220px] overflow-hidden">
+        {!imgError ? (
+          <Image
+            src={product.imageUrl}
+            alt={product.name}
+            fill
+            className="object-cover"
+            unoptimized
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-ink-light to-ink" />
+        )}
+
+        {/* Dark gradient overlay for text on image */}
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" />
+
+        {/* Tea type + name overlaid on image */}
+        <div className="absolute bottom-0 left-0 right-0 px-5 pb-5">
+          <p className="text-[10px] tracking-[0.12em] uppercase text-porcelain/60 font-medium mb-1">
+            {product.type}
+          </p>
+          <h3 className="font-serif text-[26px] font-light text-porcelain leading-tight">
+            {product.name}
+          </h3>
+          <p className="text-[13px] text-porcelain/60 mt-0.5">{product.origin}</p>
+        </div>
+      </div>
+
+      {/* Bottom section */}
+      <div className="px-5 pt-4 pb-5">
+        <p className="text-[13px] text-porcelain/60 leading-relaxed mb-4">
+          {reason}
+        </p>
+
+        {/* CTA */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-jade/80 active:bg-jade transition-colors">
+            <span className="text-[13px] font-medium text-porcelain">View Details</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-porcelain">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </div>
+          <span className="text-[14px] font-medium text-porcelain/40">{product.price}</span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// ── Carousel with dots ────────────────────────────────────────────────────────
+
+function LouCarousel({
+  cards,
+  isLoading,
+  greeting,
+}: {
+  cards: { product: TeaProduct; reason: string }[];
+  isLoading: boolean;
+  greeting: string;
+}) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const el = scrollRef.current;
+    const index = Math.round(el.scrollLeft / el.offsetWidth);
+    setActiveIndex(index);
+  };
+
+  const scrollTo = (index: number) => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollTo({
+      left: index * scrollRef.current.offsetWidth,
+      behavior: "smooth",
+    });
+    setActiveIndex(index);
+  };
+
+  return (
+    <div className="space-y-3 animate-fade-in-up animation-delay-100">
+      {/* Section label */}
+      <p className="font-serif text-[14px] italic font-light text-ink-muted px-0.5">
+        {greeting}
+      </p>
+
+      {isLoading ? (
+        /* Skeleton */
+        <div className="w-full rounded-[22px] overflow-hidden bg-porcelain shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="h-[220px] bg-steam animate-pulse" />
+          <div className="px-5 py-4 space-y-2">
+            <div className="h-3 w-1/3 rounded bg-steam animate-pulse" />
+            <div className="h-3 w-2/3 rounded bg-steam animate-pulse" />
+            <div className="h-9 w-32 mt-3 rounded-full bg-steam animate-pulse" />
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Scrollable cards */}
+          <div
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="flex overflow-x-auto gap-3 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {cards.map(({ product, reason }, i) => (
+              <div key={product.id} className="snap-center shrink-0 w-full">
+                <LouSuggestionCard
+                  product={product}
+                  reason={reason}
+                  isActive={i === activeIndex}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Pagination dots */}
+          {cards.length > 1 && (
+            <div className="flex items-center justify-center gap-2 pt-0.5">
+              {cards.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => scrollTo(i)}
+                  className={`transition-all duration-300 rounded-full ${
+                    i === activeIndex
+                      ? "w-5 h-1.5 bg-jade"
+                      : "w-1.5 h-1.5 bg-ink-muted/25"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+// ── Main page ─────────────────────────────────────────────────────────────────
+
 export default function Dashboard() {
-  const { time, weather, season, recommendation, isLoading, locationName } =
+  const { time, weather, recommendation, isLoading, locationName } =
     useTeaContext();
   const { t } = useLocale();
 
+  // Map the primary recommendation to a product; fall back to first product
+  const primaryProduct =
+    ALL_PRODUCTS.find(
+      (p) => p.name.toLowerCase() === recommendation.tea.toLowerCase()
+    ) ?? ALL_PRODUCTS[0];
+
+  // The other two products for the carousel (cycle through catalogue)
+  const others = ALL_PRODUCTS.filter((p) => p.id !== primaryProduct.id).slice(0, 2);
+
+  const carouselCards = [
+    { product: primaryProduct, reason: recommendation.reason },
+    {
+      product: others[0],
+      reason: "A floral, meditative choice for moments of quiet intention.",
+    },
+    {
+      product: others[1],
+      reason: "Layered complexity — a journey through terroir and time.",
+    },
+  ];
+
+  // Greeting label above the carousel
+  const carouselLabel = `Lou's choice for ${time.period ?? "today"}`;
+
   return (
     <div className="space-y-4">
-      {/* Header — compact, iOS-style */}
+      {/* Header */}
       <header className="animate-fade-in-up">
         <h1 className="font-serif text-[22px] font-light text-ink leading-tight">
           {time.greeting}
@@ -53,51 +238,21 @@ export default function Dashboard() {
         {!isLoading && weather && (
           <div className="flex items-center gap-1.5 mt-1 text-[12px] text-ink-muted">
             <WeatherIcon code={weather.weatherCode} isDay={weather.isDay} />
-            <span>{Math.round(weather.temperature)}&deg; &middot; {weather.description}</span>
+            <span>
+              {Math.round(weather.temperature)}&deg; &middot;{" "}
+              {weather.description}
+            </span>
             {locationName && <span>&middot; {locationName}</span>}
           </div>
         )}
       </header>
 
-      {/* Lou card — hero element */}
-      <Link href="/lou" className="block animate-fade-in-up animation-delay-100">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-ink via-ink/95 to-ink-light p-5">
-          <div className="absolute top-3 left-4 h-16 w-16 rounded-full bg-oolong/20 blur-xl animate-breathe" />
-
-          <div className="relative flex items-start gap-4">
-            <div className="shrink-0 mt-0.5">
-              <LouOrb variant="card" />
-            </div>
-
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[11px] font-medium text-porcelain/70 uppercase tracking-wider">{t.dashboard.louSuggests}</span>
-              </div>
-              {isLoading ? (
-                <div className="space-y-2 mt-1">
-                  <div className="h-3 w-3/4 rounded bg-porcelain/10 animate-pulse" />
-                  <div className="h-3 w-1/2 rounded bg-porcelain/10 animate-pulse" />
-                </div>
-              ) : (
-                <>
-                  <p className="text-[15px] font-medium text-porcelain mb-1">
-                    {recommendation.tea}
-                  </p>
-                  <p className="text-[13px] leading-relaxed text-porcelain/60">
-                    {recommendation.reason}
-                  </p>
-                </>
-              )}
-              <div className="flex items-center gap-1 mt-3">
-                <span className="text-[12px] text-oolong-light font-medium">{t.dashboard.startSession}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-oolong-light">
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Link>
+      {/* ── Lou suggestion carousel ─────────────────────────────────────── */}
+      <LouCarousel
+        cards={carouselCards}
+        isLoading={isLoading}
+        greeting={carouselLabel}
+      />
 
       {/* Quick actions */}
       <div className="grid grid-cols-2 gap-3 animate-fade-in-up animation-delay-200">
@@ -116,17 +271,16 @@ export default function Dashboard() {
           </div>
         </Link>
 
-        <Link href="/marketplace" className="group">
+        <Link href="/lou" className="group">
           <div className="flex flex-col items-start gap-2 rounded-2xl bg-porcelain p-4 active:scale-[0.97] transition-transform duration-200 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-oolong/10">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-oolong">
-                <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
-                <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
               </svg>
             </div>
             <div>
-              <p className="text-[13px] font-medium text-ink">{t.dashboard.browseTeas}</p>
-              <p className="text-[11px] text-ink-muted mt-0.5">{t.dashboard.exploreCollection}</p>
+              <p className="text-[13px] font-medium text-ink">{t.dashboard.louSuggests}</p>
+              <p className="text-[11px] text-ink-muted mt-0.5">{t.dashboard.startSession}</p>
             </div>
           </div>
         </Link>
