@@ -7,6 +7,7 @@ import LouOrb from "@/components/ui/LouOrb";
 import { useLocale } from "@/i18n/LocaleContext";
 import {
   type TeaProduct,
+  ALL_PRODUCTS,
   getSuggestionsForResponse,
 } from "@/lib/data/products";
 
@@ -322,29 +323,44 @@ export default function LouPage() {
       <div className="flex-1 overflow-y-auto">
         {!hasMessages ? (
           /* Empty / welcome state */
-          <div className="flex flex-col items-center justify-center h-full animate-fade-in-up">
-            <div className="mb-6">
-              <LouOrb variant="chat" />
+          <div className="flex flex-col py-6 animate-fade-in-up h-full overflow-y-auto">
+            {/* Orb + heading */}
+            <div className="flex flex-col items-center pt-4">
+              <div className="mb-5">
+                <LouOrb variant="chat" />
+              </div>
+
+              <h2 className="font-serif text-[18px] font-light text-ink mb-1.5">
+                {t.lou.whatExplore}
+              </h2>
+              <p className="text-[13px] text-ink-muted text-center max-w-[260px] leading-relaxed mb-5">
+                {t.lou.subtitle}
+              </p>
+
+              {/* Quick suggestion chips */}
+              <div className="flex flex-wrap justify-center gap-2 max-w-[320px] mb-6">
+                {t.lou.chips.map((chip) => (
+                  <button
+                    key={chip}
+                    onClick={() => sendMessage(chip)}
+                    className="px-3.5 py-2 rounded-2xl bg-porcelain text-[12px] text-ink-muted shadow-[0_1px_3px_rgba(0,0,0,0.04)] active:scale-[0.97] transition-transform duration-200"
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <h2 className="font-serif text-[18px] font-light text-ink mb-1.5">
-              {t.lou.whatExplore}
-            </h2>
-            <p className="text-[13px] text-ink-muted text-center max-w-[260px] leading-relaxed mb-5">
-              {t.lou.subtitle}
-            </p>
-
-            {/* Quick suggestion chips */}
-            <div className="flex flex-wrap justify-center gap-2 max-w-[320px]">
-              {t.lou.chips.map((chip) => (
-                <button
-                  key={chip}
-                  onClick={() => sendMessage(chip)}
-                  className="px-3.5 py-2 rounded-2xl bg-porcelain text-[12px] text-ink-muted shadow-[0_1px_3px_rgba(0,0,0,0.04)] active:scale-[0.97] transition-transform duration-200"
-                >
-                  {chip}
-                </button>
-              ))}
+            {/* ── Featured teas ──────────────────────────────────────────────── */}
+            <div className="px-1">
+              <p className="text-[10px] text-ink-muted uppercase tracking-[0.08em] mb-2.5 px-0.5">
+                From the collection
+              </p>
+              <div className="flex gap-2.5 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {ALL_PRODUCTS.slice(0, 3).map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
             </div>
           </div>
         ) : (
