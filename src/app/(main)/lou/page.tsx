@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import LouOrb from "@/components/ui/LouOrb";
 import { useLocale } from "@/i18n/LocaleContext";
 
@@ -10,14 +11,23 @@ type Message = {
   content: string;
 };
 
+type LouState =
+  | { kind: "idle" }
+  | { kind: "sign_in_required" }
+  | { kind: "limit_reached"; count: number; limit: number };
+
 export default function LouPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState("");
+  const [louState, setLouState] = useState<LouState>({ kind: "idle" });
+  const [usageCount, setUsageCount] = useState<number | null>(null);
+  const [usageLimit, setUsageLimit] = useState<number>(10);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useLocale();
+  const router = useRouter();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -30,6 +40,9 @@ export default function LouPage() {
   const sendMessage = async (text?: string) => {
     const content = text || input.trim();
     if (!content || isStreaming) return;
+
+    // If we already know the user needs to sign in or has hit the limit, don't proceed
+    if (louState.kind !== "idle") return;
 
     setInput("");
     setError("");
@@ -62,11 +75,39 @@ export default function LouPage() {
         }),
       });
 
+      // ── Handle access errors ─────────────────────────────────────────────
+      if (response.status === 401) {
+        // Remove the optimistic assistant message
+        setMessages((prev) => prev.filter((m) => m.id !== assistantMessage.id));
+        setLouState({ kind: "sign_in_required" });
+        setIsStreaming(false);
+        return;
+      }
+
+      if (response.status === 429) {
+        const errorData = await response.json().catch(() => ({}));
+        setMessages((prev) => prev.filter((m) => m.id !== assistantMessage.id));
+        setLouState({
+          kind: "limit_reached",
+          count: errorData.usage?.count ?? 10,
+          limit: errorData.usage?.limit ?? 10,
+        });
+        setIsStreaming(false);
+        return;
+      }
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || "Failed to reach Lou");
       }
 
+      // ── Update usage counter from response headers ────────────────────────
+      const usageCountHeader = response.headers.get("X-Lou-Usage-Count");
+      const usageLimitHeader = response.headers.get("X-Lou-Usage-Limit");
+      if (usageCountHeader) setUsageCount(parseInt(usageCountHeader, 10));
+      if (usageLimitHeader) setUsageLimit(parseInt(usageLimitHeader, 10));
+
+      // ── Stream the response ───────────────────────────────────────────────
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
 
@@ -122,10 +163,68 @@ export default function LouPage() {
   };
 
   const hasMessages = messages.length > 0;
+  const isBlocked = louState.kind !== "idle";
+
+  // Remaining messages counter (only shown for free tier with tracked usage)
+  const remaining =
+    usageCount !== null ? Math.max(0, usageLimit - usageCount) : null;
 
   return (
     <div className="flex flex-col h-[calc(100dvh-7.5rem)] md:h-[calc(100dvh-4rem)]">
-      {/* Chat area */}
+
+      {/* ── Paywall / Sign-in overlay ─────────────────────────────────── */}
+      {isBlocked && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center px-8 bg-parchment/95 backdrop-blur-sm">
+          <div className="flex flex-col items-center text-center max-w-[300px] animate-fade-in-up">
+            <div className="mb-6">
+              <LouOrb variant="hero" />
+            </div>
+
+            {louState.kind === "sign_in_required" && (
+              <>
+                <h2 className="font-serif text-[22px] font-light text-ink mb-2">
+                  {t.lou.signInRequired}
+                </h2>
+                <p className="text-[13px] text-ink-muted leading-relaxed mb-7">
+                  {t.lou.signInRequiredSub}
+                </p>
+                <button
+                  onClick={() => router.push("/welcome")}
+                  className="w-full px-6 py-3.5 bg-ink text-porcelain text-[14px] font-medium rounded-2xl active:scale-[0.98] transition-all duration-200"
+                >
+                  {t.lou.signInButton}
+                </button>
+              </>
+            )}
+
+            {louState.kind === "limit_reached" && (
+              <>
+                <h2 className="font-serif text-[22px] font-light text-ink mb-2">
+                  {t.lou.limitReached}
+                </h2>
+                <p className="text-[13px] text-ink-muted leading-relaxed mb-2">
+                  {t.lou.limitReachedSub}
+                </p>
+                <p className="text-[12px] text-oolong/80 mb-7 font-medium tracking-wide">
+                  {t.lou.memberPitch}
+                </p>
+                {/* Membership CTA — links to /profile or a future /membership page */}
+                <button
+                  onClick={() => router.push("/profile")}
+                  className="w-full px-6 py-3.5 bg-ink text-porcelain text-[14px] font-medium rounded-2xl active:scale-[0.98] transition-all duration-200 mb-3"
+                >
+                  {t.lou.becomeMember}
+                </button>
+                <p className="text-[11px] text-ink-muted/60">
+                  Renews on the 1st of each month.
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── Chat area ────────────────────────────────────────────────────── */}
       <div className="flex-1 overflow-y-auto">
         {!hasMessages ? (
           /* Empty state */
@@ -198,14 +297,23 @@ export default function LouPage() {
         )}
       </div>
 
-      {/* Error message */}
+      {/* ── Error message ────────────────────────────────────────────────── */}
       {error && (
         <div className="px-4 py-2">
           <p className="text-[12px] text-oolong-dark text-center">{error}</p>
         </div>
       )}
 
-      {/* Input area */}
+      {/* ── Remaining messages nudge ─────────────────────────────────────── */}
+      {remaining !== null && remaining <= 3 && remaining > 0 && !isBlocked && (
+        <div className="px-4 py-1.5 text-center">
+          <p className="text-[11px] text-ink-muted/60 tracking-wide">
+            {t.lou.messagesRemaining(remaining)}
+          </p>
+        </div>
+      )}
+
+      {/* ── Input area ───────────────────────────────────────────────────── */}
       <div className="pt-2 pb-1 shrink-0">
         <form onSubmit={handleSubmit} className="flex items-end gap-2">
           <div className="flex-1 flex items-center rounded-2xl bg-porcelain px-4 py-3 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
@@ -216,12 +324,12 @@ export default function LouPage() {
               onChange={(e) => setInput(e.target.value)}
               placeholder={t.lou.askPlaceholder}
               className="flex-1 bg-transparent text-[14px] text-ink placeholder:text-ink-muted/50 focus:outline-none"
-              disabled={isStreaming}
+              disabled={isStreaming || isBlocked}
             />
           </div>
           <button
             type="submit"
-            disabled={!input.trim() || isStreaming}
+            disabled={!input.trim() || isStreaming || isBlocked}
             className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-oolong to-oolong-dark active:scale-[0.93] transition-all duration-200 disabled:opacity-30"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-porcelain translate-x-[1px]">
