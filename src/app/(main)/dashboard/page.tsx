@@ -39,40 +39,92 @@ function WeatherIcon({ code, isDay }: { code: number; isDay: boolean }) {
   );
 }
 
-/* ── Suggestion card (inside carousel) ──────────────────────────────────── */
+/* ── Suggestion card — full-width, single snap card ─────────────────────── */
 function SuggestionCard({ product, reason }: { product: TeaProduct; reason: string }) {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <Link href="/marketplace" className="block active:opacity-90 transition-opacity duration-200"
-      style={{ width: 210, flexShrink: 0 }}>
-      {/* Photo */}
-      <div className="relative w-full overflow-hidden" style={{ height: 195, borderRadius: 12 }}>
+    <Link
+      href="/marketplace"
+      className="block active:opacity-90 transition-opacity duration-200"
+      style={{
+        /* Full width of the scroll container — one card at a time */
+        width: "100%",
+        flexShrink: 0,
+        scrollSnapAlign: "start",
+      }}
+    >
+      {/* Photo — taller, more editorial */}
+      <div className="relative w-full overflow-hidden" style={{ height: 220, borderRadius: 14 }}>
         {!imgError ? (
-          <Image src={product.imageUrl} alt={product.name} fill className="object-cover" unoptimized onError={() => setImgError(true)} />
+          <Image
+            src={product.imageUrl}
+            alt={product.name}
+            fill
+            className="object-cover"
+            unoptimized
+            onError={() => setImgError(true)}
+          />
         ) : (
           <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #f5f5f1, #f7f7f3)" }} />
         )}
-        {/* Overlay */}
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(34,47,38,0.88) 0%, transparent 55%)" }} />
+        {/* Dark gradient overlay */}
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(to top, rgba(34,47,38,0.90) 0%, rgba(34,47,38,0.10) 55%, transparent 100%)" }}
+        />
         {/* Labels on photo */}
-        <div className="absolute bottom-0 left-0 right-0 px-3 pb-3">
-          <p className="font-sans text-[9px] tracking-[0.18em] uppercase font-medium mb-1"
-            style={{ color: "rgba(247,247,243,0.75)" }}>
+        <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
+          <p
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 9,
+              letterSpacing: "0.20em",
+              textTransform: "uppercase",
+              fontWeight: 500,
+              color: "rgba(247,247,243,0.65)",
+              marginBottom: 5,
+            }}
+          >
             {product.type}
           </p>
-          <h3 className="font-serif font-light leading-tight"
-            style={{ fontSize: 19, color: "#ffffff", letterSpacing: "-0.01em" }}>
+          <h3
+            style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: 22,
+              fontWeight: 400,
+              letterSpacing: "0.04em",
+              lineHeight: 1.15,
+              color: "#ffffff",
+            }}
+          >
             {product.name}
           </h3>
         </div>
       </div>
-      {/* Reason text — no price */}
-      <div className="pt-2.5 px-0.5">
-        <p className="font-sans leading-snug" style={{ fontSize: 11, color: "#537062", lineHeight: 1.5 }}>
+
+      {/* Reason text below photo */}
+      <div style={{ paddingTop: 12, paddingLeft: 2, paddingRight: 2 }}>
+        <p
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 12,
+            color: "#537062",
+            lineHeight: 1.55,
+            letterSpacing: "0.01em",
+          }}
+        >
           {reason}
         </p>
-        <p className="font-sans mt-1" style={{ fontSize: 10, color: "rgba(34,47,38,0.28)", letterSpacing: "0.02em" }}>
+        <p
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: 10,
+            color: "rgba(34,47,38,0.28)",
+            letterSpacing: "0.04em",
+            marginTop: 5,
+          }}
+        >
           {product.origin}
         </p>
       </div>
@@ -80,7 +132,7 @@ function SuggestionCard({ product, reason }: { product: TeaProduct; reason: stri
   );
 }
 
-/* ── Carousel — bordered section, horizontal scroll ─────────────────────── */
+/* ── Carousel — full-width snap, one card at a time ─────────────────────── */
 function LouCarousel({ cards, isLoading, label }: {
   cards: { product: TeaProduct; reason: string }[];
   isLoading: boolean;
@@ -88,64 +140,119 @@ function LouCarousel({ cards, isLoading, label }: {
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const CARD_W = 210 + 12; // card + gap
 
   const handleScroll = () => {
     if (!scrollRef.current) return;
-    setActiveIndex(Math.min(Math.round(scrollRef.current.scrollLeft / CARD_W), cards.length - 1));
+    const w = scrollRef.current.clientWidth;
+    if (w === 0) return;
+    setActiveIndex(Math.min(Math.round(scrollRef.current.scrollLeft / w), cards.length - 1));
   };
 
   const scrollTo = (i: number) => {
-    scrollRef.current?.scrollTo({ left: i * CARD_W, behavior: "smooth" });
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollTo({ left: i * scrollRef.current.clientWidth, behavior: "smooth" });
     setActiveIndex(i);
   };
 
   return (
-    <div className="animate-fade-in-up animation-delay-100 rounded-[20px] overflow-hidden"
-      style={{ border: "1.5px solid rgba(34,47,38,0.13)", background: "#ffffff" }}>
-
-      {/* Header row */}
-      <div className="flex items-center justify-between px-4 pt-4 pb-3">
+    <div
+      className="animate-fade-in-up animation-delay-100"
+      style={{
+        borderRadius: 20,
+        overflow: "hidden",
+        background: "#ffffff",
+        /* Rim light on the card surface */
+        boxShadow: [
+          "inset 0 0.5px 0 rgba(255,255,255,0.90)",
+          "inset 0 -0.5px 0 rgba(34,47,38,0.04)",
+          "0 4px 24px rgba(34,47,38,0.10)",
+          "0 1px 4px rgba(34,47,38,0.06)",
+        ].join(", "),
+      }}
+    >
+      {/* Header */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "16px 16px 12px",
+        }}
+      >
         <div>
-          <p className="font-sans text-[9px] tracking-[0.18em] uppercase font-medium"
-            style={{ color: "rgba(34,47,38,0.32)" }}>
+          <p
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: 9,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              fontWeight: 500,
+              color: "rgba(34,47,38,0.32)",
+            }}
+          >
             Lou suggests
           </p>
-          <p className="font-serif font-light mt-0.5"
-            style={{ fontSize: 15, color: "#222f26" }}>
+          <p
+            style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: 15,
+              letterSpacing: "0.03em",
+              fontWeight: 400,
+              color: "#222f26",
+              marginTop: 3,
+            }}
+          >
             {label}
           </p>
         </div>
+        {/* Dot indicators — bottom of header area */}
         {cards.length > 1 && (
-          <div className="flex items-center gap-1.5">
+          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
             {cards.map((_, i) => (
-              <button key={i} onClick={() => scrollTo(i)} className="rounded-full transition-all duration-300"
-                style={{ width: i === activeIndex ? 16 : 5, height: 5,
-                  background: i === activeIndex ? "#537062" : "rgba(83,112,98,0.22)" }} />
+              <button
+                key={i}
+                onClick={() => scrollTo(i)}
+                style={{
+                  width: i === activeIndex ? 18 : 5,
+                  height: 5,
+                  borderRadius: 99,
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                  background: i === activeIndex ? "#537062" : "rgba(83,112,98,0.20)",
+                  transition: "all 0.3s ease",
+                }}
+              />
             ))}
           </div>
         )}
       </div>
 
-      {/* Divider */}
-      <div style={{ height: 1, background: "rgba(34,47,38,0.07)", margin: "0 16px" }} />
+      {/* Thin divider */}
+      <div style={{ height: 1, background: "rgba(34,47,38,0.06)", margin: "0 16px" }} />
 
-      {/* Cards */}
-      <div className="px-4 py-4">
+      {/* Snap scroll container — exactly one card wide, no peek */}
+      <div style={{ padding: "16px" }}>
         {isLoading ? (
-          <div className="flex gap-3">
-            {[0, 1, 2].map((i) => (
-              <div key={i} className="animate-shimmer shrink-0 rounded-[12px]" style={{ width: 210, height: 195 }} />
-            ))}
-          </div>
+          <div className="animate-shimmer rounded-[14px]" style={{ height: 220 }} />
         ) : (
-          <div ref={scrollRef} onScroll={handleScroll}
-            className="flex overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            style={{ gap: 12 }}>
+          <div
+            ref={scrollRef}
+            onScroll={handleScroll}
+            style={{
+              display: "flex",
+              overflowX: "auto",
+              scrollSnapType: "x mandatory",
+              scrollBehavior: "smooth",
+              gap: 0,
+              /* Hide scrollbar */
+              msOverflowStyle: "none",
+              scrollbarWidth: "none",
+            }}
+          >
             {cards.map(({ product, reason }) => (
               <SuggestionCard key={product.id} product={product} reason={reason} />
             ))}
-            <div style={{ width: 4, flexShrink: 0 }} />
           </div>
         )}
       </div>

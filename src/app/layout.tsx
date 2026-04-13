@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, Young_Serif } from "next/font/google";
+import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
 import PWARegister from "@/components/PWARegister";
 import { LocaleProvider } from "@/i18n/LocaleContext";
 import "@/styles/globals.css";
 
 /*
- * Plus Jakarta Sans — closest free match to Neue Montreal.
- * Geometric humanist, excellent at both display and UI sizes.
+ * Plus Jakarta Sans — refined geometric humanist sans-serif.
+ * Pairs beautifully with display serifs. Body text, UI labels, captions.
  * Weights 300–700, normal only (no italics).
  */
 const jakartaSans = Plus_Jakarta_Sans({
@@ -19,13 +19,13 @@ const jakartaSans = Plus_Jakarta_Sans({
 });
 
 /*
- * Young Serif — closest free match to The Youngest Serif.
- * Contemporary serif with refined proportions, weight 400 only.
- * Used exclusively for display headings at large sizes.
+ * Playfair Display — high-contrast transitional serif, Baskerville lineage.
+ * Designed for display use: elegant optical proportions, strong personality.
+ * The luxury editorial standard. Normal only (no italics).
  */
-const youngSerif = Young_Serif({
+const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400", "500", "600", "700"],
   style: ["normal"],
   variable: "--font-serif",
   display: "swap",
@@ -36,7 +36,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   viewportFit: "cover",
-  themeColor: "#f1e6c8",
+  themeColor: "#f7f7f3",
 };
 
 export const metadata: Metadata = {
@@ -74,7 +74,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-GB" className={`${jakartaSans.variable} ${youngSerif.variable}`}>
+    <html lang="en-GB" className={`${jakartaSans.variable} ${playfairDisplay.variable}`}>
       <body className="bg-parchment text-ink antialiased">
         <GoogleAnalytics />
         <PWARegister />

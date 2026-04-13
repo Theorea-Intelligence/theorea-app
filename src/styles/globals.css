@@ -1,61 +1,60 @@
 @import "tailwindcss";
 
 /*
- * Théorea Design System — Dark Canvas Edition
- * Cosmos-inspired: dark, editorial, content-led, gold-accented
+ * Théorea Design System — Luxury Editorial Edition
+ * Playfair Display (display serif) × Plus Jakarta Sans (refined sans)
+ * Glassmorphism · Noise grain · Rim-light borders · High letter-spacing
  */
 
 @theme {
   /* ══════════════════════════════════════════════════════════════════════════
-     Théorea Design System — Forest Garden Edition
-     ══════════════════════════════════════════════════════════════════════════
-     Palette: 6 chosen tones + 2 added harmonics
+     Palette: 6 chosen tones + 2 harmonics
 
-     #222f26  deep forest     — darkest background / strong text
+     #222f26  deep forest     — darkest bg / strong text
      #2f2d29  warm charcoal   — rich dark for text, user bubbles
      #537062  sage green      — primary interactive accent
      #92a38d  light sage      — secondary accent, muted UI
      #c9d9c9  pale mint       — surface tint, badges, hover fills
-     #f1e6c8  warm parchment  — canvas background
+     #f7f7f3  neutral white   — canvas background
 
-     Added harmonics (same temperature, fill the mid-range):
-     #3d5245  mid-forest      — hover state between the two greens
-     #e8ddc0  deep parchment  — dividers / subtle depth on cream
+     Harmonics:
+     #3d5245  mid-forest      — hover between greens
+     #e8ddc0  deep parchment  — dividers, subtle depth
   ══════════════════════════════════════════════════════════════════════════ */
 
   /* ── Canvas & surfaces ───────────────────────────────────────────────── */
-  --color-canvas:         #f7f7f3;   /* pale mint — base background */
-  --color-surface:        #ffffff;   /* warm parchment — card surface */
-  --color-surface-raised: #f5f5f1;   /* deep parchment — elevated / hover */
+  --color-canvas:         #f7f7f3;
+  --color-surface:        #ffffff;
+  --color-surface-raised: #f5f5f1;
 
   /* ── Semantic text tokens ────────────────────────────────────────────── */
-  --color-ink:            #222f26;   /* deep forest — primary text */
-  --color-ink-light:      #537062;   /* sage green — secondary text */
-  --color-ink-muted:      #92a38d;   /* light sage — ghost / caption */
+  --color-ink:            #222f26;
+  --color-ink-light:      #537062;
+  --color-ink-muted:      #92a38d;
 
-  /* ── Aliases (used by older component classes) ───────────────────────── */
+  /* ── Aliases ─────────────────────────────────────────────────────────── */
   --color-parchment:      #f7f7f3;
-  --color-parchment-warm: #ededea;   /* deeper mint — dividers */
+  --color-parchment-warm: #ededea;
   --color-porcelain:      #ffffff;
-  --color-steam:          #ededea;   /* deep parchment — separation */
+  --color-steam:          #ededea;
   --color-steam-light:    #f5f5f1;
 
   /* ── Primary accent — Sage green ────────────────────────────────────── */
-  --color-oolong:         #537062;   /* sage — buttons, links, active */
-  --color-oolong-light:   #92a38d;   /* light sage — hover tint */
-  --color-oolong-dark:    #3d5245;   /* mid-forest — pressed state */
+  --color-oolong:         #537062;
+  --color-oolong-light:   #92a38d;
+  --color-oolong-dark:    #3d5245;
 
   /* ── Secondary accent — Forest dark ─────────────────────────────────── */
-  --color-jade:           #222f26;   /* deep forest — emphasis, icons */
-  --color-jade-light:     #537062;   /* sage */
-  --color-jade-dark:      #2f2d29;   /* warm charcoal */
+  --color-jade:           #222f26;
+  --color-jade-light:     #537062;
+  --color-jade-dark:      #2f2d29;
 
   /* ── Border ──────────────────────────────────────────────────────────── */
   --color-border:         rgba(34, 47, 38, 0.10);
 
   /* ── Typography ──────────────────────────────────────────────────────── */
-  --font-sans:  "Plus Jakarta Sans", "Neue Montreal", "Helvetica Neue", system-ui, sans-serif;
-  --font-serif: "Young Serif", "Georgia", serif;
+  --font-sans:  "Plus Jakarta Sans", "Helvetica Neue", system-ui, sans-serif;
+  --font-serif: "Playfair Display", "Baskerville", "Georgia", serif;
   --font-mono:  "JetBrains Mono", "Fira Code", monospace;
 
   /* ── Spacing ─────────────────────────────────────────────────────────── */
@@ -79,7 +78,9 @@
   --shadow-glow:    0 0 40px   rgba(83, 112, 98, 0.20);
 }
 
-/* ── Base styles ──────────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════════════════════
+   Base styles
+   ════════════════════════════════════════════════════════════════════════════ */
 
 html {
   font-family: var(--font-sans);
@@ -92,16 +93,35 @@ html {
 body {
   min-height: 100vh;
   line-height: 1.65;
-  letter-spacing: 0.005em;  /* DM Sans is slightly wider — less tracking needed */
+  letter-spacing: 0.012em;
   background-color: var(--color-canvas);
+  position: relative;
 }
 
+/* ── Noise grain overlay — removes digital flatness ──────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 300px 300px;
+}
+
+/* ── Display headings — Playfair Display, high letter-spacing ────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif);
   line-height: 1.15;
-  letter-spacing: -0.01em;  /* Cormorant Garamond is naturally wider-spaced */
   font-weight: 400;
 }
+
+h1 { letter-spacing: 0.04em; }
+h2 { letter-spacing: 0.035em; }
+h3 { letter-spacing: 0.025em; }
+h4, h5, h6 { letter-spacing: 0.02em; }
 
 /* ── Selection ───────────────────────────────────────────────────────────── */
 ::selection {
@@ -113,14 +133,14 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(196, 164, 106, 0.2);
+  background: rgba(83, 112, 98, 0.2);
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(196, 164, 106, 0.4);
+  background: rgba(83, 112, 98, 0.4);
 }
 
-/* ── Focus ring — gold ───────────────────────────────────────────────────── */
+/* ── Focus ring ──────────────────────────────────────────────────────────── */
 *:focus-visible {
   outline: 1px solid var(--color-oolong);
   outline-offset: 2px;
@@ -135,13 +155,13 @@ h1, h2, h3, h4, h5, h6 {
   * { -webkit-tap-highlight-color: transparent; }
 }
 
-/* ── Lou chat input — italic placeholder ─────────────────────────────────── */
+/* ── Placeholder ─────────────────────────────────────────────────────────── */
 input::placeholder {
-  color: rgba(83, 112, 98, 0.45);   /* visible on dark pill, muted on light surfaces */
+  color: rgba(83, 112, 98, 0.45);
   letter-spacing: 0.02em;
 }
 
-/* ── Cosmos-style subtle divider ─────────────────────────────────────────── */
+/* ── Divider ─────────────────────────────────────────────────────────────── */
 .theorea-divider {
   height: 1px;
   background: linear-gradient(
@@ -162,9 +182,62 @@ input::placeholder {
   background-clip: text;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   Zen Animations
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════
+   Glassmorphism utilities
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* Canvas glass — used on light overlays, modals, cards over photo */
+.glass {
+  background: rgba(247, 247, 243, 0.60);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 0.5px solid rgba(255, 255, 255, 0.60);
+  /* Inner rim light */
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.70),
+    inset 0 -0.5px 0 rgba(255, 255, 255, 0.10),
+    0 4px 24px rgba(34, 47, 38, 0.10);
+}
+
+/* Sage glass — used on the navbar, sage-coloured overlays */
+.glass-sage {
+  background: rgba(83, 112, 98, 0.80);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  /* Rim light on sage surface */
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.08),
+    0 8px 32px rgba(34, 47, 38, 0.22);
+}
+
+/* Dark glass — used on photo overlays, dark modals */
+.glass-dark {
+  background: rgba(34, 47, 38, 0.60);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.10),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.20),
+    0 8px 32px rgba(0, 0, 0, 0.30);
+}
+
+/* Rim border utility — add as box-shadow to any button/card */
+.rim-light {
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.60),
+    inset 0 -0.5px 0 rgba(255, 255, 255, 0.08);
+}
+
+.rim-light-sage {
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.20),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   Zen animations
+   ════════════════════════════════════════════════════════════════════════════ */
 
 @keyframes breathe {
   0%, 100% { transform: scale(1);    opacity: 0.7; }
@@ -186,15 +259,15 @@ input::placeholder {
 .animate-breathe-glow  { animation: breathe-glow 6s ease-in-out infinite; }
 
 @keyframes steam {
-  0%   { transform: translateY(0)    scaleX(1);   opacity: 0;   }
-  15%  {                                           opacity: 0.5; }
+  0%   { transform: translateY(0)     scaleX(1);   opacity: 0;    }
+  15%  {                                            opacity: 0.5;  }
   50%  { transform: translateY(-12px) scaleX(1.2); opacity: 0.25; }
-  100% { transform: translateY(-24px) scaleX(0.8); opacity: 0;   }
+  100% { transform: translateY(-24px) scaleX(0.8); opacity: 0;    }
 }
 
-.animate-steam         { animation: steam 3s ease-out          infinite; }
-.animate-steam-delayed { animation: steam 3s ease-out 1s       infinite; }
-.animate-steam-slow    { animation: steam 4s ease-out 0.5s     infinite; }
+.animate-steam         { animation: steam 3s ease-out       infinite; }
+.animate-steam-delayed { animation: steam 3s ease-out 1s    infinite; }
+.animate-steam-slow    { animation: steam 4s ease-out 0.5s  infinite; }
 
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(16px); }
@@ -219,7 +292,6 @@ input::placeholder {
 
 .animate-gentle-pulse { animation: gentle-pulse 2.5s ease-in-out infinite; }
 
-/* Gold shimmer for loading states */
 @keyframes gold-shimmer {
   0%   { background-position: -200% center; }
   100% { background-position:  200% center; }
@@ -236,6 +308,13 @@ input::placeholder {
   animation: gold-shimmer 1.8s linear infinite;
 }
 
+@keyframes float-in {
+  from { opacity: 0; transform: translateY(32px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+.animate-float-in { animation: float-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+
 /* ── Reduced motion ───────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .animate-breathe,
@@ -245,6 +324,7 @@ input::placeholder {
   .animate-steam-delayed,
   .animate-steam-slow,
   .animate-fade-in-up,
+  .animate-float-in,
   .animate-gentle-pulse,
   .animate-shimmer {
     animation: none !important;
