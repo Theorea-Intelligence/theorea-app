@@ -77,7 +77,7 @@ function SuggestionCard({ product, reason }: { product: TeaProduct; reason: stri
         <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
           <p
             style={{
-              fontFamily: "var(--font-sans)",
+              fontFamily: "var(--nf-sans)",
               fontSize: 9,
               letterSpacing: "0.20em",
               textTransform: "uppercase",
@@ -90,7 +90,7 @@ function SuggestionCard({ product, reason }: { product: TeaProduct; reason: stri
           </p>
           <h3
             style={{
-              fontFamily: "var(--font-serif)",
+              fontFamily: "var(--nf-serif)",
               fontSize: 22,
               fontWeight: 400,
               letterSpacing: "0.04em",
@@ -107,7 +107,7 @@ function SuggestionCard({ product, reason }: { product: TeaProduct; reason: stri
       <div style={{ paddingTop: 12, paddingLeft: 2, paddingRight: 2 }}>
         <p
           style={{
-            fontFamily: "var(--font-sans)",
+            fontFamily: "var(--nf-sans)",
             fontSize: 12,
             color: "#537062",
             lineHeight: 1.55,
@@ -118,7 +118,7 @@ function SuggestionCard({ product, reason }: { product: TeaProduct; reason: stri
         </p>
         <p
           style={{
-            fontFamily: "var(--font-sans)",
+            fontFamily: "var(--nf-sans)",
             fontSize: 10,
             color: "rgba(34,47,38,0.28)",
             letterSpacing: "0.04em",
@@ -182,7 +182,7 @@ function LouCarousel({ cards, isLoading, label }: {
         <div>
           <p
             style={{
-              fontFamily: "var(--font-sans)",
+              fontFamily: "var(--nf-sans)",
               fontSize: 9,
               letterSpacing: "0.18em",
               textTransform: "uppercase",
@@ -194,7 +194,7 @@ function LouCarousel({ cards, isLoading, label }: {
           </p>
           <p
             style={{
-              fontFamily: "var(--font-serif)",
+              fontFamily: "var(--nf-serif)",
               fontSize: 15,
               letterSpacing: "0.03em",
               fontWeight: 400,
@@ -323,7 +323,7 @@ export default function Dashboard() {
           style={{
             fontSize: "clamp(30px, 8vw, 40px)",
             color: "#222f26",
-            fontFamily: "var(--font-serif)",
+            fontFamily: "var(--nf-serif)",
             letterSpacing: "-0.01em",
           }}
         >

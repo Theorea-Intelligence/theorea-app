@@ -239,7 +239,7 @@ export default function StartPage() {
         {/* Eyebrow */}
         <p
           style={{
-            fontFamily: "var(--font-sans)",
+            fontFamily: "var(--nf-sans)",
             fontSize: 10,
             fontWeight: 500,
             letterSpacing: "0.28em",
@@ -254,7 +254,7 @@ export default function StartPage() {
         {/* Wordmark — large Playfair Display */}
         <h1
           style={{
-            fontFamily: "var(--font-serif)",
+            fontFamily: "var(--nf-serif)",
             fontSize: "clamp(52px, 14vw, 72px)",
             fontWeight: 400,
             letterSpacing: "0.12em",
@@ -269,7 +269,7 @@ export default function StartPage() {
         {/* Tagline */}
         <p
           style={{
-            fontFamily: "var(--font-sans)",
+            fontFamily: "var(--nf-sans)",
             fontSize: 14,
             fontWeight: 300,
             letterSpacing: "0.06em",
@@ -299,7 +299,7 @@ export default function StartPage() {
               "0 8px 32px rgba(83,112,98,0.35)",
               "0 2px 8px rgba(83,112,98,0.20)",
             ].join(", "),
-            fontFamily: "var(--font-sans)",
+            fontFamily: "var(--nf-sans)",
             fontSize: 13,
             fontWeight: 500,
             letterSpacing: "0.14em",

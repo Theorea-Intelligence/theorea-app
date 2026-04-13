@@ -159,7 +159,7 @@ function MobileNav() {
                     letterSpacing: "0.10em",
                     textTransform: "uppercase",
                     fontWeight: 500,
-                    fontFamily: "var(--font-sans)",
+                    fontFamily: "var(--nf-sans)",
                     opacity: isActive ? 1 : 0.55,
                   }}
                 >
@@ -222,7 +222,7 @@ function DesktopNav() {
           <Link
             href="/dashboard"
             style={{
-              fontFamily: "var(--font-serif)",
+              fontFamily: "var(--nf-serif)",
               fontSize: 16,
               letterSpacing: "0.08em",
               color: "#ffffff",
@@ -292,7 +292,7 @@ function DesktopNav() {
                     padding: collapsed ? "10px" : "10px 12px",
                     borderRadius: 12,
                     fontSize: 13,
-                    fontFamily: "var(--font-sans)",
+                    fontFamily: "var(--nf-sans)",
                     fontWeight: 400,
                     letterSpacing: "0.025em",
                     textDecoration: "none",
@@ -352,7 +352,7 @@ function DesktopNav() {
                 padding: collapsed ? "10px" : "10px 12px",
                 borderRadius: 12,
                 fontSize: 13,
-                fontFamily: "var(--font-sans)",
+                fontFamily: "var(--nf-sans)",
                 fontWeight: 400,
                 letterSpacing: "0.025em",
                 textDecoration: "none",

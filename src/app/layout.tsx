@@ -7,27 +7,27 @@ import "@/styles/globals.css";
 
 /*
  * Plus Jakarta Sans — refined geometric humanist sans-serif.
- * Pairs beautifully with display serifs. Body text, UI labels, captions.
- * Weights 300–700, normal only (no italics).
+ * Uses --nf-sans so it doesn't clash with Tailwind's @theme --font-sans.
+ * Tailwind's @theme then sets --font-sans: var(--nf-sans) to bridge them.
  */
 const jakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   style: ["normal"],
-  variable: "--font-sans",
+  variable: "--nf-sans",   // ← unique name, no @theme clash
   display: "swap",
 });
 
 /*
  * Playfair Display — high-contrast transitional serif, Baskerville lineage.
- * Designed for display use: elegant optical proportions, strong personality.
- * The luxury editorial standard. Normal only (no italics).
+ * Uses --nf-serif so it doesn't clash with Tailwind's @theme --font-serif.
+ * Tailwind's @theme then sets --font-serif: var(--nf-serif) to bridge them.
  */
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   style: ["normal"],
-  variable: "--font-serif",
+  variable: "--nf-serif",  // ← unique name, no @theme clash
   display: "swap",
 });
 
@@ -74,7 +74,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-GB" className={`${jakartaSans.variable} ${playfairDisplay.variable}`}>
+    <html lang="en-GB" className={`${jakartaSans.variable} ${playfairDisplay.variable}`} style={{ fontFamily: "var(--nf-sans), system-ui, sans-serif" }}>
       <body className="bg-parchment text-ink antialiased">
         <GoogleAnalytics />
         <PWARegister />

@@ -53,8 +53,15 @@
   --color-border:         rgba(34, 47, 38, 0.10);
 
   /* ── Typography ──────────────────────────────────────────────────────── */
-  --font-sans:  "Plus Jakarta Sans", "Helvetica Neue", system-ui, sans-serif;
-  --font-serif: "Playfair Display", "Baskerville", "Georgia", serif;
+  /*
+   * Bridge to next/font variables.
+   * next/font injects --nf-sans and --nf-serif on <html> with real @font-face.
+   * We reference them here so Tailwind utility classes (font-sans / font-serif)
+   * resolve to the actual loaded webfonts, not just name strings that fall back
+   * to whatever the OS has installed.
+   */
+  --font-sans:  var(--nf-sans), "Helvetica Neue", system-ui, sans-serif;
+  --font-serif: var(--nf-serif), "Georgia", serif;
   --font-mono:  "JetBrains Mono", "Fira Code", monospace;
 
   /* ── Spacing ─────────────────────────────────────────────────────────── */
@@ -83,7 +90,8 @@
    ════════════════════════════════════════════════════════════════════════════ */
 
 html {
-  font-family: var(--font-sans);
+  /* Use the next/font variable directly — bypasses any @theme specificity fight */
+  font-family: var(--nf-sans), "Helvetica Neue", system-ui, sans-serif;
   color: var(--color-ink);
   background-color: var(--color-canvas);
   -webkit-font-smoothing: antialiased;
@@ -96,6 +104,8 @@ body {
   letter-spacing: 0.012em;
   background-color: var(--color-canvas);
   position: relative;
+  /* Ensure body inherits the loaded webfont, not a fallback */
+  font-family: var(--nf-sans), "Helvetica Neue", system-ui, sans-serif;
 }
 
 /* ── Noise grain overlay — removes digital flatness ──────────────────────── */
@@ -113,7 +123,8 @@ body::after {
 
 /* ── Display headings — Playfair Display, high letter-spacing ────────────── */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-serif);
+  /* Reference next/font variable directly — resolves to Playfair Display */
+  font-family: var(--nf-serif), "Georgia", serif;
   line-height: 1.15;
   font-weight: 400;
 }
