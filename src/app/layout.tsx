@@ -1,18 +1,31 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { DM_Sans, Cormorant_Garamond } from "next/font/google";
 import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
 import PWARegister from "@/components/PWARegister";
 import { LocaleProvider } from "@/i18n/LocaleContext";
 import "@/styles/globals.css";
 
-const inter = Inter({
+/*
+ * DM Sans — closest free equivalent to Proxima Nova.
+ * Same geometric-humanist proportions, optimised for screen rendering.
+ * Weights: 300 (light labels), 400 (body), 500 (medium UI), 600 (semibold CTAs).
+ */
+const dmSans = DM_Sans({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
   variable: "--font-sans",
   display: "swap",
 });
 
-const playfair = Playfair_Display({
+/*
+ * Cormorant Garamond — editorial serif for display headings.
+ * More refined and contemporary than Playfair Display; excellent with
+ * nature-forward palettes. Light weight for large headings.
+ */
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
+  weight: ["300", "400", "600"],
+  style: ["normal", "italic"],
   variable: "--font-serif",
   display: "swap",
 });
@@ -22,7 +35,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   viewportFit: "cover",
-  themeColor: "#5a7a6a",
+  themeColor: "#f1e6c8",
 };
 
 export const metadata: Metadata = {
@@ -60,7 +73,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-GB" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="en-GB" className={`${dmSans.variable} ${cormorant.variable}`}>
       <body className="bg-parchment text-ink antialiased">
         <GoogleAnalytics />
         <PWARegister />

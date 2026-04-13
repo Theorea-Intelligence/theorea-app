@@ -54,8 +54,8 @@
   --color-border:         rgba(34, 47, 38, 0.10);
 
   /* ── Typography ──────────────────────────────────────────────────────── */
-  --font-sans:  "Inter", "Helvetica Neue", system-ui, sans-serif;
-  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans:  "DM Sans", "Proxima Nova", "Helvetica Neue", system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", "Garamond", Georgia, serif;
   --font-mono:  "JetBrains Mono", "Fira Code", monospace;
 
   /* ── Spacing ─────────────────────────────────────────────────────────── */
@@ -91,15 +91,16 @@ html {
 
 body {
   min-height: 100vh;
-  line-height: 1.7;
-  letter-spacing: 0.01em;
+  line-height: 1.65;
+  letter-spacing: 0.005em;  /* DM Sans is slightly wider — less tracking needed */
   background-color: var(--color-canvas);
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif);
-  line-height: 1.25;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
+  letter-spacing: -0.01em;  /* Cormorant Garamond is naturally wider-spaced */
+  font-weight: 300;          /* Light weight looks most refined at display sizes */
 }
 
 /* ── Selection ───────────────────────────────────────────────────────────── */
@@ -153,15 +154,14 @@ input::placeholder {
   );
 }
 
-/* ── Gold gradient text ──────────────────────────────────────────────────── */
-.text-jade-gradient {
+/* ── Gradient text ───────────────────────────────────────────────────────── */
+.text-jade-gradient,
+.text-gold-gradient {
   background: linear-gradient(135deg, #92a38d 0%, #537062 50%, #3d5245 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-/* alias for backwards compatibility */
-.text-gold-gradient { @apply text-jade-gradient; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Zen Animations
