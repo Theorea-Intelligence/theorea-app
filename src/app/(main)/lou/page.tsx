@@ -112,7 +112,7 @@ function TeaMosaic() {
           left: 0,
           right: 0,
           height: 100,
-          background: "linear-gradient(to top, #f1e6c8 0%, transparent 100%)",
+          background: "linear-gradient(to top, #c9d9c9 0%, transparent 100%)",
           pointerEvents: "none",
         }}
       />
@@ -260,7 +260,7 @@ export default function LouPage() {
       className="relative flex flex-col"
       style={{
         height: "calc(100dvh - 7.5rem)",
-        background: "#f1e6c8",
+        background: "#c9d9c9",
         overflow: "hidden",
       }}
     >
@@ -313,7 +313,7 @@ export default function LouPage() {
                 <button
                   onClick={() => router.push("/welcome")}
                   className="w-full py-4 rounded-2xl text-[13px] font-medium tracking-[0.05em] transition-all duration-200 active:scale-[0.98]"
-                  style={{ background: "#222f26", color: "#f1e6c8" }}
+                  style={{ background: "#222f26", color: "#c9d9c9" }}
                 >
                   {t.lou.signInButton}
                 </button>
@@ -335,7 +335,7 @@ export default function LouPage() {
                 <button
                   onClick={() => router.push("/profile")}
                   className="w-full py-4 rounded-2xl text-[13px] font-medium tracking-[0.05em] transition-all duration-200 active:scale-[0.98] mb-3"
-                  style={{ background: "#222f26", color: "#f1e6c8" }}
+                  style={{ background: "#222f26", color: "#c9d9c9" }}
                 >
                   {t.lou.becomeMember}
                 </button>
@@ -540,46 +540,30 @@ export default function LouPage() {
           INPUT BAR — pinned at bottom, minimal glass
       ══════════════════════════════════════════════════════════════ */}
       <div
-        className="shrink-0 px-4 pb-2 pt-3"
+        className="shrink-0 px-4 pb-3 pt-2"
         style={{
-          background: "linear-gradient(to top, #f1e6c8 60%, transparent 100%)",
+          background: "linear-gradient(to top, #c9d9c9 70%, transparent 100%)",
         }}
       >
-        {/* Separator */}
-        <div
-          className="mb-3"
-          style={{
-            height: 1,
-            background: "linear-gradient(90deg, transparent 0%, rgba(34,47,38,0.10) 40%, rgba(34,47,38,0.10) 60%, transparent 100%)",
-          }}
-        />
-
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            sendMessage();
-          }}
+          onSubmit={(e) => { e.preventDefault(); sendMessage(); }}
           style={{
             display: "flex",
             alignItems: "center",
             gap: 10,
-            background: "rgba(34,47,38,0.10)",
-            border: "1px solid rgba(34,47,38,0.10)",
+            /* High-contrast pill: deep forest background, parchment text */
+            background: "#222f26",
+            border: "none",
             borderRadius: 100,
-            padding: "10px 10px 10px 20px",
+            padding: "12px 10px 12px 18px",
+            boxShadow: "0 2px 16px rgba(34,47,38,0.18)",
           }}
         >
-          {/* Gold leaf icon */}
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 48 48"
-            fill="none"
-            style={{ flexShrink: 0, opacity: 0.3 }}
-          >
-            <path d="M24 6C18 12 12 20 14 32C16 38 20 42 24 44" stroke="#222f26" strokeWidth="2" fill="#8a6a4a" fillOpacity="0.3" strokeLinecap="round" />
-            <path d="M24 6C30 12 36 20 34 32C32 38 28 42 24 44" stroke="rgba(83,112,98,0.52)" strokeWidth="2" strokeLinecap="round" />
-            <line x1="24" y1="10" x2="24" y2="44" stroke="#222f26" strokeWidth="1" strokeLinecap="round" />
+          {/* Leaf icon */}
+          <svg width="14" height="14" viewBox="0 0 48 48" fill="none" style={{ flexShrink: 0, opacity: 0.5 }}>
+            <path d="M24 6C18 12 12 20 14 32C16 38 20 42 24 44" stroke="#f1e6c8" strokeWidth="2" strokeLinecap="round" />
+            <path d="M24 6C30 12 36 20 34 32C32 38 28 42 24 44" stroke="rgba(201,217,201,0.6)" strokeWidth="2" strokeLinecap="round" />
+            <line x1="24" y1="10" x2="24" y2="44" stroke="#f1e6c8" strokeWidth="1" strokeLinecap="round" />
           </svg>
 
           <input
@@ -592,8 +576,8 @@ export default function LouPage() {
             className="flex-1 bg-transparent focus:outline-none"
             style={{
               fontSize: 14,
-              color: "#222f26",
-              caretColor: "#222f26",
+              color: "#f1e6c8",
+              caretColor: "#c9d9c9",
               letterSpacing: "0.01em",
               lineHeight: 1.4,
             }}
@@ -608,11 +592,9 @@ export default function LouPage() {
               width: 36,
               height: 36,
               background: input.trim() && !isStreaming && !isBlocked
-                ? "linear-gradient(135deg, #92a38d, #222f26)"
-                : "transparent",
-              border: input.trim() && !isStreaming && !isBlocked
-                ? "none"
-                : "1px solid rgba(83,112,98,0.28)",
+                ? "#537062"
+                : "rgba(241,230,200,0.12)",
+              border: "none",
             }}
           >
             <svg
@@ -620,7 +602,7 @@ export default function LouPage() {
               height="14"
               viewBox="0 0 24 24"
               fill="none"
-              stroke={input.trim() && !isStreaming && !isBlocked ? "#f1e6c8" : "#222f26"}
+              stroke={input.trim() && !isStreaming && !isBlocked ? "#f1e6c8" : "rgba(241,230,200,0.4)"}
               strokeWidth="2.3"
               strokeLinecap="round"
               strokeLinejoin="round"

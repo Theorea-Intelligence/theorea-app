@@ -159,7 +159,7 @@ function DesktopNav() {
         collapsed ? "w-16" : "w-56"
       }`}
       style={{
-        background: "rgba(241, 230, 200, 0.95)",
+        background: "rgba(201, 217, 201, 0.95)",
         backdropFilter: "blur(20px)",
         borderRight: "1px solid rgba(83, 112, 98, 0.08)",
       }}

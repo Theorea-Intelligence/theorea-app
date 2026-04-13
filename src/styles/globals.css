@@ -24,9 +24,9 @@
   ══════════════════════════════════════════════════════════════════════════ */
 
   /* ── Canvas & surfaces ───────────────────────────────────────────────── */
-  --color-canvas:         #f1e6c8;   /* warm parchment — base background */
-  --color-surface:        #ffffff;   /* white card surface */
-  --color-surface-raised: #faf7f0;   /* barely warm white — hover */
+  --color-canvas:         #c9d9c9;   /* pale mint — base background */
+  --color-surface:        #f1e6c8;   /* warm parchment — card surface */
+  --color-surface-raised: #e8ddc0;   /* deep parchment — elevated / hover */
 
   /* ── Semantic text tokens ────────────────────────────────────────────── */
   --color-ink:            #222f26;   /* deep forest — primary text */
@@ -34,11 +34,11 @@
   --color-ink-muted:      #92a38d;   /* light sage — ghost / caption */
 
   /* ── Aliases (used by older component classes) ───────────────────────── */
-  --color-parchment:      #f1e6c8;
-  --color-parchment-warm: #e8ddc0;   /* deep parchment — dividers */
-  --color-porcelain:      #ffffff;
-  --color-steam:          #c9d9c9;   /* pale mint — separation layer */
-  --color-steam-light:    #faf7f0;
+  --color-parchment:      #c9d9c9;
+  --color-parchment-warm: #b8c9b8;   /* deeper mint — dividers */
+  --color-porcelain:      #f1e6c8;
+  --color-steam:          #e8ddc0;   /* deep parchment — separation */
+  --color-steam-light:    #f1e6c8;
 
   /* ── Primary accent — Sage green ────────────────────────────────────── */
   --color-oolong:         #537062;   /* sage — buttons, links, active */
@@ -138,7 +138,7 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Lou chat input — italic placeholder ─────────────────────────────────── */
 input::placeholder {
   font-style: italic;
-  color: rgba(83, 112, 98, 0.45);
+  color: rgba(201, 217, 201, 0.45);   /* visible on dark pill, muted on light surfaces */
   letter-spacing: 0.02em;
 }
 

@@ -39,157 +39,116 @@ function WeatherIcon({ code, isDay }: { code: number; isDay: boolean }) {
   );
 }
 
-/* ── Lou suggestion card ─────────────────────────────────────────────────── */
+/* ── Suggestion card (inside carousel) ──────────────────────────────────── */
 function SuggestionCard({ product, reason }: { product: TeaProduct; reason: string }) {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <Link href="/marketplace" className="block shrink-0 w-full active:opacity-90 transition-opacity duration-200">
-      {/* Photo — full bleed, tall */}
-      <div className="relative w-full overflow-hidden" style={{ height: 260, borderRadius: 16 }}>
+    <Link href="/marketplace" className="block active:opacity-90 transition-opacity duration-200"
+      style={{ width: 210, flexShrink: 0 }}>
+      {/* Photo */}
+      <div className="relative w-full overflow-hidden" style={{ height: 195, borderRadius: 12 }}>
         {!imgError ? (
-          <Image
-            src={product.imageUrl}
-            alt={product.name}
-            fill
-            className="object-cover"
-            unoptimized
-            onError={() => setImgError(true)}
-          />
+          <Image src={product.imageUrl} alt={product.name} fill className="object-cover" unoptimized onError={() => setImgError(true)} />
         ) : (
-          <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(135deg, #faf7f0, #f1e6c8)" }}
-          />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #e8ddc0, #c9d9c9)" }} />
         )}
-
-        {/* Gradient overlay */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(to top, rgba(34,47,38,0.92) 0%, rgba(241,230,200,0.3) 50%, transparent 100%)",
-          }}
-        />
-
-        {/* Text on image */}
-        <div className="absolute bottom-0 left-0 right-0 px-5 pb-5">
-          <p
-            className="text-[10px] tracking-[0.14em] uppercase font-medium mb-1.5"
-            style={{ color: "#222f26" }}
-          >
+        {/* Overlay */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(34,47,38,0.88) 0%, transparent 55%)" }} />
+        {/* Labels on photo */}
+        <div className="absolute bottom-0 left-0 right-0 px-3 pb-3">
+          <p className="font-sans text-[9px] tracking-[0.18em] uppercase font-medium mb-1"
+            style={{ color: "rgba(201,217,201,0.75)" }}>
             {product.type}
           </p>
-          <h3
-            className="font-serif text-[28px] font-light leading-tight"
-            style={{ color: "#222f26" }}
-          >
+          <h3 className="font-serif font-light leading-tight"
+            style={{ fontSize: 19, color: "#f1e6c8", letterSpacing: "-0.01em" }}>
             {product.name}
           </h3>
-          <p className="text-[12px] mt-0.5" style={{ color: "rgba(34,47,38,0.5)" }}>
-            {product.origin}
-          </p>
         </div>
       </div>
-
-      {/* Reason + CTA */}
-      <div className="px-1 pt-4 pb-1">
-        <p className="text-[13px] leading-relaxed mb-4" style={{ color: "#537062" }}>
+      {/* Reason text — no price */}
+      <div className="pt-2.5 px-0.5">
+        <p className="font-sans leading-snug" style={{ fontSize: 11, color: "#537062", lineHeight: 1.5 }}>
           {reason}
         </p>
-        <div className="flex items-center justify-between">
-          <div
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full"
-            style={{ background: "rgba(106,154,122,0.15)", border: "1px solid rgba(106,154,122,0.25)" }}
-          >
-            <span className="text-[12px] font-medium" style={{ color: "#6a9a7a" }}>
-              View Details
-            </span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6a9a7a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </div>
-          <span className="text-[15px] font-light" style={{ color: "rgba(34,47,38,0.3)" }}>
-            {product.price}
-          </span>
-        </div>
+        <p className="font-sans mt-1" style={{ fontSize: 10, color: "rgba(34,47,38,0.28)", letterSpacing: "0.02em" }}>
+          {product.origin}
+        </p>
       </div>
     </Link>
   );
 }
 
-/* ── Carousel ─────────────────────────────────────────────────────────────── */
-function LouCarousel({
-  cards,
-  isLoading,
-  label,
-}: {
+/* ── Carousel — bordered section, horizontal scroll ─────────────────────── */
+function LouCarousel({ cards, isLoading, label }: {
   cards: { product: TeaProduct; reason: string }[];
   isLoading: boolean;
   label: string;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const CARD_W = 210 + 12; // card + gap
 
   const handleScroll = () => {
     if (!scrollRef.current) return;
-    const index = Math.round(scrollRef.current.scrollLeft / scrollRef.current.offsetWidth);
-    setActiveIndex(index);
+    setActiveIndex(Math.min(Math.round(scrollRef.current.scrollLeft / CARD_W), cards.length - 1));
   };
 
-  const scrollTo = (index: number) => {
-    scrollRef.current?.scrollTo({ left: index * (scrollRef.current.offsetWidth), behavior: "smooth" });
-    setActiveIndex(index);
+  const scrollTo = (i: number) => {
+    scrollRef.current?.scrollTo({ left: i * CARD_W, behavior: "smooth" });
+    setActiveIndex(i);
   };
 
   return (
-    <div className="space-y-4 animate-fade-in-up animation-delay-100">
-      {/* Label */}
-      <p
-        className="font-serif text-[14px] italic font-light px-0.5"
-        style={{ color: "rgba(34,47,38,0.45)" }}
-      >
-        {label}
-      </p>
+    <div className="animate-fade-in-up animation-delay-100 rounded-[20px] overflow-hidden"
+      style={{ border: "1.5px solid rgba(34,47,38,0.13)", background: "#f1e6c8" }}>
 
-      {isLoading ? (
-        <div
-          className="w-full animate-shimmer"
-          style={{ height: 340, borderRadius: 16 }}
-        />
-      ) : (
-        <>
-          <div
-            ref={scrollRef}
-            onScroll={handleScroll}
-            className="flex overflow-x-auto snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            style={{ gap: 16 }}
-          >
-            {cards.map(({ product, reason }, i) => (
-              <div key={product.id} className="snap-center shrink-0 w-full">
-                <SuggestionCard product={product} reason={reason} />
-              </div>
+      {/* Header row */}
+      <div className="flex items-center justify-between px-4 pt-4 pb-3">
+        <div>
+          <p className="font-sans text-[9px] tracking-[0.18em] uppercase font-medium"
+            style={{ color: "rgba(34,47,38,0.32)" }}>
+            Lou suggests
+          </p>
+          <p className="font-serif font-light italic mt-0.5"
+            style={{ fontSize: 15, color: "#222f26" }}>
+            {label}
+          </p>
+        </div>
+        {cards.length > 1 && (
+          <div className="flex items-center gap-1.5">
+            {cards.map((_, i) => (
+              <button key={i} onClick={() => scrollTo(i)} className="rounded-full transition-all duration-300"
+                style={{ width: i === activeIndex ? 16 : 5, height: 5,
+                  background: i === activeIndex ? "#537062" : "rgba(83,112,98,0.22)" }} />
             ))}
           </div>
+        )}
+      </div>
 
-          {/* Dots */}
-          {cards.length > 1 && (
-            <div className="flex items-center justify-center gap-2">
-              {cards.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => scrollTo(i)}
-                  className="transition-all duration-300 rounded-full"
-                  style={{
-                    width: i === activeIndex ? 20 : 6,
-                    height: 6,
-                    background: i === activeIndex ? "#222f26" : "rgba(83,112,98,0.28)",
-                  }}
-                />
-              ))}
-            </div>
-          )}
-        </>
-      )}
+      {/* Divider */}
+      <div style={{ height: 1, background: "rgba(34,47,38,0.07)", margin: "0 16px" }} />
+
+      {/* Cards */}
+      <div className="px-4 py-4">
+        {isLoading ? (
+          <div className="flex gap-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="animate-shimmer shrink-0 rounded-[12px]" style={{ width: 210, height: 195 }} />
+            ))}
+          </div>
+        ) : (
+          <div ref={scrollRef} onScroll={handleScroll}
+            className="flex overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            style={{ gap: 12 }}>
+            {cards.map(({ product, reason }) => (
+              <SuggestionCard key={product.id} product={product} reason={reason} />
+            ))}
+            <div style={{ width: 4, flexShrink: 0 }} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -213,7 +172,7 @@ function ActionTile({
       <div
         className="flex flex-col items-start gap-3 p-4 rounded-[16px] active:opacity-80 transition-opacity duration-200"
         style={{
-          background: "#ffffff",
+          background: "#f1e6c8",
           border: "1px solid rgba(34,47,38,0.09)",
         }}
       >
@@ -253,8 +212,13 @@ export default function Dashboard() {
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <header className="animate-fade-in-up pt-1">
         <h1
-          className="font-serif font-light leading-[1.15]"
-          style={{ fontSize: 34, color: "#222f26" }}
+          className="font-serif font-light leading-[1.1]"
+          style={{
+            fontSize: "clamp(30px, 8vw, 40px)",
+            color: "#222f26",
+            fontFamily: "var(--font-serif)",
+            letterSpacing: "-0.01em",
+          }}
         >
           {time.greeting}
         </h1>
@@ -310,7 +274,7 @@ export default function Dashboard() {
       {/* ── Recent rituals ─────────────────────────────────────────────── */}
       <section
         className="rounded-[16px] animate-fade-in-up animation-delay-300"
-        style={{ background: "#ffffff", border: "1px solid rgba(34,47,38,0.09)" }}
+        style={{ background: "#f1e6c8", border: "1px solid rgba(34,47,38,0.09)" }}
       >
         <div className="flex items-center justify-between px-4 pt-4 pb-3">
           <p
@@ -366,7 +330,7 @@ export default function Dashboard() {
       {/* ── Marketplace peek ───────────────────────────────────────────── */}
       <section
         className="rounded-[16px] animate-fade-in-up animation-delay-400"
-        style={{ background: "#ffffff", border: "1px solid rgba(34,47,38,0.09)" }}
+        style={{ background: "#f1e6c8", border: "1px solid rgba(34,47,38,0.09)" }}
       >
         <div className="flex items-center justify-between px-4 pt-4 pb-3">
           <p
