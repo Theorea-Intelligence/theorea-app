@@ -112,7 +112,7 @@ function TeaMosaic() {
           left: 0,
           right: 0,
           height: 100,
-          background: "linear-gradient(to top, #1e1710 0%, transparent 100%)",
+          background: "linear-gradient(to top, #f1e6c8 0%, transparent 100%)",
           pointerEvents: "none",
         }}
       />
@@ -133,7 +133,7 @@ function StreamingDots() {
           style={{
             width: 5,
             height: 5,
-            background: "#c4a46a",
+            background: "#222f26",
             animationDelay: `${d}ms`,
             opacity: 0.55,
           }}
@@ -260,7 +260,7 @@ export default function LouPage() {
       className="relative flex flex-col"
       style={{
         height: "calc(100dvh - 7.5rem)",
-        background: "#1e1710",
+        background: "#f1e6c8",
         overflow: "hidden",
       }}
     >
@@ -269,14 +269,14 @@ export default function LouPage() {
       {isBlocked && (
         <div
           className="absolute inset-0 z-30 flex items-end justify-center pb-16 backdrop-blur-md"
-          style={{ background: "rgba(30,23,16,0.82)" }}
+          style={{ background: "rgba(34,47,38,0.82)" }}
         >
           {/* Photo peeks through above */}
           <div
             className="w-full mx-4 rounded-3xl px-7 py-8 flex flex-col items-center text-center"
             style={{
-              background: "rgba(40,33,26,0.96)",
-              border: "1px solid rgba(196,164,106,0.1)",
+              background: "rgba(255,255,255,0.96)",
+              border: "1px solid rgba(83,112,98,0.1)",
               maxWidth: 360,
               margin: "0 auto",
             }}
@@ -288,14 +288,14 @@ export default function LouPage() {
                 width: 40,
                 height: 40,
                 borderRadius: "50%",
-                background: "rgba(200,170,110,0.14)",
-                border: "1px solid rgba(200,170,110,0.24)",
+                background: "rgba(83,112,98,0.14)",
+                border: "1px solid rgba(83,112,98,0.24)",
               }}
             >
               <svg width="18" height="18" viewBox="0 0 48 48" fill="none">
-                <path d="M24 6C18 12 12 20 14 32C16 38 20 42 24 44" stroke="#c4a46a" strokeWidth="1.8" fill="#8a6a4a" fillOpacity="0.25" strokeLinecap="round" />
-                <path d="M24 6C30 12 36 20 34 32C32 38 28 42 24 44" stroke="rgba(200,170,110,0.52)" strokeWidth="1.8" strokeLinecap="round" />
-                <line x1="24" y1="10" x2="24" y2="44" stroke="#c4a46a" strokeWidth="0.9" strokeLinecap="round" />
+                <path d="M24 6C18 12 12 20 14 32C16 38 20 42 24 44" stroke="#222f26" strokeWidth="1.8" fill="#8a6a4a" fillOpacity="0.25" strokeLinecap="round" />
+                <path d="M24 6C30 12 36 20 34 32C32 38 28 42 24 44" stroke="rgba(83,112,98,0.52)" strokeWidth="1.8" strokeLinecap="round" />
+                <line x1="24" y1="10" x2="24" y2="44" stroke="#222f26" strokeWidth="0.9" strokeLinecap="round" />
               </svg>
             </div>
 
@@ -303,17 +303,17 @@ export default function LouPage() {
               <>
                 <h2
                   className="font-serif font-light leading-snug mb-3"
-                  style={{ fontSize: 26, color: "#f0ebe3", letterSpacing: "-0.01em" }}
+                  style={{ fontSize: 26, color: "#222f26", letterSpacing: "-0.01em" }}
                 >
                   {t.lou.signInRequired}
                 </h2>
-                <p className="text-[13px] leading-[1.65] mb-7" style={{ color: "rgba(205,188,165,0.68)" }}>
+                <p className="text-[13px] leading-[1.65] mb-7" style={{ color: "rgba(83,112,98,0.68)" }}>
                   {t.lou.signInRequiredSub}
                 </p>
                 <button
                   onClick={() => router.push("/welcome")}
                   className="w-full py-4 rounded-2xl text-[13px] font-medium tracking-[0.05em] transition-all duration-200 active:scale-[0.98]"
-                  style={{ background: "#c4a46a", color: "#1e1710" }}
+                  style={{ background: "#222f26", color: "#f1e6c8" }}
                 >
                   {t.lou.signInButton}
                 </button>
@@ -322,24 +322,24 @@ export default function LouPage() {
               <>
                 <h2
                   className="font-serif font-light leading-snug mb-3"
-                  style={{ fontSize: 26, color: "#f0ebe3", letterSpacing: "-0.01em" }}
+                  style={{ fontSize: 26, color: "#222f26", letterSpacing: "-0.01em" }}
                 >
                   {t.lou.limitReached}
                 </h2>
-                <p className="text-[13px] leading-[1.65] mb-2" style={{ color: "rgba(205,188,165,0.68)" }}>
+                <p className="text-[13px] leading-[1.65] mb-2" style={{ color: "rgba(83,112,98,0.68)" }}>
                   {t.lou.limitReachedSub}
                 </p>
-                <p className="text-[11px] tracking-[0.14em] uppercase mb-7" style={{ color: "#c4a46a" }}>
+                <p className="text-[11px] tracking-[0.14em] uppercase mb-7" style={{ color: "#222f26" }}>
                   {t.lou.memberPitch}
                 </p>
                 <button
                   onClick={() => router.push("/profile")}
                   className="w-full py-4 rounded-2xl text-[13px] font-medium tracking-[0.05em] transition-all duration-200 active:scale-[0.98] mb-3"
-                  style={{ background: "#c4a46a", color: "#1e1710" }}
+                  style={{ background: "#222f26", color: "#f1e6c8" }}
                 >
                   {t.lou.becomeMember}
                 </button>
-                <p className="text-[11px]" style={{ color: "rgba(160,142,122,0.70)" }}>
+                <p className="text-[11px]" style={{ color: "rgba(136,160,134,0.70)" }}>
                   Renews on the 1st of each month.
                 </p>
               </>
@@ -366,7 +366,7 @@ export default function LouPage() {
             {/* Eyebrow label */}
             <p
               className="text-[10px] tracking-[0.22em] uppercase font-medium mb-4"
-              style={{ color: "rgba(200,170,110,0.62)" }}
+              style={{ color: "rgba(83,112,98,0.62)" }}
             >
               Your Tea Sommelier
             </p>
@@ -376,7 +376,7 @@ export default function LouPage() {
               className="font-serif font-light leading-[1.1] mb-5"
               style={{
                 fontSize: "clamp(34px, 10vw, 48px)",
-                color: "#f0ebe3",
+                color: "#222f26",
                 letterSpacing: "-0.025em",
                 maxWidth: 300,
               }}
@@ -390,7 +390,7 @@ export default function LouPage() {
               style={{
                 width: "100%",
                 height: 1,
-                background: "linear-gradient(90deg, rgba(200,170,110,0.24) 0%, transparent 60%)",
+                background: "linear-gradient(90deg, rgba(83,112,98,0.24) 0%, transparent 60%)",
               }}
             />
 
@@ -406,7 +406,7 @@ export default function LouPage() {
                     className="shrink-0 mt-[3px]"
                     style={{
                       fontSize: 9,
-                      color: "rgba(200,170,110,0.42)",
+                      color: "rgba(83,112,98,0.42)",
                       letterSpacing: "0.1em",
                     }}
                   >
@@ -418,8 +418,8 @@ export default function LouPage() {
                       fontStyle: "italic",
                       lineHeight: 1.5,
                       color: i === 0
-                        ? "rgba(240,235,227,0.55)"
-                        : "rgba(176,162,146,0.3)",
+                        ? "#537062"
+                        : "#92a38d",
                       letterSpacing: "0.01em",
                       transition: "color 150ms",
                     }}
@@ -458,8 +458,8 @@ export default function LouPage() {
                         fontSize: 9,
                         letterSpacing: "0.22em",
                         color: isUser
-                          ? "rgba(176,162,146,0.3)"
-                          : "rgba(196,164,106,0.45)",
+                          ? "rgba(83,112,98,0.3)"
+                          : "rgba(83,112,98,0.45)",
                         textAlign: isUser ? "right" : "left",
                       }}
                     >
@@ -473,7 +473,7 @@ export default function LouPage() {
                       style={{
                         fontSize: 15,
                         lineHeight: 1.65,
-                        color: "rgba(240,235,227,0.6)",
+                        color: "#537062",
                         fontStyle: "italic",
                         textAlign: "right",
                         letterSpacing: "0.01em",
@@ -486,14 +486,14 @@ export default function LouPage() {
                     <div
                       style={{
                         paddingLeft: 16,
-                        borderLeft: "1.5px solid rgba(200,170,110,0.28)",
+                        borderLeft: "1.5px solid rgba(83,112,98,0.28)",
                       }}
                     >
                       <p
                         style={{
                           fontSize: 15,
                           lineHeight: 1.8,
-                          color: "#ede7dc",
+                          color: "#222f26",
                           letterSpacing: "0.012em",
                           whiteSpace: "pre-wrap",
                         }}
@@ -520,7 +520,7 @@ export default function LouPage() {
       {error && (
         <p
           className="text-center px-5 py-1.5"
-          style={{ fontSize: 12, color: "#a8885a", fontStyle: "italic" }}
+          style={{ fontSize: 12, color: "#222f26", fontStyle: "italic" }}
         >
           {error}
         </p>
@@ -530,7 +530,7 @@ export default function LouPage() {
       {remaining !== null && remaining <= 3 && remaining > 0 && !isBlocked && (
         <p
           className="text-center px-5 py-1 uppercase tracking-widest"
-          style={{ fontSize: 9, color: "rgba(160,142,122,0.70)" }}
+          style={{ fontSize: 9, color: "rgba(136,160,134,0.70)" }}
         >
           {t.lou.messagesRemaining(remaining)}
         </p>
@@ -542,7 +542,7 @@ export default function LouPage() {
       <div
         className="shrink-0 px-4 pb-2 pt-3"
         style={{
-          background: "linear-gradient(to top, #1e1710 60%, transparent 100%)",
+          background: "linear-gradient(to top, #f1e6c8 60%, transparent 100%)",
         }}
       >
         {/* Separator */}
@@ -550,7 +550,7 @@ export default function LouPage() {
           className="mb-3"
           style={{
             height: 1,
-            background: "linear-gradient(90deg, transparent 0%, rgba(255,247,235,0.12) 40%, rgba(255,247,235,0.12) 60%, transparent 100%)",
+            background: "linear-gradient(90deg, transparent 0%, rgba(34,47,38,0.10) 40%, rgba(34,47,38,0.10) 60%, transparent 100%)",
           }}
         />
 
@@ -563,8 +563,8 @@ export default function LouPage() {
             display: "flex",
             alignItems: "center",
             gap: 10,
-            background: "rgba(255,247,235,0.12)",
-            border: "1px solid rgba(255,247,235,0.12)",
+            background: "rgba(34,47,38,0.10)",
+            border: "1px solid rgba(34,47,38,0.10)",
             borderRadius: 100,
             padding: "10px 10px 10px 20px",
           }}
@@ -577,9 +577,9 @@ export default function LouPage() {
             fill="none"
             style={{ flexShrink: 0, opacity: 0.3 }}
           >
-            <path d="M24 6C18 12 12 20 14 32C16 38 20 42 24 44" stroke="#c4a46a" strokeWidth="2" fill="#8a6a4a" fillOpacity="0.3" strokeLinecap="round" />
-            <path d="M24 6C30 12 36 20 34 32C32 38 28 42 24 44" stroke="rgba(200,170,110,0.52)" strokeWidth="2" strokeLinecap="round" />
-            <line x1="24" y1="10" x2="24" y2="44" stroke="#c4a46a" strokeWidth="1" strokeLinecap="round" />
+            <path d="M24 6C18 12 12 20 14 32C16 38 20 42 24 44" stroke="#222f26" strokeWidth="2" fill="#8a6a4a" fillOpacity="0.3" strokeLinecap="round" />
+            <path d="M24 6C30 12 36 20 34 32C32 38 28 42 24 44" stroke="rgba(83,112,98,0.52)" strokeWidth="2" strokeLinecap="round" />
+            <line x1="24" y1="10" x2="24" y2="44" stroke="#222f26" strokeWidth="1" strokeLinecap="round" />
           </svg>
 
           <input
@@ -592,8 +592,8 @@ export default function LouPage() {
             className="flex-1 bg-transparent focus:outline-none"
             style={{
               fontSize: 14,
-              color: "#f0ebe3",
-              caretColor: "#c4a46a",
+              color: "#222f26",
+              caretColor: "#222f26",
               letterSpacing: "0.01em",
               lineHeight: 1.4,
             }}
@@ -608,11 +608,11 @@ export default function LouPage() {
               width: 36,
               height: 36,
               background: input.trim() && !isStreaming && !isBlocked
-                ? "linear-gradient(135deg, #d4b88a, #c4a46a)"
+                ? "linear-gradient(135deg, #92a38d, #222f26)"
                 : "transparent",
               border: input.trim() && !isStreaming && !isBlocked
                 ? "none"
-                : "1px solid rgba(200,170,110,0.28)",
+                : "1px solid rgba(83,112,98,0.28)",
             }}
           >
             <svg
@@ -620,7 +620,7 @@ export default function LouPage() {
               height="14"
               viewBox="0 0 24 24"
               fill="none"
-              stroke={input.trim() && !isStreaming && !isBlocked ? "#1e1710" : "#c4a46a"}
+              stroke={input.trim() && !isStreaming && !isBlocked ? "#f1e6c8" : "#222f26"}
               strokeWidth="2.3"
               strokeLinecap="round"
               strokeLinejoin="round"

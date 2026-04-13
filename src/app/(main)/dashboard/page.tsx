@@ -59,7 +59,7 @@ function SuggestionCard({ product, reason }: { product: TeaProduct; reason: stri
         ) : (
           <div
             className="absolute inset-0"
-            style={{ background: "linear-gradient(135deg, #332a20, #1e1710)" }}
+            style={{ background: "linear-gradient(135deg, #faf7f0, #f1e6c8)" }}
           />
         )}
 
@@ -67,7 +67,7 @@ function SuggestionCard({ product, reason }: { product: TeaProduct; reason: stri
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(to top, rgba(30,23,16,0.92) 0%, rgba(30,23,16,0.3) 50%, transparent 100%)",
+            background: "linear-gradient(to top, rgba(34,47,38,0.92) 0%, rgba(241,230,200,0.3) 50%, transparent 100%)",
           }}
         />
 
@@ -75,17 +75,17 @@ function SuggestionCard({ product, reason }: { product: TeaProduct; reason: stri
         <div className="absolute bottom-0 left-0 right-0 px-5 pb-5">
           <p
             className="text-[10px] tracking-[0.14em] uppercase font-medium mb-1.5"
-            style={{ color: "#c4a46a" }}
+            style={{ color: "#222f26" }}
           >
             {product.type}
           </p>
           <h3
             className="font-serif text-[28px] font-light leading-tight"
-            style={{ color: "#f0ebe3" }}
+            style={{ color: "#222f26" }}
           >
             {product.name}
           </h3>
-          <p className="text-[12px] mt-0.5" style={{ color: "rgba(240,235,227,0.5)" }}>
+          <p className="text-[12px] mt-0.5" style={{ color: "rgba(34,47,38,0.5)" }}>
             {product.origin}
           </p>
         </div>
@@ -93,7 +93,7 @@ function SuggestionCard({ product, reason }: { product: TeaProduct; reason: stri
 
       {/* Reason + CTA */}
       <div className="px-1 pt-4 pb-1">
-        <p className="text-[13px] leading-relaxed mb-4" style={{ color: "rgba(240,235,227,0.55)" }}>
+        <p className="text-[13px] leading-relaxed mb-4" style={{ color: "#537062" }}>
           {reason}
         </p>
         <div className="flex items-center justify-between">
@@ -108,7 +108,7 @@ function SuggestionCard({ product, reason }: { product: TeaProduct; reason: stri
               <polyline points="9 18 15 12 9 6" />
             </svg>
           </div>
-          <span className="text-[15px] font-light" style={{ color: "rgba(240,235,227,0.3)" }}>
+          <span className="text-[15px] font-light" style={{ color: "rgba(34,47,38,0.3)" }}>
             {product.price}
           </span>
         </div>
@@ -146,7 +146,7 @@ function LouCarousel({
       {/* Label */}
       <p
         className="font-serif text-[14px] italic font-light px-0.5"
-        style={{ color: "rgba(240,235,227,0.45)" }}
+        style={{ color: "rgba(34,47,38,0.45)" }}
       >
         {label}
       </p>
@@ -182,7 +182,7 @@ function LouCarousel({
                   style={{
                     width: i === activeIndex ? 20 : 6,
                     height: 6,
-                    background: i === activeIndex ? "#c4a46a" : "rgba(200,170,110,0.28)",
+                    background: i === activeIndex ? "#222f26" : "rgba(83,112,98,0.28)",
                   }}
                 />
               ))}
@@ -213,8 +213,8 @@ function ActionTile({
       <div
         className="flex flex-col items-start gap-3 p-4 rounded-[16px] active:opacity-80 transition-opacity duration-200"
         style={{
-          background: "#28211a",
-          border: "1px solid rgba(255,247,235,0.10)",
+          background: "#ffffff",
+          border: "1px solid rgba(34,47,38,0.09)",
         }}
       >
         <div
@@ -224,8 +224,8 @@ function ActionTile({
           <span style={{ color: accentColor }}>{icon}</span>
         </div>
         <div>
-          <p className="text-[13px] font-medium" style={{ color: "#f0ebe3" }}>{label}</p>
-          <p className="text-[11px] mt-0.5" style={{ color: "rgba(240,235,227,0.35)" }}>{sub}</p>
+          <p className="text-[13px] font-medium" style={{ color: "#222f26" }}>{label}</p>
+          <p className="text-[11px] mt-0.5" style={{ color: "rgba(34,47,38,0.35)" }}>{sub}</p>
         </div>
       </div>
     </Link>
@@ -254,7 +254,7 @@ export default function Dashboard() {
       <header className="animate-fade-in-up pt-1">
         <h1
           className="font-serif font-light leading-[1.15]"
-          style={{ fontSize: 34, color: "#f0ebe3" }}
+          style={{ fontSize: 34, color: "#222f26" }}
         >
           {time.greeting}
         </h1>
@@ -262,7 +262,7 @@ export default function Dashboard() {
         {!isLoading && weather && (
           <div
             className="flex items-center gap-1.5 mt-2 text-[11px] tracking-wide"
-            style={{ color: "rgba(240,235,227,0.35)" }}
+            style={{ color: "rgba(34,47,38,0.35)" }}
           >
             <WeatherIcon code={weather.weatherCode} isDay={weather.isDay} />
             <span>{Math.round(weather.temperature)}° · {weather.description}</span>
@@ -298,7 +298,7 @@ export default function Dashboard() {
           href="/lou"
           label={t.dashboard.louSuggests}
           sub={t.dashboard.startSession}
-          accentColor="#c4a46a"
+          accentColor="#222f26"
           icon={
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
@@ -310,17 +310,17 @@ export default function Dashboard() {
       {/* ── Recent rituals ─────────────────────────────────────────────── */}
       <section
         className="rounded-[16px] animate-fade-in-up animation-delay-300"
-        style={{ background: "#28211a", border: "1px solid rgba(255,247,235,0.10)" }}
+        style={{ background: "#ffffff", border: "1px solid rgba(34,47,38,0.09)" }}
       >
         <div className="flex items-center justify-between px-4 pt-4 pb-3">
           <p
             className="text-[10px] tracking-[0.1em] uppercase font-medium"
-            style={{ color: "rgba(240,235,227,0.3)" }}
+            style={{ color: "rgba(34,47,38,0.3)" }}
           >
             {t.dashboard.recent}
           </p>
           <Link href="/rituals">
-            <span className="text-[11px] font-medium" style={{ color: "#c4a46a" }}>
+            <span className="text-[11px] font-medium" style={{ color: "#222f26" }}>
               {t.dashboard.seeAll}
             </span>
           </Link>
@@ -336,12 +336,12 @@ export default function Dashboard() {
               key={i}
               className="flex items-center px-4 py-3 active:opacity-70 transition-opacity"
               style={{
-                borderTop: i > 0 ? "1px solid rgba(255,247,235,0.05)" : undefined,
+                borderTop: i > 0 ? "1px solid rgba(34,47,38,0.05)" : undefined,
               }}
             >
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <p className="text-[13px] font-medium" style={{ color: "#f0ebe3" }}>
+                  <p className="text-[13px] font-medium" style={{ color: "#222f26" }}>
                     {ritual.tea}
                   </p>
                   <span
@@ -351,11 +351,11 @@ export default function Dashboard() {
                     {ritual.mood}
                   </span>
                 </div>
-                <p className="text-[11px] mt-0.5 truncate" style={{ color: "rgba(240,235,227,0.3)" }}>
+                <p className="text-[11px] mt-0.5 truncate" style={{ color: "rgba(34,47,38,0.3)" }}>
                   {ritual.note}
                 </p>
               </div>
-              <span className="text-[10px] ml-3 shrink-0" style={{ color: "rgba(240,235,227,0.2)" }}>
+              <span className="text-[10px] ml-3 shrink-0" style={{ color: "rgba(34,47,38,0.2)" }}>
                 {ritual.time}
               </span>
             </div>
@@ -366,17 +366,17 @@ export default function Dashboard() {
       {/* ── Marketplace peek ───────────────────────────────────────────── */}
       <section
         className="rounded-[16px] animate-fade-in-up animation-delay-400"
-        style={{ background: "#28211a", border: "1px solid rgba(255,247,235,0.10)" }}
+        style={{ background: "#ffffff", border: "1px solid rgba(34,47,38,0.09)" }}
       >
         <div className="flex items-center justify-between px-4 pt-4 pb-3">
           <p
             className="text-[10px] tracking-[0.1em] uppercase font-medium"
-            style={{ color: "rgba(240,235,227,0.3)" }}
+            style={{ color: "rgba(34,47,38,0.3)" }}
           >
             {t.dashboard.marketplace}
           </p>
           <Link href="/marketplace">
-            <span className="text-[11px] font-medium" style={{ color: "#c4a46a" }}>
+            <span className="text-[11px] font-medium" style={{ color: "#222f26" }}>
               {t.dashboard.browse}
             </span>
           </Link>
@@ -390,17 +390,17 @@ export default function Dashboard() {
             <div
               key={i}
               className="flex items-center justify-between px-4 py-3 active:opacity-70 transition-opacity"
-              style={{ borderTop: i > 0 ? "1px solid rgba(255,247,235,0.05)" : undefined }}
+              style={{ borderTop: i > 0 ? "1px solid rgba(34,47,38,0.05)" : undefined }}
             >
               <div className="min-w-0">
-                <p className="text-[13px] font-medium" style={{ color: "#f0ebe3" }}>{tea.tea}</p>
-                <p className="text-[11px] mt-0.5" style={{ color: "rgba(240,235,227,0.3)" }}>
+                <p className="text-[13px] font-medium" style={{ color: "#222f26" }}>{tea.tea}</p>
+                <p className="text-[11px] mt-0.5" style={{ color: "rgba(34,47,38,0.3)" }}>
                   {tea.type} · {tea.origin}
                 </p>
               </div>
               <div className="flex items-center gap-2 ml-3 shrink-0">
-                <span className="text-[13px] font-medium" style={{ color: "#c4a46a" }}>{tea.price}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(240,235,227,0.2)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <span className="text-[13px] font-medium" style={{ color: "#222f26" }}>{tea.price}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(34,47,38,0.2)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="9 18 15 12 9 6" />
                 </svg>
               </div>

@@ -98,8 +98,8 @@ function MobileNav() {
             background: "rgba(18, 15, 11, 0.92)",
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
-            border: "1px solid rgba(196, 164, 106, 0.1)",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(196,164,106,0.06)",
+            border: "1px solid rgba(83, 112, 98, 0.1)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(83,112,98,0.06)",
           }}
         >
           {navItems.map((item) => {
@@ -113,13 +113,13 @@ function MobileNav() {
                 key={item.href}
                 href={item.href}
                 className="flex flex-col items-center gap-[3px] px-4 py-1.5 transition-all duration-300"
-                style={{ color: isActive ? "#c4a46a" : "rgba(176,162,146,0.4)" }}
+                style={{ color: isActive ? "#222f26" : "rgba(83,112,98,0.4)" }}
               >
                 <span
                   className="transition-all duration-300"
                   style={{
                     transform: isActive ? "scale(1.1)" : "scale(1)",
-                    filter: isActive ? "drop-shadow(0 0 6px rgba(196,164,106,0.5))" : "none",
+                    filter: isActive ? "drop-shadow(0 0 6px rgba(83,112,98,0.5))" : "none",
                   }}
                 >
                   {item.icon}
@@ -159,9 +159,9 @@ function DesktopNav() {
         collapsed ? "w-16" : "w-56"
       }`}
       style={{
-        background: "rgba(30, 23, 16, 0.95)",
+        background: "rgba(241, 230, 200, 0.95)",
         backdropFilter: "blur(20px)",
-        borderRight: "1px solid rgba(196, 164, 106, 0.08)",
+        borderRight: "1px solid rgba(83, 112, 98, 0.08)",
       }}
     >
       {/* Brand + collapse */}
@@ -170,7 +170,7 @@ function DesktopNav() {
           <Link
             href="/dashboard"
             className="font-serif text-[17px] tracking-tight"
-            style={{ color: "#f0ebe3" }}
+            style={{ color: "#222f26" }}
           >
             Théorea
           </Link>
@@ -178,9 +178,9 @@ function DesktopNav() {
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors duration-200"
-          style={{ color: "rgba(176,162,146,0.4)" }}
-          onMouseEnter={(e) => ((e.target as HTMLElement).closest("button")!.style.color = "#c4a46a")}
-          onMouseLeave={(e) => ((e.target as HTMLElement).closest("button")!.style.color = "rgba(176,162,146,0.4)")}
+          style={{ color: "rgba(83,112,98,0.4)" }}
+          onMouseEnter={(e) => ((e.target as HTMLElement).closest("button")!.style.color = "#222f26")}
+          onMouseLeave={(e) => ((e.target as HTMLElement).closest("button")!.style.color = "rgba(83,112,98,0.4)")}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           <svg
@@ -213,15 +213,15 @@ function DesktopNav() {
                     collapsed ? "justify-center" : ""
                   }`}
                   style={{
-                    color: isActive ? "#c4a46a" : "rgba(176,162,146,0.5)",
-                    background: isActive ? "rgba(200,170,110,0.14)" : "transparent",
+                    color: isActive ? "#222f26" : "rgba(83,112,98,0.5)",
+                    background: isActive ? "rgba(83,112,98,0.14)" : "transparent",
                   }}
                   title={collapsed ? item.label : undefined}
                 >
                   <span
                     className="shrink-0 transition-all duration-200"
                     style={{
-                      filter: isActive ? "drop-shadow(0 0 4px rgba(196,164,106,0.4))" : "none",
+                      filter: isActive ? "drop-shadow(0 0 4px rgba(83,112,98,0.4))" : "none",
                     }}
                   >
                     {item.icon}
@@ -237,7 +237,7 @@ function DesktopNav() {
       </nav>
 
       {/* Profile at bottom */}
-      <div className="px-2 py-3" style={{ borderTop: "1px solid rgba(200,170,110,0.14)" }}>
+      <div className="px-2 py-3" style={{ borderTop: "1px solid rgba(83,112,98,0.14)" }}>
         {(() => {
           const profileItem = allItems[allItems.length - 1];
           const isActive = pathname.startsWith(profileItem.href);
@@ -248,8 +248,8 @@ function DesktopNav() {
                 collapsed ? "justify-center" : ""
               }`}
               style={{
-                color: isActive ? "#c4a46a" : "rgba(176,162,146,0.5)",
-                background: isActive ? "rgba(200,170,110,0.14)" : "transparent",
+                color: isActive ? "#222f26" : "rgba(83,112,98,0.5)",
+                background: isActive ? "rgba(83,112,98,0.14)" : "transparent",
               }}
               title={collapsed ? profileItem.label : undefined}
             >

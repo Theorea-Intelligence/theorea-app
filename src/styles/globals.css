@@ -6,62 +6,77 @@
  */
 
 @theme {
-  /* ── Warm Cognac palette ─────────────────────────────────────────────────
-     Shifted from cold black to a rich warm dark brown — the colour of aged
-     walnut, black tea at depth, or a luxury leather-bound journal. Surfaces
-     are clearly differentiated so the eye has somewhere to land. */
+  /* ══════════════════════════════════════════════════════════════════════════
+     Théorea Design System — Forest Garden Edition
+     ══════════════════════════════════════════════════════════════════════════
+     Palette: 6 chosen tones + 2 added harmonics
 
-  --color-canvas:         #1e1710;   /* base — warm dark brown, not black */
-  --color-surface:        #28211a;   /* card surfaces, clearly visible */
-  --color-surface-raised: #332a20;   /* elevated / hover */
+     #222f26  deep forest     — darkest background / strong text
+     #2f2d29  warm charcoal   — rich dark for text, user bubbles
+     #537062  sage green      — primary interactive accent
+     #92a38d  light sage      — secondary accent, muted UI
+     #c9d9c9  pale mint       — surface tint, badges, hover fills
+     #f1e6c8  warm parchment  — canvas background
 
-  /* Semantic aliases used throughout components */
-  --color-ink:            #f5eedf;   /* primary text — warm cream */
-  --color-ink-light:      #cbb89a;   /* secondary text — legible */
-  --color-ink-muted:      #9a8878;   /* ghost text — visible, not invisible */
-  --color-parchment:      #1e1710;   /* background alias */
-  --color-parchment-warm: #231c12;
-  --color-porcelain:      #28211a;   /* card surface alias */
-  --color-steam:          #3a3026;   /* elevated surface */
-  --color-steam-light:    #28211a;
+     Added harmonics (same temperature, fill the mid-range):
+     #3d5245  mid-forest      — hover state between the two greens
+     #e8ddc0  deep parchment  — dividers / subtle depth on cream
+  ══════════════════════════════════════════════════════════════════════════ */
 
-  /* Gold — Théorea's signature accent, slightly warmer */
-  --color-oolong:         #c8aa72;
-  --color-oolong-light:   #d9c08e;
-  --color-oolong-dark:    #aa8c5a;
+  /* ── Canvas & surfaces ───────────────────────────────────────────────── */
+  --color-canvas:         #f1e6c8;   /* warm parchment — base background */
+  --color-surface:        #ffffff;   /* white card surface */
+  --color-surface-raised: #faf7f0;   /* barely warm white — hover */
 
-  /* Jade — secondary accent, used sparingly */
-  --color-jade:           #6a9a7a;
-  --color-jade-light:     #8ab89a;
-  --color-jade-dark:      #4a7a5a;
+  /* ── Semantic text tokens ────────────────────────────────────────────── */
+  --color-ink:            #222f26;   /* deep forest — primary text */
+  --color-ink-light:      #537062;   /* sage green — secondary text */
+  --color-ink-muted:      #92a38d;   /* light sage — ghost / caption */
 
-  /* Border — subtle but present */
-  --color-border:         rgba(255, 247, 235, 0.09);
+  /* ── Aliases (used by older component classes) ───────────────────────── */
+  --color-parchment:      #f1e6c8;
+  --color-parchment-warm: #e8ddc0;   /* deep parchment — dividers */
+  --color-porcelain:      #ffffff;
+  --color-steam:          #c9d9c9;   /* pale mint — separation layer */
+  --color-steam-light:    #faf7f0;
 
-  /* Typography */
+  /* ── Primary accent — Sage green ────────────────────────────────────── */
+  --color-oolong:         #537062;   /* sage — buttons, links, active */
+  --color-oolong-light:   #92a38d;   /* light sage — hover tint */
+  --color-oolong-dark:    #3d5245;   /* mid-forest — pressed state */
+
+  /* ── Secondary accent — Forest dark ─────────────────────────────────── */
+  --color-jade:           #222f26;   /* deep forest — emphasis, icons */
+  --color-jade-light:     #537062;   /* sage */
+  --color-jade-dark:      #2f2d29;   /* warm charcoal */
+
+  /* ── Border ──────────────────────────────────────────────────────────── */
+  --color-border:         rgba(34, 47, 38, 0.10);
+
+  /* ── Typography ──────────────────────────────────────────────────────── */
   --font-sans:  "Inter", "Helvetica Neue", system-ui, sans-serif;
   --font-serif: "Playfair Display", Georgia, serif;
   --font-mono:  "JetBrains Mono", "Fira Code", monospace;
 
-  /* Spacing */
+  /* ── Spacing ─────────────────────────────────────────────────────────── */
   --spacing-page:    2rem;
   --spacing-section: 4rem;
   --spacing-breath:  6rem;
 
-  /* Transitions */
+  /* ── Motion ──────────────────────────────────────────────────────────── */
   --ease-gentle:     cubic-bezier(0.4, 0, 0.2, 1);
   --duration-gentle: 300ms;
   --duration-slow:   500ms;
 
-  /* Borders */
+  /* ── Radii ───────────────────────────────────────────────────────────── */
   --radius-subtle: 0.375rem;
   --radius-soft:   0.75rem;
 
-  /* Shadows — warm dark */
-  --shadow-whisper: 0 1px 6px  rgba(0, 0, 0, 0.25);
-  --shadow-soft:    0 4px 20px rgba(0, 0, 0, 0.35);
-  --shadow-lift:    0 8px 32px rgba(0, 0, 0, 0.45);
-  --shadow-glow:    0 0 40px   rgba(200, 170, 114, 0.18);
+  /* ── Shadows ─────────────────────────────────────────────────────────── */
+  --shadow-whisper: 0 1px 8px  rgba(34, 47, 38, 0.08);
+  --shadow-soft:    0 4px 24px rgba(34, 47, 38, 0.10);
+  --shadow-lift:    0 8px 40px rgba(34, 47, 38, 0.14);
+  --shadow-glow:    0 0 40px   rgba(83, 112, 98, 0.20);
 }
 
 /* ── Base styles ──────────────────────────────────────────────────────────── */
@@ -122,7 +137,7 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Lou chat input — italic placeholder ─────────────────────────────────── */
 input::placeholder {
   font-style: italic;
-  color: rgba(200, 184, 160, 0.45);
+  color: rgba(83, 112, 98, 0.45);
   letter-spacing: 0.02em;
 }
 
@@ -132,19 +147,21 @@ input::placeholder {
   background: linear-gradient(
     to right,
     transparent,
-    rgba(196, 164, 106, 0.25) 30%,
-    rgba(196, 164, 106, 0.25) 70%,
+    rgba(83, 112, 98, 0.30) 30%,
+    rgba(83, 112, 98, 0.30) 70%,
     transparent
   );
 }
 
 /* ── Gold gradient text ──────────────────────────────────────────────────── */
-.text-gold-gradient {
-  background: linear-gradient(135deg, #d4b88a 0%, #c4a46a 50%, #a8885a 100%);
+.text-jade-gradient {
+  background: linear-gradient(135deg, #92a38d 0%, #537062 50%, #3d5245 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+/* alias for backwards compatibility */
+.text-gold-gradient { @apply text-jade-gradient; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Zen Animations
@@ -161,8 +178,8 @@ input::placeholder {
 }
 
 @keyframes breathe-glow {
-  0%, 100% { box-shadow: 0 0 24px rgba(196, 164, 106, 0.15); }
-  50%       { box-shadow: 0 0 56px rgba(196, 164, 106, 0.35); }
+  0%, 100% { box-shadow: 0 0 24px rgba(83, 112, 98, 0.20); }
+  50%       { box-shadow: 0 0 56px rgba(83, 112, 98, 0.40); }
 }
 
 .animate-breathe       { animation: breathe      6s ease-in-out infinite; }

@@ -6,7 +6,7 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#1e1710]">
+    <div className="min-h-screen bg-[#f1e6c8]">
       <Navigation />
 
       {/* Main content — mobile-first, dark canvas */}
