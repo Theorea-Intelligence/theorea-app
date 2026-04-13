@@ -16,6 +16,7 @@ const jakartaSans = Plus_Jakarta_Sans({
   style: ["normal"],
   variable: "--nf-sans",   // ← unique name, no @theme clash
   display: "swap",
+  preload: false,          // ← don't block first render waiting for Google CDN
 });
 
 /*
@@ -29,6 +30,7 @@ const playfairDisplay = Playfair_Display({
   style: ["normal"],
   variable: "--nf-serif",  // ← unique name, no @theme clash
   display: "swap",
+  preload: false,          // ← don't block first render waiting for Google CDN
 });
 
 export const viewport: Viewport = {
