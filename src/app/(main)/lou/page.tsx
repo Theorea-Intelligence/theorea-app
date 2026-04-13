@@ -112,7 +112,7 @@ function TeaMosaic() {
           left: 0,
           right: 0,
           height: 100,
-          background: "linear-gradient(to top, #c9d9c9 0%, transparent 100%)",
+          background: "linear-gradient(to top, #f7f7f3 0%, transparent 100%)",
           pointerEvents: "none",
         }}
       />
@@ -260,7 +260,7 @@ export default function LouPage() {
       className="relative flex flex-col"
       style={{
         height: "calc(100dvh - 7.5rem)",
-        background: "#c9d9c9",
+        background: "#f7f7f3",
         overflow: "hidden",
       }}
     >
@@ -275,7 +275,7 @@ export default function LouPage() {
           <div
             className="w-full mx-4 rounded-3xl px-7 py-8 flex flex-col items-center text-center"
             style={{
-              background: "rgba(255,255,255,0.96)",
+              background: "rgba(34,47,38,0.96)",
               border: "1px solid rgba(83,112,98,0.1)",
               maxWidth: 360,
               margin: "0 auto",
@@ -313,7 +313,7 @@ export default function LouPage() {
                 <button
                   onClick={() => router.push("/welcome")}
                   className="w-full py-4 rounded-2xl text-[13px] font-medium tracking-[0.05em] transition-all duration-200 active:scale-[0.98]"
-                  style={{ background: "#222f26", color: "#c9d9c9" }}
+                  style={{ background: "#222f26", color: "#f7f7f3" }}
                 >
                   {t.lou.signInButton}
                 </button>
@@ -335,7 +335,7 @@ export default function LouPage() {
                 <button
                   onClick={() => router.push("/profile")}
                   className="w-full py-4 rounded-2xl text-[13px] font-medium tracking-[0.05em] transition-all duration-200 active:scale-[0.98] mb-3"
-                  style={{ background: "#222f26", color: "#c9d9c9" }}
+                  style={{ background: "#222f26", color: "#f7f7f3" }}
                 >
                   {t.lou.becomeMember}
                 </button>
@@ -415,7 +415,7 @@ export default function LouPage() {
                   <span
                     style={{
                       fontSize: 14,
-                      fontStyle: "italic",
+                      
                       lineHeight: 1.5,
                       color: i === 0
                         ? "#537062"
@@ -474,7 +474,7 @@ export default function LouPage() {
                         fontSize: 15,
                         lineHeight: 1.65,
                         color: "#537062",
-                        fontStyle: "italic",
+                        
                         textAlign: "right",
                         letterSpacing: "0.01em",
                       }}
@@ -542,7 +542,7 @@ export default function LouPage() {
       <div
         className="shrink-0 px-4 pb-3 pt-2"
         style={{
-          background: "linear-gradient(to top, #c9d9c9 70%, transparent 100%)",
+          background: "linear-gradient(to top, #f7f7f3 70%, transparent 100%)",
         }}
       >
         <form
@@ -561,9 +561,9 @@ export default function LouPage() {
         >
           {/* Leaf icon */}
           <svg width="14" height="14" viewBox="0 0 48 48" fill="none" style={{ flexShrink: 0, opacity: 0.5 }}>
-            <path d="M24 6C18 12 12 20 14 32C16 38 20 42 24 44" stroke="#f1e6c8" strokeWidth="2" strokeLinecap="round" />
-            <path d="M24 6C30 12 36 20 34 32C32 38 28 42 24 44" stroke="rgba(201,217,201,0.6)" strokeWidth="2" strokeLinecap="round" />
-            <line x1="24" y1="10" x2="24" y2="44" stroke="#f1e6c8" strokeWidth="1" strokeLinecap="round" />
+            <path d="M24 6C18 12 12 20 14 32C16 38 20 42 24 44" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
+            <path d="M24 6C30 12 36 20 34 32C32 38 28 42 24 44" stroke="rgba(247,247,243,0.6)" strokeWidth="2" strokeLinecap="round" />
+            <line x1="24" y1="10" x2="24" y2="44" stroke="#ffffff" strokeWidth="1" strokeLinecap="round" />
           </svg>
 
           <input
@@ -576,8 +576,8 @@ export default function LouPage() {
             className="flex-1 bg-transparent focus:outline-none"
             style={{
               fontSize: 14,
-              color: "#f1e6c8",
-              caretColor: "#c9d9c9",
+              color: "#ffffff",
+              caretColor: "#f7f7f3",
               letterSpacing: "0.01em",
               lineHeight: 1.4,
             }}
@@ -593,7 +593,7 @@ export default function LouPage() {
               height: 36,
               background: input.trim() && !isStreaming && !isBlocked
                 ? "#537062"
-                : "rgba(241,230,200,0.12)",
+                : "rgba(255,255,255,0.12)",
               border: "none",
             }}
           >
@@ -602,7 +602,7 @@ export default function LouPage() {
               height="14"
               viewBox="0 0 24 24"
               fill="none"
-              stroke={input.trim() && !isStreaming && !isBlocked ? "#f1e6c8" : "rgba(241,230,200,0.4)"}
+              stroke={input.trim() && !isStreaming && !isBlocked ? "#ffffff" : "rgba(255,255,255,0.4)"}
               strokeWidth="2.3"
               strokeLinecap="round"
               strokeLinejoin="round"

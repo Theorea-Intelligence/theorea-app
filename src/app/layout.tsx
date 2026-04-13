@@ -1,31 +1,32 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Sans, Cormorant_Garamond } from "next/font/google";
+import { Plus_Jakarta_Sans, Young_Serif } from "next/font/google";
 import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
 import PWARegister from "@/components/PWARegister";
 import { LocaleProvider } from "@/i18n/LocaleContext";
 import "@/styles/globals.css";
 
 /*
- * DM Sans — closest free equivalent to Proxima Nova.
- * Same geometric-humanist proportions, optimised for screen rendering.
- * Weights: 300 (light labels), 400 (body), 500 (medium UI), 600 (semibold CTAs).
+ * Plus Jakarta Sans — closest free match to Neue Montreal.
+ * Geometric humanist, excellent at both display and UI sizes.
+ * Weights 300–700, normal only (no italics).
  */
-const dmSans = DM_Sans({
+const jakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal"],
   variable: "--font-sans",
   display: "swap",
 });
 
 /*
- * Cormorant Garamond — editorial serif for display headings.
- * More refined and contemporary than Playfair Display; excellent with
- * nature-forward palettes. Light weight for large headings.
+ * Young Serif — closest free match to The Youngest Serif.
+ * Contemporary serif with refined proportions, weight 400 only.
+ * Used exclusively for display headings at large sizes.
  */
-const cormorant = Cormorant_Garamond({
+const youngSerif = Young_Serif({
   subsets: ["latin"],
-  weight: ["300", "400", "600"],
-  style: ["normal", "italic"],
+  weight: ["400"],
+  style: ["normal"],
   variable: "--font-serif",
   display: "swap",
 });
@@ -73,7 +74,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-GB" className={`${dmSans.variable} ${cormorant.variable}`}>
+    <html lang="en-GB" className={`${jakartaSans.variable} ${youngSerif.variable}`}>
       <body className="bg-parchment text-ink antialiased">
         <GoogleAnalytics />
         <PWARegister />

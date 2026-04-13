@@ -95,7 +95,7 @@ function MobileNav() {
         <div
           className="flex items-center justify-around rounded-[24px] px-1 pt-2 pb-2"
           style={{
-            background: "rgba(18, 15, 11, 0.92)",
+            background: "#537062",
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
             border: "1px solid rgba(83, 112, 98, 0.1)",
@@ -159,7 +159,7 @@ function DesktopNav() {
         collapsed ? "w-16" : "w-56"
       }`}
       style={{
-        background: "rgba(201, 217, 201, 0.95)",
+        background: "rgba(247, 247, 243, 0.95)",
         backdropFilter: "blur(20px)",
         borderRight: "1px solid rgba(83, 112, 98, 0.08)",
       }}

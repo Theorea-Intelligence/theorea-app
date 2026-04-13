@@ -24,9 +24,9 @@
   ══════════════════════════════════════════════════════════════════════════ */
 
   /* ── Canvas & surfaces ───────────────────────────────────────────────── */
-  --color-canvas:         #c9d9c9;   /* pale mint — base background */
-  --color-surface:        #f1e6c8;   /* warm parchment — card surface */
-  --color-surface-raised: #e8ddc0;   /* deep parchment — elevated / hover */
+  --color-canvas:         #f7f7f3;   /* pale mint — base background */
+  --color-surface:        #ffffff;   /* warm parchment — card surface */
+  --color-surface-raised: #f5f5f1;   /* deep parchment — elevated / hover */
 
   /* ── Semantic text tokens ────────────────────────────────────────────── */
   --color-ink:            #222f26;   /* deep forest — primary text */
@@ -34,11 +34,11 @@
   --color-ink-muted:      #92a38d;   /* light sage — ghost / caption */
 
   /* ── Aliases (used by older component classes) ───────────────────────── */
-  --color-parchment:      #c9d9c9;
-  --color-parchment-warm: #b8c9b8;   /* deeper mint — dividers */
-  --color-porcelain:      #f1e6c8;
-  --color-steam:          #e8ddc0;   /* deep parchment — separation */
-  --color-steam-light:    #f1e6c8;
+  --color-parchment:      #f7f7f3;
+  --color-parchment-warm: #ededea;   /* deeper mint — dividers */
+  --color-porcelain:      #ffffff;
+  --color-steam:          #ededea;   /* deep parchment — separation */
+  --color-steam-light:    #f5f5f1;
 
   /* ── Primary accent — Sage green ────────────────────────────────────── */
   --color-oolong:         #537062;   /* sage — buttons, links, active */
@@ -54,8 +54,8 @@
   --color-border:         rgba(34, 47, 38, 0.10);
 
   /* ── Typography ──────────────────────────────────────────────────────── */
-  --font-sans:  "DM Sans", "Proxima Nova", "Helvetica Neue", system-ui, sans-serif;
-  --font-serif: "Cormorant Garamond", "Garamond", Georgia, serif;
+  --font-sans:  "Plus Jakarta Sans", "Neue Montreal", "Helvetica Neue", system-ui, sans-serif;
+  --font-serif: "Young Serif", "Georgia", serif;
   --font-mono:  "JetBrains Mono", "Fira Code", monospace;
 
   /* ── Spacing ─────────────────────────────────────────────────────────── */
@@ -100,7 +100,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif);
   line-height: 1.15;
   letter-spacing: -0.01em;  /* Cormorant Garamond is naturally wider-spaced */
-  font-weight: 300;          /* Light weight looks most refined at display sizes */
+  font-weight: 400;
 }
 
 /* ── Selection ───────────────────────────────────────────────────────────── */
@@ -137,8 +137,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Lou chat input — italic placeholder ─────────────────────────────────── */
 input::placeholder {
-  font-style: italic;
-  color: rgba(201, 217, 201, 0.45);   /* visible on dark pill, muted on light surfaces */
+  color: rgba(83, 112, 98, 0.45);   /* visible on dark pill, muted on light surfaces */
   letter-spacing: 0.02em;
 }
 
@@ -148,8 +147,8 @@ input::placeholder {
   background: linear-gradient(
     to right,
     transparent,
-    rgba(83, 112, 98, 0.30) 30%,
-    rgba(83, 112, 98, 0.30) 70%,
+    rgba(83, 112, 98, 0.25) 30%,
+    rgba(83, 112, 98, 0.25) 70%,
     transparent
   );
 }

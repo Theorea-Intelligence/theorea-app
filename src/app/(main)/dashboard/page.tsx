@@ -51,18 +51,18 @@ function SuggestionCard({ product, reason }: { product: TeaProduct; reason: stri
         {!imgError ? (
           <Image src={product.imageUrl} alt={product.name} fill className="object-cover" unoptimized onError={() => setImgError(true)} />
         ) : (
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #e8ddc0, #c9d9c9)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #f5f5f1, #f7f7f3)" }} />
         )}
         {/* Overlay */}
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(34,47,38,0.88) 0%, transparent 55%)" }} />
         {/* Labels on photo */}
         <div className="absolute bottom-0 left-0 right-0 px-3 pb-3">
           <p className="font-sans text-[9px] tracking-[0.18em] uppercase font-medium mb-1"
-            style={{ color: "rgba(201,217,201,0.75)" }}>
+            style={{ color: "rgba(247,247,243,0.75)" }}>
             {product.type}
           </p>
           <h3 className="font-serif font-light leading-tight"
-            style={{ fontSize: 19, color: "#f1e6c8", letterSpacing: "-0.01em" }}>
+            style={{ fontSize: 19, color: "#ffffff", letterSpacing: "-0.01em" }}>
             {product.name}
           </h3>
         </div>
@@ -102,7 +102,7 @@ function LouCarousel({ cards, isLoading, label }: {
 
   return (
     <div className="animate-fade-in-up animation-delay-100 rounded-[20px] overflow-hidden"
-      style={{ border: "1.5px solid rgba(34,47,38,0.13)", background: "#f1e6c8" }}>
+      style={{ border: "1.5px solid rgba(34,47,38,0.13)", background: "#ffffff" }}>
 
       {/* Header row */}
       <div className="flex items-center justify-between px-4 pt-4 pb-3">
@@ -111,7 +111,7 @@ function LouCarousel({ cards, isLoading, label }: {
             style={{ color: "rgba(34,47,38,0.32)" }}>
             Lou suggests
           </p>
-          <p className="font-serif font-light italic mt-0.5"
+          <p className="font-serif font-light mt-0.5"
             style={{ fontSize: 15, color: "#222f26" }}>
             {label}
           </p>
@@ -172,7 +172,7 @@ function ActionTile({
       <div
         className="flex flex-col items-start gap-3 p-4 rounded-[16px] active:opacity-80 transition-opacity duration-200"
         style={{
-          background: "#f1e6c8",
+          background: "#ffffff",
           border: "1px solid rgba(34,47,38,0.09)",
         }}
       >
@@ -274,7 +274,7 @@ export default function Dashboard() {
       {/* ── Recent rituals ─────────────────────────────────────────────── */}
       <section
         className="rounded-[16px] animate-fade-in-up animation-delay-300"
-        style={{ background: "#f1e6c8", border: "1px solid rgba(34,47,38,0.09)" }}
+        style={{ background: "#ffffff", border: "1px solid rgba(34,47,38,0.09)" }}
       >
         <div className="flex items-center justify-between px-4 pt-4 pb-3">
           <p
@@ -330,7 +330,7 @@ export default function Dashboard() {
       {/* ── Marketplace peek ───────────────────────────────────────────── */}
       <section
         className="rounded-[16px] animate-fade-in-up animation-delay-400"
-        style={{ background: "#f1e6c8", border: "1px solid rgba(34,47,38,0.09)" }}
+        style={{ background: "#ffffff", border: "1px solid rgba(34,47,38,0.09)" }}
       >
         <div className="flex items-center justify-between px-4 pt-4 pb-3">
           <p

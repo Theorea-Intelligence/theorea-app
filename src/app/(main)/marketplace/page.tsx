@@ -20,7 +20,7 @@ function VenueChip({ venue }: { venue: TeaVenue }) {
       target="_blank"
       rel="noopener noreferrer"
       className="shrink-0 flex flex-col px-3.5 py-2.5 rounded-[14px] min-w-[140px] active:opacity-70 transition-opacity duration-200"
-      style={{ background: "#f1e6c8", border: "1px solid rgba(34,47,38,0.10)" }}
+      style={{ background: "#ffffff", border: "1px solid rgba(34,47,38,0.10)" }}
     >
       <div className="flex items-center justify-between mb-0.5">
         <p className="text-[12px] font-medium leading-tight line-clamp-1" style={{ color: "#222f26" }}>
@@ -101,7 +101,7 @@ function ProductCard({ tea, onAdd }: { tea: TeaProduct; onAdd: (t: TeaProduct) =
   return (
     <div
       className="overflow-hidden active:opacity-90 transition-opacity duration-200"
-      style={{ borderRadius: 16, background: "#f1e6c8" }}
+      style={{ borderRadius: 16, background: "#ffffff" }}
     >
       {/* Full-bleed photo */}
       <div className="relative w-full overflow-hidden" style={{ height: 200 }}>
@@ -117,14 +117,14 @@ function ProductCard({ tea, onAdd }: { tea: TeaProduct; onAdd: (t: TeaProduct) =
         ) : (
           <div
             className="absolute inset-0"
-            style={{ background: "linear-gradient(135deg, #c9d9c9, #c9d9c9)" }}
+            style={{ background: "linear-gradient(135deg, #f7f7f3, #f7f7f3)" }}
           />
         )}
 
         {/* Gradient */}
         <div
           className="absolute inset-0"
-          style={{ background: "linear-gradient(to top, rgba(34,47,38,0.85) 0%, rgba(201,217,201,0.1) 60%, transparent 100%)" }}
+          style={{ background: "linear-gradient(to top, rgba(34,47,38,0.85) 0%, rgba(247,247,243,0.1) 60%, transparent 100%)" }}
         />
 
         {/* Badges */}
@@ -132,7 +132,7 @@ function ProductCard({ tea, onAdd }: { tea: TeaProduct; onAdd: (t: TeaProduct) =
           {tea.brandTag === "theorea" && (
             <span
               className="text-[9px] tracking-[0.08em] uppercase font-medium px-2 py-1 rounded-full"
-              style={{ background: "rgba(201,217,201,0.75)", color: "#222f26", backdropFilter: "blur(8px)" }}
+              style={{ background: "rgba(247,247,243,0.75)", color: "#222f26", backdropFilter: "blur(8px)" }}
             >
               Théorea
             </span>
@@ -140,7 +140,7 @@ function ProductCard({ tea, onAdd }: { tea: TeaProduct; onAdd: (t: TeaProduct) =
           {!tea.available && (
             <span
               className="text-[9px] tracking-[0.07em] uppercase px-2 py-1 rounded-full"
-              style={{ background: "rgba(201,217,201,0.7)", color: "rgba(34,47,38,0.5)", backdropFilter: "blur(8px)" }}
+              style={{ background: "rgba(247,247,243,0.7)", color: "rgba(34,47,38,0.5)", backdropFilter: "blur(8px)" }}
             >
               Soon
             </span>
@@ -221,7 +221,7 @@ function BagToast({ name, onClose }: { name: string; onClose: () => void }) {
     <div
       className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3 animate-fade-in-up"
       style={{
-        background: "#e8ddc0",
+        background: "#f5f5f1",
         border: "1px solid rgba(83,112,98,0.28)",
         borderRadius: 20,
         boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
@@ -291,7 +291,7 @@ export default function MarketplacePage() {
       <div
         className="flex items-center gap-2 px-4 py-3 animate-fade-in-up animation-delay-75"
         style={{
-          background: "#f1e6c8",
+          background: "#ffffff",
           border: "1px solid rgba(34,47,38,0.10)",
           borderRadius: 14,
         }}
@@ -325,7 +325,7 @@ export default function MarketplacePage() {
                     color: "#222f26",
                   }
                 : {
-                    background: "#f1e6c8",
+                    background: "#ffffff",
                     border: "1px solid rgba(34,47,38,0.10)",
                     color: "rgba(34,47,38,0.4)",
                   }
@@ -388,7 +388,7 @@ export default function MarketplacePage() {
         onClick={() => router.push("/lou")}
         className="w-full flex items-center gap-3 p-4 active:opacity-80 transition-opacity duration-200 animate-fade-in-up animation-delay-400"
         style={{
-          background: "#f1e6c8",
+          background: "#ffffff",
           border: "1px solid rgba(83,112,98,0.20)",
           borderRadius: 16,
         }}
