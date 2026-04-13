@@ -1,37 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
+/*
+ * Fonts are self-hosted in /public/fonts/ as woff2 variable fonts.
+ * @font-face rules are declared directly in globals.css using /fonts/ absolute paths.
+ * This bypasses all bundler/CDN/CSS-variable issues entirely.
+ */
 import GoogleAnalytics from "@/components/ui/GoogleAnalytics";
 import PWARegister from "@/components/PWARegister";
 import { LocaleProvider } from "@/i18n/LocaleContext";
 import "@/styles/globals.css";
-
-/*
- * Plus Jakarta Sans — refined geometric humanist sans-serif.
- * Uses --nf-sans so it doesn't clash with Tailwind's @theme --font-sans.
- * Tailwind's @theme then sets --font-sans: var(--nf-sans) to bridge them.
- */
-const jakartaSans = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal"],
-  variable: "--nf-sans",   // ← unique name, no @theme clash
-  display: "swap",
-  preload: false,          // ← don't block first render waiting for Google CDN
-});
-
-/*
- * Playfair Display — high-contrast transitional serif, Baskerville lineage.
- * Uses --nf-serif so it doesn't clash with Tailwind's @theme --font-serif.
- * Tailwind's @theme then sets --font-serif: var(--nf-serif) to bridge them.
- */
-const playfairDisplay = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal"],
-  variable: "--nf-serif",  // ← unique name, no @theme clash
-  display: "swap",
-  preload: false,          // ← don't block first render waiting for Google CDN
-});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -76,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-GB" className={`${jakartaSans.variable} ${playfairDisplay.variable}`} style={{ fontFamily: "var(--nf-sans), system-ui, sans-serif" }}>
+    <html lang="en-GB">
       <body className="bg-parchment text-ink antialiased">
         <GoogleAnalytics />
         <PWARegister />

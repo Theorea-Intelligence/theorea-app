@@ -1,3 +1,22 @@
+/* ── Self-hosted variable fonts — served from /public/fonts/ ─────────────── */
+/* Absolute paths: guaranteed to work regardless of bundler, CDN, or caching  */
+
+@font-face {
+  font-family: "Playfair Display Variable";
+  src: url("/fonts/playfair-display-vf.woff2") format("woff2-variations");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nunito Sans Variable";
+  src: url("/fonts/nunito-sans-vf.woff2") format("woff2-variations");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @import "tailwindcss";
 
 /*
@@ -54,14 +73,14 @@
 
   /* ── Typography ──────────────────────────────────────────────────────── */
   /*
-   * Bridge to next/font variables.
-   * next/font injects --nf-sans and --nf-serif on <html> with real @font-face.
-   * We reference them here so Tailwind utility classes (font-sans / font-serif)
-   * resolve to the actual loaded webfonts, not just name strings that fall back
-   * to whatever the OS has installed.
+   * @fontsource-variable packages bundle @font-face rules directly into the
+   * CSS bundle. Font family names are set here as plain strings — no next/font
+   * CSS variable injection, no CDN, no Turbopack compatibility issues.
    */
-  --font-sans:  var(--nf-sans), "Helvetica Neue", system-ui, sans-serif;
-  --font-serif: var(--nf-serif), "Georgia", serif;
+  --nf-serif:   "Playfair Display Variable";
+  --nf-sans:    "Nunito Sans Variable";
+  --font-sans:  "Nunito Sans Variable", "Helvetica Neue", system-ui, sans-serif;
+  --font-serif: "Playfair Display Variable", "Georgia", serif;
   --font-mono:  "JetBrains Mono", "Fira Code", monospace;
 
   /* ── Spacing ─────────────────────────────────────────────────────────── */
@@ -90,8 +109,7 @@
    ════════════════════════════════════════════════════════════════════════════ */
 
 html {
-  /* Use the next/font variable directly — bypasses any @theme specificity fight */
-  font-family: var(--nf-sans), "Helvetica Neue", system-ui, sans-serif;
+  font-family: "Nunito Sans Variable", "Helvetica Neue", system-ui, sans-serif;
   color: var(--color-ink);
   background-color: var(--color-canvas);
   -webkit-font-smoothing: antialiased;
@@ -104,8 +122,7 @@ body {
   letter-spacing: 0.012em;
   background-color: var(--color-canvas);
   position: relative;
-  /* Ensure body inherits the loaded webfont, not a fallback */
-  font-family: var(--nf-sans), "Helvetica Neue", system-ui, sans-serif;
+  font-family: "Nunito Sans Variable", "Helvetica Neue", system-ui, sans-serif;
 }
 
 /* ── Noise grain overlay — removes digital flatness ──────────────────────── */
@@ -123,8 +140,7 @@ body::after {
 
 /* ── Display headings — Playfair Display, high letter-spacing ────────────── */
 h1, h2, h3, h4, h5, h6 {
-  /* Reference next/font variable directly — resolves to Playfair Display */
-  font-family: var(--nf-serif), "Georgia", serif;
+  font-family: "Playfair Display Variable", "Georgia", serif;
   line-height: 1.15;
   font-weight: 400;
 }
