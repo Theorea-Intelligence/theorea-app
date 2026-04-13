@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import LouOrb from "@/components/ui/LouOrb";
+import Image from "next/image";
 import { useLocale } from "@/i18n/LocaleContext";
 
 type Message = {
@@ -16,24 +16,136 @@ type LouState =
   | { kind: "sign_in_required" }
   | { kind: "limit_reached"; count: number; limit: number };
 
-/* ── Lou leaf avatar ─────────────────────────────────────────────────────── */
-function LouAvatar() {
+/* ══════════════════════════════════════════════════════════════════════════
+   Tea photo mosaic — the visual hero of the empty state
+   ══════════════════════════════════════════════════════════════════════════ */
+
+const MOSAIC_IMAGES = [
+  {
+    src: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=500&q=85",
+    alt: "Da Hong Pao oolong",
+    height: 200,
+  },
+  {
+    src: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500&q=85",
+    alt: "Jasmin Snow Buds",
+    height: 140,
+  },
+  {
+    src: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=500&q=85",
+    alt: "Tea ceremony",
+    height: 150,
+  },
+  {
+    src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=85",
+    alt: "Silver Needle white tea",
+    height: 195,
+  },
+  {
+    src: "https://images.unsplash.com/photo-1563822249548-9a72b6353cd1?w=500&q=85",
+    alt: "Gyokuro Japanese green tea",
+    height: 155,
+  },
+  {
+    src: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500&q=85",
+    alt: "High mountain oolong",
+    height: 130,
+  },
+];
+
+function TeaMosaic() {
+  const col1 = [MOSAIC_IMAGES[0], MOSAIC_IMAGES[2], MOSAIC_IMAGES[4]];
+  const col2 = [MOSAIC_IMAGES[1], MOSAIC_IMAGES[3], MOSAIC_IMAGES[5]];
+
   return (
     <div
-      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
+      className="w-full"
       style={{
-        background: "rgba(196,164,106,0.12)",
-        border: "1px solid rgba(196,164,106,0.2)",
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: 3,
+        borderRadius: 20,
+        overflow: "hidden",
       }}
     >
-      <svg width="13" height="13" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 6C18 12 12 20 14 32C16 38 20 42 24 44" stroke="#c4a46a" strokeWidth="2" fill="#8a6a4a" fillOpacity="0.25" strokeLinecap="round" />
-        <path d="M24 6C30 12 36 20 34 32C32 38 28 42 24 44" stroke="rgba(196,164,106,0.35)" strokeWidth="2" fill="rgba(196,164,106,0.08)" strokeLinecap="round" />
-        <line x1="24" y1="10" x2="24" y2="44" stroke="#c4a46a" strokeWidth="1" strokeLinecap="round" />
-      </svg>
+      {/* Column 1 */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+        {col1.map((img) => (
+          <div
+            key={img.src}
+            style={{ position: "relative", height: img.height, overflow: "hidden" }}
+          >
+            <Image
+              src={img.src}
+              alt={img.alt}
+              fill
+              className="object-cover"
+              unoptimized
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Column 2 — offset by 30px for stagger */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 3, marginTop: 30 }}>
+        {col2.map((img) => (
+          <div
+            key={img.src}
+            style={{ position: "relative", height: img.height, overflow: "hidden" }}
+          >
+            <Image
+              src={img.src}
+              alt={img.alt}
+              fill
+              className="object-cover"
+              unoptimized
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Gradient fade at bottom */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 100,
+          background: "linear-gradient(to top, #1e1710 0%, transparent 100%)",
+          pointerEvents: "none",
+        }}
+      />
     </div>
   );
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Streaming dots
+   ══════════════════════════════════════════════════════════════════════════ */
+function StreamingDots() {
+  return (
+    <span className="inline-flex items-center gap-[5px] ml-1">
+      {[0, 180, 360].map((d) => (
+        <span
+          key={d}
+          className="block rounded-full animate-gentle-pulse"
+          style={{
+            width: 5,
+            height: 5,
+            background: "#c4a46a",
+            animationDelay: `${d}ms`,
+            opacity: 0.55,
+          }}
+        />
+      ))}
+    </span>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Main page
+   ══════════════════════════════════════════════════════════════════════════ */
 
 export default function LouPage() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -48,188 +160,186 @@ export default function LouPage() {
   const { t } = useLocale();
   const router = useRouter();
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const sendMessage = async (text?: string) => {
     const content = text || input.trim();
-    if (!content || isStreaming) return;
-    if (louState.kind !== "idle") return;
+    if (!content || isStreaming || louState.kind !== "idle") return;
 
     setInput("");
     setError("");
 
-    const userMessage: Message = {
-      id: `user-${Date.now()}`,
-      role: "user",
-      content,
-    };
+    const userMsg: Message = { id: `user-${Date.now()}`, role: "user", content };
+    const asstMsg: Message = { id: `asst-${Date.now()}`, role: "assistant", content: "" };
+    const thread = [...messages, userMsg];
 
-    const assistantMessage: Message = {
-      id: `assistant-${Date.now()}`,
-      role: "assistant",
-      content: "",
-    };
-
-    const updatedMessages = [...messages, userMessage];
-    setMessages([...updatedMessages, assistantMessage]);
+    setMessages([...thread, asstMsg]);
     setIsStreaming(true);
 
     try {
-      const response = await fetch("/api/lou/chat", {
+      const res = await fetch("/api/lou/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: updatedMessages.map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
+          messages: thread.map((m) => ({ role: m.role, content: m.content })),
         }),
       });
 
-      if (response.status === 401) {
-        setMessages((prev) => prev.filter((m) => m.id !== assistantMessage.id));
+      if (res.status === 401) {
+        setMessages((p) => p.filter((m) => m.id !== asstMsg.id));
         setLouState({ kind: "sign_in_required" });
         setIsStreaming(false);
         return;
       }
-
-      if (response.status === 429) {
-        const errorData = await response.json().catch(() => ({}));
-        setMessages((prev) => prev.filter((m) => m.id !== assistantMessage.id));
+      if (res.status === 429) {
+        const d = await res.json().catch(() => ({}));
+        setMessages((p) => p.filter((m) => m.id !== asstMsg.id));
         setLouState({
           kind: "limit_reached",
-          count: errorData.usage?.count ?? 10,
-          limit: errorData.usage?.limit ?? 10,
+          count: d.usage?.count ?? 10,
+          limit: d.usage?.limit ?? 10,
         });
         setIsStreaming(false);
         return;
       }
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to reach Lou");
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}));
+        throw new Error(d.error || "Failed to reach Lou");
       }
 
-      const usageCountHeader = response.headers.get("X-Lou-Usage-Count");
-      const usageLimitHeader = response.headers.get("X-Lou-Usage-Limit");
-      if (usageCountHeader) setUsageCount(parseInt(usageCountHeader, 10));
-      if (usageLimitHeader) setUsageLimit(parseInt(usageLimitHeader, 10));
+      const ch = res.headers.get("X-Lou-Usage-Count");
+      const lh = res.headers.get("X-Lou-Usage-Limit");
+      if (ch) setUsageCount(parseInt(ch, 10));
+      if (lh) setUsageLimit(parseInt(lh, 10));
 
-      const reader = response.body?.getReader();
+      const reader = res.body?.getReader();
       const decoder = new TextDecoder();
-      if (!reader) throw new Error("No response stream");
+      if (!reader) throw new Error("No stream");
 
-      let fullText = "";
-      let buffer = "";
-
+      let full = "";
+      let buf = "";
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() || "";
-
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split("\n");
+        buf = lines.pop() || "";
         for (const line of lines) {
-          if (line.startsWith("data: ")) {
-            const data = line.slice(6).trim();
-            if (data === "[DONE]") continue;
-            try {
-              const parsed = JSON.parse(data);
-              if (parsed.text) {
-                fullText += parsed.text;
-                setMessages((prev) =>
-                  prev.map((m) =>
-                    m.id === assistantMessage.id ? { ...m, content: fullText } : m
-                  )
-                );
-              }
-            } catch {
-              // skip
+          if (!line.startsWith("data: ")) continue;
+          const raw = line.slice(6).trim();
+          if (raw === "[DONE]") continue;
+          try {
+            const parsed = JSON.parse(raw);
+            if (parsed.text) {
+              full += parsed.text;
+              setMessages((p) =>
+                p.map((m) => (m.id === asstMsg.id ? { ...m, content: full } : m))
+              );
             }
-          }
+          } catch { /* skip */ }
         }
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : t.lou.errorFallback;
       setError(msg);
-      setMessages((prev) => prev.filter((m) => m.id !== assistantMessage.id));
+      setMessages((p) => p.filter((m) => m.id !== asstMsg.id));
     } finally {
       setIsStreaming(false);
       inputRef.current?.focus();
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    sendMessage();
-  };
-
   const hasMessages = messages.length > 0;
   const isBlocked = louState.kind !== "idle";
-  const remaining =
-    usageCount !== null ? Math.max(0, usageLimit - usageCount) : null;
+  const remaining = usageCount !== null ? Math.max(0, usageLimit - usageCount) : null;
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-7.5rem)] md:h-[calc(100dvh-4rem)]">
+    <div
+      className="relative flex flex-col"
+      style={{
+        height: "calc(100dvh - 7.5rem)",
+        background: "#1e1710",
+        overflow: "hidden",
+      }}
+    >
 
-      {/* ── Paywall / Sign-in overlay ─────────────────────────────────── */}
+      {/* ── Paywall overlay ───────────────────────────────────────────────── */}
       {isBlocked && (
         <div
-          className="absolute inset-0 z-20 flex items-center justify-center px-8 backdrop-blur-sm"
-          style={{ background: "rgba(13,11,8,0.92)" }}
+          className="absolute inset-0 z-30 flex items-end justify-center pb-16 backdrop-blur-md"
+          style={{ background: "rgba(30,23,16,0.82)" }}
         >
-          <div className="flex flex-col items-center text-center max-w-[300px] animate-fade-in-up">
-            <div className="mb-6">
-              <LouOrb variant="hero" />
+          {/* Photo peeks through above */}
+          <div
+            className="w-full mx-4 rounded-3xl px-7 py-8 flex flex-col items-center text-center"
+            style={{
+              background: "rgba(40,33,26,0.96)",
+              border: "1px solid rgba(196,164,106,0.1)",
+              maxWidth: 360,
+              margin: "0 auto",
+            }}
+          >
+            {/* Small gold leaf mark */}
+            <div
+              className="flex items-center justify-center mb-5"
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                background: "rgba(200,170,110,0.14)",
+                border: "1px solid rgba(200,170,110,0.24)",
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 48 48" fill="none">
+                <path d="M24 6C18 12 12 20 14 32C16 38 20 42 24 44" stroke="#c4a46a" strokeWidth="1.8" fill="#8a6a4a" fillOpacity="0.25" strokeLinecap="round" />
+                <path d="M24 6C30 12 36 20 34 32C32 38 28 42 24 44" stroke="rgba(200,170,110,0.52)" strokeWidth="1.8" strokeLinecap="round" />
+                <line x1="24" y1="10" x2="24" y2="44" stroke="#c4a46a" strokeWidth="0.9" strokeLinecap="round" />
+              </svg>
             </div>
 
-            {louState.kind === "sign_in_required" && (
+            {louState.kind === "sign_in_required" ? (
               <>
-                <h2 className="font-serif text-[22px] font-light mb-2" style={{ color: "#f0ebe3" }}>
+                <h2
+                  className="font-serif font-light leading-snug mb-3"
+                  style={{ fontSize: 26, color: "#f0ebe3", letterSpacing: "-0.01em" }}
+                >
                   {t.lou.signInRequired}
                 </h2>
-                <p className="text-[13px] leading-relaxed mb-7" style={{ color: "rgba(176,162,146,0.6)" }}>
+                <p className="text-[13px] leading-[1.65] mb-7" style={{ color: "rgba(205,188,165,0.68)" }}>
                   {t.lou.signInRequiredSub}
                 </p>
                 <button
                   onClick={() => router.push("/welcome")}
-                  className="w-full px-6 py-3.5 text-[14px] font-medium rounded-2xl active:scale-[0.98] transition-all duration-200"
-                  style={{
-                    background: "#c4a46a",
-                    color: "#0d0b08",
-                  }}
+                  className="w-full py-4 rounded-2xl text-[13px] font-medium tracking-[0.05em] transition-all duration-200 active:scale-[0.98]"
+                  style={{ background: "#c4a46a", color: "#1e1710" }}
                 >
                   {t.lou.signInButton}
                 </button>
               </>
-            )}
-
-            {louState.kind === "limit_reached" && (
+            ) : (
               <>
-                <h2 className="font-serif text-[22px] font-light mb-2" style={{ color: "#f0ebe3" }}>
+                <h2
+                  className="font-serif font-light leading-snug mb-3"
+                  style={{ fontSize: 26, color: "#f0ebe3", letterSpacing: "-0.01em" }}
+                >
                   {t.lou.limitReached}
                 </h2>
-                <p className="text-[13px] leading-relaxed mb-2" style={{ color: "rgba(176,162,146,0.6)" }}>
+                <p className="text-[13px] leading-[1.65] mb-2" style={{ color: "rgba(205,188,165,0.68)" }}>
                   {t.lou.limitReachedSub}
                 </p>
-                <p className="text-[12px] mb-7 font-medium tracking-wide" style={{ color: "#c4a46a" }}>
+                <p className="text-[11px] tracking-[0.14em] uppercase mb-7" style={{ color: "#c4a46a" }}>
                   {t.lou.memberPitch}
                 </p>
                 <button
                   onClick={() => router.push("/profile")}
-                  className="w-full px-6 py-3.5 text-[14px] font-medium rounded-2xl active:scale-[0.98] transition-all duration-200 mb-3"
-                  style={{ background: "#c4a46a", color: "#0d0b08" }}
+                  className="w-full py-4 rounded-2xl text-[13px] font-medium tracking-[0.05em] transition-all duration-200 active:scale-[0.98] mb-3"
+                  style={{ background: "#c4a46a", color: "#1e1710" }}
                 >
                   {t.lou.becomeMember}
                 </button>
-                <p className="text-[11px]" style={{ color: "rgba(110,99,88,0.8)" }}>
+                <p className="text-[11px]" style={{ color: "rgba(160,142,122,0.70)" }}>
                   Renews on the 1st of each month.
                 </p>
               </>
@@ -238,164 +348,283 @@ export default function LouPage() {
         </div>
       )}
 
-      {/* ── Chat area ────────────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto">
-        {!hasMessages ? (
-          /* ── Empty state ── */
-          <div className="flex flex-col items-center justify-center h-full animate-fade-in-up">
-            <div className="mb-5">
-              <LouOrb variant="chat" />
-            </div>
+      {/* ══════════════════════════════════════════════════════════════
+          EMPTY STATE — Cosmos-style photo-first layout
+      ══════════════════════════════════════════════════════════════ */}
+      {!hasMessages && (
+        <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: "none" }}>
+          {/* Photo mosaic — fills most of the screen */}
+          <div className="relative px-4 pt-4" style={{ marginBottom: -20 }}>
+            <TeaMosaic />
+          </div>
 
-            <h2
-              className="font-serif text-[20px] font-light mb-1.5"
-              style={{ color: "#f0ebe3" }}
-            >
-              {t.lou.whatExplore}
-            </h2>
+          {/* Text content below the mosaic */}
+          <div
+            className="relative px-5 pt-8 pb-2 animate-fade-in-up"
+            style={{ animationDelay: "200ms" }}
+          >
+            {/* Eyebrow label */}
             <p
-              className="text-[13px] text-center max-w-[260px] leading-relaxed mb-6"
-              style={{ color: "rgba(176,162,146,0.55)" }}
+              className="text-[10px] tracking-[0.22em] uppercase font-medium mb-4"
+              style={{ color: "rgba(200,170,110,0.62)" }}
             >
-              {t.lou.subtitle}
+              Your Tea Sommelier
             </p>
 
-            {/* Quick suggestion chips */}
-            <div className="flex flex-wrap justify-center gap-2 max-w-[320px]">
-              {t.lou.chips.map((chip) => (
+            {/* Large editorial heading */}
+            <h1
+              className="font-serif font-light leading-[1.1] mb-5"
+              style={{
+                fontSize: "clamp(34px, 10vw, 48px)",
+                color: "#f0ebe3",
+                letterSpacing: "-0.025em",
+                maxWidth: 300,
+              }}
+            >
+              {t.lou.whatExplore}
+            </h1>
+
+            {/* Hairline divider */}
+            <div
+              className="mb-5"
+              style={{
+                width: "100%",
+                height: 1,
+                background: "linear-gradient(90deg, rgba(200,170,110,0.24) 0%, transparent 60%)",
+              }}
+            />
+
+            {/* Suggestion prompts — italic, text-first, like Cosmos labels */}
+            <div className="flex flex-col gap-3">
+              {t.lou.chips.map((chip, i) => (
                 <button
                   key={chip}
                   onClick={() => sendMessage(chip)}
-                  className="px-3.5 py-2 rounded-2xl text-[12px] active:scale-[0.97] transition-all duration-200"
-                  style={{
-                    background: "rgba(255,247,235,0.04)",
-                    border: "1px solid rgba(196,164,106,0.12)",
-                    color: "rgba(176,162,146,0.7)",
-                  }}
+                  className="flex items-start gap-3 text-left w-full group transition-all duration-150 active:opacity-50"
                 >
-                  {chip}
+                  <span
+                    className="shrink-0 mt-[3px]"
+                    style={{
+                      fontSize: 9,
+                      color: "rgba(200,170,110,0.42)",
+                      letterSpacing: "0.1em",
+                    }}
+                  >
+                    ↗
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 14,
+                      fontStyle: "italic",
+                      lineHeight: 1.5,
+                      color: i === 0
+                        ? "rgba(240,235,227,0.55)"
+                        : "rgba(176,162,146,0.3)",
+                      letterSpacing: "0.01em",
+                      transition: "color 150ms",
+                    }}
+                  >
+                    {chip}
+                  </span>
                 </button>
               ))}
             </div>
           </div>
-        ) : (
-          /* ── Messages ── */
-          <div className="px-1 py-3 space-y-4">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-              >
-                {/* Lou avatar */}
-                {msg.role === "assistant" && (
-                  <div className="shrink-0 mr-2.5 mt-1">
-                    <LouAvatar />
-                  </div>
-                )}
+        </div>
+      )}
 
-                {/* Bubble */}
-                <div
-                  className="max-w-[80%] rounded-2xl px-4 py-3"
-                  style={
-                    msg.role === "user"
-                      ? {
-                          background: "#f0ebe3",
-                          color: "#1e1a14",
-                          borderBottomRightRadius: "6px",
-                        }
-                      : {
-                          background: "rgba(255,247,235,0.04)",
-                          border: "1px solid rgba(255,247,235,0.06)",
-                          color: "#f0ebe3",
-                          borderBottomLeftRadius: "6px",
-                        }
-                  }
-                >
-                  <p className="text-[14px] leading-relaxed whitespace-pre-wrap">
-                    {msg.content}
-                    {msg.role === "assistant" && !msg.content && isStreaming && (
-                      <span className="inline-flex gap-1 ml-1">
-                        <span
-                          className="h-1.5 w-1.5 rounded-full animate-gentle-pulse"
-                          style={{ background: "rgba(196,164,106,0.5)" }}
-                        />
-                        <span
-                          className="h-1.5 w-1.5 rounded-full animate-gentle-pulse animation-delay-200"
-                          style={{ background: "rgba(196,164,106,0.5)" }}
-                        />
-                        <span
-                          className="h-1.5 w-1.5 rounded-full animate-gentle-pulse animation-delay-400"
-                          style={{ background: "rgba(196,164,106,0.5)" }}
-                        />
-                      </span>
-                    )}
-                  </p>
+      {/* ══════════════════════════════════════════════════════════════
+          MESSAGES — editorial transcript
+      ══════════════════════════════════════════════════════════════ */}
+      {hasMessages && (
+        <div
+          className="flex-1 overflow-y-auto px-5 pt-6"
+          style={{ scrollbarWidth: "none" }}
+        >
+          <div style={{ maxWidth: 560, margin: "0 auto" }}>
+            {messages.map((msg, idx) => {
+              const isUser = msg.role === "user";
+              const prevRole = idx > 0 ? messages[idx - 1].role : null;
+              const isFirstInGroup = prevRole !== msg.role;
+
+              return (
+                <div key={msg.id} className={isFirstInGroup ? "mt-8" : "mt-2"}>
+
+                  {/* Role label */}
+                  {isFirstInGroup && (
+                    <p
+                      className="font-sans font-medium uppercase mb-2.5"
+                      style={{
+                        fontSize: 9,
+                        letterSpacing: "0.22em",
+                        color: isUser
+                          ? "rgba(176,162,146,0.3)"
+                          : "rgba(196,164,106,0.45)",
+                        textAlign: isUser ? "right" : "left",
+                      }}
+                    >
+                      {isUser ? "You" : "Lou"}
+                    </p>
+                  )}
+
+                  {isUser ? (
+                    /* User — right-aligned italic, dimmer */
+                    <p
+                      style={{
+                        fontSize: 15,
+                        lineHeight: 1.65,
+                        color: "rgba(240,235,227,0.6)",
+                        fontStyle: "italic",
+                        textAlign: "right",
+                        letterSpacing: "0.01em",
+                      }}
+                    >
+                      {msg.content}
+                    </p>
+                  ) : (
+                    /* Lou — full width, left border, bright */
+                    <div
+                      style={{
+                        paddingLeft: 16,
+                        borderLeft: "1.5px solid rgba(200,170,110,0.28)",
+                      }}
+                    >
+                      <p
+                        style={{
+                          fontSize: 15,
+                          lineHeight: 1.8,
+                          color: "#ede7dc",
+                          letterSpacing: "0.012em",
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        {msg.content}
+                        {!msg.content && isStreaming && <StreamingDots />}
+                      </p>
+                      {msg.content && isStreaming && idx === messages.length - 1 && (
+                        <span className="mt-1 block">
+                          <StreamingDots />
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
+              );
+            })}
+            <div ref={messagesEndRef} className="h-6" />
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* ── Error message ─────────────────────────────────────────────────── */}
+      {/* ── Error nudge ───────────────────────────────────────────────────── */}
       {error && (
-        <div className="px-4 py-2">
-          <p className="text-[12px] text-center" style={{ color: "#a8885a" }}>{error}</p>
-        </div>
+        <p
+          className="text-center px-5 py-1.5"
+          style={{ fontSize: 12, color: "#a8885a", fontStyle: "italic" }}
+        >
+          {error}
+        </p>
       )}
 
-      {/* ── Remaining messages nudge ──────────────────────────────────────── */}
+      {/* ── Usage nudge ───────────────────────────────────────────────────── */}
       {remaining !== null && remaining <= 3 && remaining > 0 && !isBlocked && (
-        <div className="px-4 py-1.5 text-center">
-          <p className="text-[11px] tracking-wide" style={{ color: "rgba(110,99,88,0.7)" }}>
-            {t.lou.messagesRemaining(remaining)}
-          </p>
-        </div>
+        <p
+          className="text-center px-5 py-1 uppercase tracking-widest"
+          style={{ fontSize: 9, color: "rgba(160,142,122,0.70)" }}
+        >
+          {t.lou.messagesRemaining(remaining)}
+        </p>
       )}
 
-      {/* ── Input area ────────────────────────────────────────────────────── */}
-      <div className="pt-2 pb-1 shrink-0">
-        <form onSubmit={handleSubmit} className="flex items-end gap-2">
-          <div
-            className="flex-1 flex items-center rounded-2xl px-4 py-3"
-            style={{
-              background: "rgba(255,247,235,0.04)",
-              border: "1px solid rgba(255,247,235,0.07)",
-            }}
+      {/* ══════════════════════════════════════════════════════════════
+          INPUT BAR — pinned at bottom, minimal glass
+      ══════════════════════════════════════════════════════════════ */}
+      <div
+        className="shrink-0 px-4 pb-2 pt-3"
+        style={{
+          background: "linear-gradient(to top, #1e1710 60%, transparent 100%)",
+        }}
+      >
+        {/* Separator */}
+        <div
+          className="mb-3"
+          style={{
+            height: 1,
+            background: "linear-gradient(90deg, transparent 0%, rgba(255,247,235,0.12) 40%, rgba(255,247,235,0.12) 60%, transparent 100%)",
+          }}
+        />
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            sendMessage();
+          }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            background: "rgba(255,247,235,0.12)",
+            border: "1px solid rgba(255,247,235,0.12)",
+            borderRadius: 100,
+            padding: "10px 10px 10px 20px",
+          }}
+        >
+          {/* Gold leaf icon */}
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 48 48"
+            fill="none"
+            style={{ flexShrink: 0, opacity: 0.3 }}
           >
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={t.lou.askPlaceholder}
-              className="flex-1 bg-transparent text-[14px] focus:outline-none"
-              style={{
-                color: "#f0ebe3",
-              }}
-              disabled={isStreaming || isBlocked}
-            />
-          </div>
+            <path d="M24 6C18 12 12 20 14 32C16 38 20 42 24 44" stroke="#c4a46a" strokeWidth="2" fill="#8a6a4a" fillOpacity="0.3" strokeLinecap="round" />
+            <path d="M24 6C30 12 36 20 34 32C32 38 28 42 24 44" stroke="rgba(200,170,110,0.52)" strokeWidth="2" strokeLinecap="round" />
+            <line x1="24" y1="10" x2="24" y2="44" stroke="#c4a46a" strokeWidth="1" strokeLinecap="round" />
+          </svg>
+
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={t.lou.askPlaceholder}
+            disabled={isStreaming || isBlocked}
+            className="flex-1 bg-transparent focus:outline-none"
+            style={{
+              fontSize: 14,
+              color: "#f0ebe3",
+              caretColor: "#c4a46a",
+              letterSpacing: "0.01em",
+              lineHeight: 1.4,
+            }}
+          />
+
+          {/* Send button */}
           <button
             type="submit"
             disabled={!input.trim() || isStreaming || isBlocked}
-            className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full active:scale-[0.93] transition-all duration-200 disabled:opacity-25"
+            className="shrink-0 flex items-center justify-center rounded-full transition-all duration-200 active:scale-90 disabled:opacity-20"
             style={{
-              background: "linear-gradient(135deg, #d4b88a 0%, #c4a46a 50%, #a8885a 100%)",
+              width: 36,
+              height: 36,
+              background: input.trim() && !isStreaming && !isBlocked
+                ? "linear-gradient(135deg, #d4b88a, #c4a46a)"
+                : "transparent",
+              border: input.trim() && !isStreaming && !isBlocked
+                ? "none"
+                : "1px solid rgba(200,170,110,0.28)",
             }}
           >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="17"
-              height="17"
+              width="14"
+              height="14"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#0d0b08"
-              strokeWidth="2.2"
+              stroke={input.trim() && !isStreaming && !isBlocked ? "#1e1710" : "#c4a46a"}
+              strokeWidth="2.3"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="translate-x-[1px]"
+              style={{ transform: "translateX(1px)" }}
             >
               <line x1="22" y1="2" x2="11" y2="13" />
               <polygon points="22 2 15 22 11 13 2 9 22 2" />
@@ -403,6 +632,7 @@ export default function LouPage() {
           </button>
         </form>
       </div>
+
     </div>
   );
 }

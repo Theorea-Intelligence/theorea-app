@@ -159,7 +159,7 @@ function DesktopNav() {
         collapsed ? "w-16" : "w-56"
       }`}
       style={{
-        background: "rgba(13, 11, 8, 0.95)",
+        background: "rgba(30, 23, 16, 0.95)",
         backdropFilter: "blur(20px)",
         borderRight: "1px solid rgba(196, 164, 106, 0.08)",
       }}
@@ -214,7 +214,7 @@ function DesktopNav() {
                   }`}
                   style={{
                     color: isActive ? "#c4a46a" : "rgba(176,162,146,0.5)",
-                    background: isActive ? "rgba(196,164,106,0.08)" : "transparent",
+                    background: isActive ? "rgba(200,170,110,0.14)" : "transparent",
                   }}
                   title={collapsed ? item.label : undefined}
                 >
@@ -237,7 +237,7 @@ function DesktopNav() {
       </nav>
 
       {/* Profile at bottom */}
-      <div className="px-2 py-3" style={{ borderTop: "1px solid rgba(196,164,106,0.08)" }}>
+      <div className="px-2 py-3" style={{ borderTop: "1px solid rgba(200,170,110,0.14)" }}>
         {(() => {
           const profileItem = allItems[allItems.length - 1];
           const isActive = pathname.startsWith(profileItem.href);
@@ -249,7 +249,7 @@ function DesktopNav() {
               }`}
               style={{
                 color: isActive ? "#c4a46a" : "rgba(176,162,146,0.5)",
-                background: isActive ? "rgba(196,164,106,0.08)" : "transparent",
+                background: isActive ? "rgba(200,170,110,0.14)" : "transparent",
               }}
               title={collapsed ? profileItem.label : undefined}
             >

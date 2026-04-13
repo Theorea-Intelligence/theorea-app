@@ -20,7 +20,7 @@ function VenueChip({ venue }: { venue: TeaVenue }) {
       target="_blank"
       rel="noopener noreferrer"
       className="shrink-0 flex flex-col px-3.5 py-2.5 rounded-[14px] min-w-[140px] active:opacity-70 transition-opacity duration-200"
-      style={{ background: "#161310", border: "1px solid rgba(255,247,235,0.07)" }}
+      style={{ background: "#28211a", border: "1px solid rgba(255,247,235,0.12)" }}
     >
       <div className="flex items-center justify-between mb-0.5">
         <p className="text-[12px] font-medium leading-tight line-clamp-1" style={{ color: "#f0ebe3" }}>
@@ -80,7 +80,7 @@ function MapSection() {
           className="absolute inset-0 pointer-events-none"
           style={{
             borderRadius: 16,
-            border: "1px solid rgba(196,164,106,0.12)",
+            border: "1px solid rgba(200,170,110,0.20)",
           }}
         />
       </div>
@@ -101,7 +101,7 @@ function ProductCard({ tea, onAdd }: { tea: TeaProduct; onAdd: (t: TeaProduct) =
   return (
     <div
       className="overflow-hidden active:opacity-90 transition-opacity duration-200"
-      style={{ borderRadius: 16, background: "#161310" }}
+      style={{ borderRadius: 16, background: "#28211a" }}
     >
       {/* Full-bleed photo */}
       <div className="relative w-full overflow-hidden" style={{ height: 200 }}>
@@ -117,14 +117,14 @@ function ProductCard({ tea, onAdd }: { tea: TeaProduct; onAdd: (t: TeaProduct) =
         ) : (
           <div
             className="absolute inset-0"
-            style={{ background: "linear-gradient(135deg, #201c16, #0d0b08)" }}
+            style={{ background: "linear-gradient(135deg, #3a3026, #1e1710)" }}
           />
         )}
 
         {/* Gradient */}
         <div
           className="absolute inset-0"
-          style={{ background: "linear-gradient(to top, rgba(13,11,8,0.85) 0%, rgba(13,11,8,0.1) 60%, transparent 100%)" }}
+          style={{ background: "linear-gradient(to top, rgba(30,23,16,0.85) 0%, rgba(30,23,16,0.1) 60%, transparent 100%)" }}
         />
 
         {/* Badges */}
@@ -132,7 +132,7 @@ function ProductCard({ tea, onAdd }: { tea: TeaProduct; onAdd: (t: TeaProduct) =
           {tea.brandTag === "theorea" && (
             <span
               className="text-[9px] tracking-[0.08em] uppercase font-medium px-2 py-1 rounded-full"
-              style={{ background: "rgba(13,11,8,0.75)", color: "#c4a46a", backdropFilter: "blur(8px)" }}
+              style={{ background: "rgba(30,23,16,0.75)", color: "#c4a46a", backdropFilter: "blur(8px)" }}
             >
               Théorea
             </span>
@@ -140,7 +140,7 @@ function ProductCard({ tea, onAdd }: { tea: TeaProduct; onAdd: (t: TeaProduct) =
           {!tea.available && (
             <span
               className="text-[9px] tracking-[0.07em] uppercase px-2 py-1 rounded-full"
-              style={{ background: "rgba(13,11,8,0.7)", color: "rgba(240,235,227,0.5)", backdropFilter: "blur(8px)" }}
+              style={{ background: "rgba(30,23,16,0.7)", color: "rgba(240,235,227,0.5)", backdropFilter: "blur(8px)" }}
             >
               Soon
             </span>
@@ -175,7 +175,7 @@ function ProductCard({ tea, onAdd }: { tea: TeaProduct; onAdd: (t: TeaProduct) =
 
         <div
           className="flex items-center justify-between mt-3.5 pt-3.5"
-          style={{ borderTop: "1px solid rgba(255,247,235,0.06)" }}
+          style={{ borderTop: "1px solid rgba(255,247,235,0.10)" }}
         >
           <div>
             <span className="text-[16px] font-medium" style={{ color: "#f0ebe3" }}>{tea.price}</span>
@@ -187,8 +187,8 @@ function ProductCard({ tea, onAdd }: { tea: TeaProduct; onAdd: (t: TeaProduct) =
               onClick={() => onAdd(tea)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-[12px] font-medium active:opacity-70 transition-opacity duration-200"
               style={{
-                background: "rgba(196,164,106,0.12)",
-                border: "1px solid rgba(196,164,106,0.2)",
+                background: "rgba(200,170,110,0.20)",
+                border: "1px solid rgba(200,170,110,0.28)",
                 color: "#c4a46a",
               }}
             >
@@ -198,7 +198,7 @@ function ProductCard({ tea, onAdd }: { tea: TeaProduct; onAdd: (t: TeaProduct) =
             <button
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-[12px] font-medium"
               style={{
-                background: "rgba(255,247,235,0.04)",
+                background: "rgba(255,247,235,0.12)",
                 color: "rgba(240,235,227,0.3)",
               }}
             >
@@ -221,8 +221,8 @@ function BagToast({ name, onClose }: { name: string; onClose: () => void }) {
     <div
       className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3 animate-fade-in-up"
       style={{
-        background: "#1e1a14",
-        border: "1px solid rgba(196,164,106,0.2)",
+        background: "#332a20",
+        border: "1px solid rgba(200,170,110,0.28)",
         borderRadius: 20,
         boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
         color: "#f0ebe3",
@@ -291,8 +291,8 @@ export default function MarketplacePage() {
       <div
         className="flex items-center gap-2 px-4 py-3 animate-fade-in-up animation-delay-75"
         style={{
-          background: "#161310",
-          border: "1px solid rgba(255,247,235,0.07)",
+          background: "#28211a",
+          border: "1px solid rgba(255,247,235,0.12)",
           borderRadius: 14,
         }}
       >
@@ -320,13 +320,13 @@ export default function MarketplacePage() {
             style={
               activeFilter === f
                 ? {
-                    background: "rgba(196,164,106,0.15)",
-                    border: "1px solid rgba(196,164,106,0.35)",
+                    background: "rgba(200,170,110,0.24)",
+                    border: "1px solid rgba(200,170,110,0.48)",
                     color: "#c4a46a",
                   }
                 : {
-                    background: "#161310",
-                    border: "1px solid rgba(255,247,235,0.07)",
+                    background: "#28211a",
+                    border: "1px solid rgba(255,247,235,0.12)",
                     color: "rgba(240,235,227,0.4)",
                   }
             }
@@ -388,8 +388,8 @@ export default function MarketplacePage() {
         onClick={() => router.push("/lou")}
         className="w-full flex items-center gap-3 p-4 active:opacity-80 transition-opacity duration-200 animate-fade-in-up animation-delay-400"
         style={{
-          background: "#161310",
-          border: "1px solid rgba(196,164,106,0.12)",
+          background: "#28211a",
+          border: "1px solid rgba(200,170,110,0.20)",
           borderRadius: 16,
         }}
       >

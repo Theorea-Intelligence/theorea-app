@@ -59,7 +59,7 @@ function SuggestionCard({ product, reason }: { product: TeaProduct; reason: stri
         ) : (
           <div
             className="absolute inset-0"
-            style={{ background: "linear-gradient(135deg, #1e1a14, #0d0b08)" }}
+            style={{ background: "linear-gradient(135deg, #332a20, #1e1710)" }}
           />
         )}
 
@@ -67,7 +67,7 @@ function SuggestionCard({ product, reason }: { product: TeaProduct; reason: stri
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(to top, rgba(13,11,8,0.92) 0%, rgba(13,11,8,0.3) 50%, transparent 100%)",
+            background: "linear-gradient(to top, rgba(30,23,16,0.92) 0%, rgba(30,23,16,0.3) 50%, transparent 100%)",
           }}
         />
 
@@ -182,7 +182,7 @@ function LouCarousel({
                   style={{
                     width: i === activeIndex ? 20 : 6,
                     height: 6,
-                    background: i === activeIndex ? "#c4a46a" : "rgba(196,164,106,0.2)",
+                    background: i === activeIndex ? "#c4a46a" : "rgba(200,170,110,0.28)",
                   }}
                 />
               ))}
@@ -213,8 +213,8 @@ function ActionTile({
       <div
         className="flex flex-col items-start gap-3 p-4 rounded-[16px] active:opacity-80 transition-opacity duration-200"
         style={{
-          background: "#161310",
-          border: "1px solid rgba(255,247,235,0.06)",
+          background: "#28211a",
+          border: "1px solid rgba(255,247,235,0.10)",
         }}
       >
         <div
@@ -310,7 +310,7 @@ export default function Dashboard() {
       {/* ── Recent rituals ─────────────────────────────────────────────── */}
       <section
         className="rounded-[16px] animate-fade-in-up animation-delay-300"
-        style={{ background: "#161310", border: "1px solid rgba(255,247,235,0.06)" }}
+        style={{ background: "#28211a", border: "1px solid rgba(255,247,235,0.10)" }}
       >
         <div className="flex items-center justify-between px-4 pt-4 pb-3">
           <p
@@ -366,7 +366,7 @@ export default function Dashboard() {
       {/* ── Marketplace peek ───────────────────────────────────────────── */}
       <section
         className="rounded-[16px] animate-fade-in-up animation-delay-400"
-        style={{ background: "#161310", border: "1px solid rgba(255,247,235,0.06)" }}
+        style={{ background: "#28211a", border: "1px solid rgba(255,247,235,0.10)" }}
       >
         <div className="flex items-center justify-between px-4 pt-4 pb-3">
           <p

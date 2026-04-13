@@ -6,37 +6,37 @@
  */
 
 @theme {
-  /* ── Dark canvas palette ─────────────────────────────────────────────────
-     The old light palette is inverted. "Parchment" now refers to the dark
-     canvas; "ink" is the warm-white text. Oolong gold stays unchanged —
-     it was always the hero accent. */
+  /* ── Warm Cognac palette ─────────────────────────────────────────────────
+     Shifted from cold black to a rich warm dark brown — the colour of aged
+     walnut, black tea at depth, or a luxury leather-bound journal. Surfaces
+     are clearly differentiated so the eye has somewhere to land. */
 
-  --color-canvas:         #0d0b08;   /* deepest background */
-  --color-surface:        #161310;   /* card surfaces */
-  --color-surface-raised: #1e1a14;   /* elevated / hover */
+  --color-canvas:         #1e1710;   /* base — warm dark brown, not black */
+  --color-surface:        #28211a;   /* card surfaces, clearly visible */
+  --color-surface-raised: #332a20;   /* elevated / hover */
 
   /* Semantic aliases used throughout components */
-  --color-ink:            #f0ebe3;   /* primary text — warm white */
-  --color-ink-light:      #b8a898;   /* secondary text */
-  --color-ink-muted:      #6e6358;   /* ghost text */
-  --color-parchment:      #0d0b08;   /* background (dark) */
-  --color-parchment-warm: #111009;
-  --color-porcelain:      #161310;   /* card surface (dark) */
-  --color-steam:          #201c16;   /* elevated surface */
-  --color-steam-light:    #161310;
+  --color-ink:            #f5eedf;   /* primary text — warm cream */
+  --color-ink-light:      #cbb89a;   /* secondary text — legible */
+  --color-ink-muted:      #9a8878;   /* ghost text — visible, not invisible */
+  --color-parchment:      #1e1710;   /* background alias */
+  --color-parchment-warm: #231c12;
+  --color-porcelain:      #28211a;   /* card surface alias */
+  --color-steam:          #3a3026;   /* elevated surface */
+  --color-steam-light:    #28211a;
 
-  /* Gold — Théorea's signature accent */
-  --color-oolong:         #c4a46a;
-  --color-oolong-light:   #d4b88a;
-  --color-oolong-dark:    #a8885a;
+  /* Gold — Théorea's signature accent, slightly warmer */
+  --color-oolong:         #c8aa72;
+  --color-oolong-light:   #d9c08e;
+  --color-oolong-dark:    #aa8c5a;
 
   /* Jade — secondary accent, used sparingly */
   --color-jade:           #6a9a7a;
   --color-jade-light:     #8ab89a;
   --color-jade-dark:      #4a7a5a;
 
-  /* Border — barely there */
-  --color-border:         rgba(255, 247, 235, 0.07);
+  /* Border — subtle but present */
+  --color-border:         rgba(255, 247, 235, 0.09);
 
   /* Typography */
   --font-sans:  "Inter", "Helvetica Neue", system-ui, sans-serif;
@@ -58,10 +58,10 @@
   --radius-soft:   0.75rem;
 
   /* Shadows — warm dark */
-  --shadow-whisper: 0 1px 6px  rgba(0, 0, 0, 0.35);
-  --shadow-soft:    0 4px 20px rgba(0, 0, 0, 0.5);
-  --shadow-lift:    0 8px 32px rgba(0, 0, 0, 0.6);
-  --shadow-glow:    0 0 40px   rgba(196, 164, 106, 0.12);
+  --shadow-whisper: 0 1px 6px  rgba(0, 0, 0, 0.25);
+  --shadow-soft:    0 4px 20px rgba(0, 0, 0, 0.35);
+  --shadow-lift:    0 8px 32px rgba(0, 0, 0, 0.45);
+  --shadow-glow:    0 0 40px   rgba(200, 170, 114, 0.18);
 }
 
 /* ── Base styles ──────────────────────────────────────────────────────────── */
@@ -117,6 +117,13 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Mobile tap highlight ────────────────────────────────────────────────── */
 @media (hover: none) {
   * { -webkit-tap-highlight-color: transparent; }
+}
+
+/* ── Lou chat input — italic placeholder ─────────────────────────────────── */
+input::placeholder {
+  font-style: italic;
+  color: rgba(200, 184, 160, 0.45);
+  letter-spacing: 0.02em;
 }
 
 /* ── Cosmos-style subtle divider ─────────────────────────────────────────── */
