@@ -6,6 +6,8 @@ import { updatePassword, supabase } from "@/lib/supabase/client";
 import LouOrb from "@/components/ui/LouOrb";
 import { useLocale } from "@/i18n/LocaleContext";
 
+type PageState = "checking" | "ready" | "expired";
+
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -13,20 +15,48 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error">("success");
-  const [sessionReady, setSessionReady] = useState(false);
+  const [pageState, setPageState] = useState<PageState>("checking");
   const router = useRouter();
   const { t } = useLocale();
 
-  // Supabase sends a recovery session via the URL hash — wait for it
   useEffect(() => {
+    /**
+     * The auth callback already called verifyOtp(token_hash, "recovery") which
+     * creates a session and stores it in cookies. We just need to confirm a
+     * session exists before showing the form.
+     *
+     * We also listen for auth state changes as a secondary signal, in case the
+     * session hasn't propagated to cookies quite yet on first render.
+     */
+    let resolved = false;
+
+    const resolve = (ready: boolean) => {
+      if (resolved) return;
+      resolved = true;
+      setPageState(ready ? "ready" : "expired");
+    };
+
+    // Primary check — read the session from cookies
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      resolve(!!session);
+    });
+
+    // Secondary signal — catch PASSWORD_RECOVERY or SIGNED_IN events
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event) => {
-        if (event === "PASSWORD_RECOVERY") {
-          setSessionReady(true);
+      (event, session) => {
+        if (event === "PASSWORD_RECOVERY" || (event === "SIGNED_IN" && session)) {
+          resolve(true);
         }
       }
     );
-    return () => subscription.unsubscribe();
+
+    // Safety timeout — if neither fires within 4 s, treat link as expired
+    const timeout = setTimeout(() => resolve(false), 4000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,6 +92,7 @@ export default function ResetPasswordPage() {
     <main className="flex min-h-[100dvh] flex-col items-center justify-between px-8 py-12 safe-top safe-bottom bg-parchment">
       <div />
 
+      {/* Brand */}
       <div className="flex flex-col items-center text-center">
         <div className="mb-8">
           <LouOrb variant="hero" />
@@ -77,12 +108,33 @@ export default function ResetPasswordPage() {
         </p>
       </div>
 
+      {/* Form area */}
       <div className="w-full max-w-[320px]">
-        {!sessionReady ? (
-          <p className="text-[13px] text-ink-muted text-center">
+
+        {/* Checking — brief spinner while session is verified */}
+        {pageState === "checking" && (
+          <p className="text-[13px] text-ink-muted text-center animate-pulse">
             {t.welcome.verifyingLink}
           </p>
-        ) : (
+        )}
+
+        {/* Expired — link was invalid, already used, or timed out */}
+        {pageState === "expired" && (
+          <div className="text-center space-y-4">
+            <p className="text-[13px] text-oolong-dark leading-relaxed">
+              This link has expired or has already been used. Password reset links are valid for one hour.
+            </p>
+            <button
+              onClick={() => router.push("/welcome?mode=login")}
+              className="w-full px-4 py-3.5 bg-ink text-porcelain text-[14px] font-medium rounded-2xl transition-all duration-200 active:scale-[0.98]"
+            >
+              Request a new link
+            </button>
+          </div>
+        )}
+
+        {/* Ready — session confirmed, show the new password form */}
+        {pageState === "ready" && (
           <form onSubmit={handleSubmit} className="space-y-2.5">
             <div className="relative">
               <input
@@ -94,6 +146,7 @@ export default function ResetPasswordPage() {
                 required
                 minLength={8}
                 disabled={loading}
+                autoFocus
               />
               <button
                 type="button"

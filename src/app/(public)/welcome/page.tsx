@@ -68,16 +68,37 @@ function WelcomeContent() {
       });
 
       if (error) {
-        setMessage(error.message);
+        // Map Supabase error messages to friendly British English
+        let friendlyError = error.message;
+        if (error.message.toLowerCase().includes("already registered") ||
+            error.message.toLowerCase().includes("user already exists")) {
+          friendlyError = "An account with this email already exists. Please sign in instead.";
+        } else if (error.message.toLowerCase().includes("invalid email")) {
+          friendlyError = "Please enter a valid email address.";
+        } else if (error.message.toLowerCase().includes("password")) {
+          friendlyError = "Password must be at least 8 characters.";
+        } else if (error.message.toLowerCase().includes("rate limit") ||
+                   error.message.toLowerCase().includes("too many")) {
+          friendlyError = "Too many attempts. Please wait a moment and try again.";
+        }
+        setMessage(friendlyError);
         setMessageType("error");
         trackLoginError("email_signup", error.message);
       } else if (data.user && !data.session) {
-        // Email confirmation required
-        setMessage(t.welcome.checkEmailSignup);
-        setMessageType("success");
-        trackSignUp("email");
+        // Supabase returns identities: [] when the email is already registered
+        // (it doesn't return an error to prevent email enumeration)
+        if (data.user.identities && data.user.identities.length === 0) {
+          setMessage("An account with this email already exists. Please sign in instead.");
+          setMessageType("error");
+          trackLoginError("email_signup", "duplicate_email");
+        } else {
+          // Genuine new user — confirmation email sent
+          setMessage(t.welcome.checkEmailSignup);
+          setMessageType("success");
+          trackSignUp("email");
+        }
       } else if (data.session) {
-        // Signed in immediately (email confirmation disabled)
+        // Signed in immediately (email confirmation disabled in Supabase)
         trackSignUp("email");
         router.push("/dashboard");
       }
@@ -86,7 +107,18 @@ function WelcomeContent() {
       const { data, error } = await signInWithPassword(email, password);
 
       if (error) {
-        setMessage(error.message);
+        let friendlyError = error.message;
+        if (error.message.toLowerCase().includes("invalid login") ||
+            error.message.toLowerCase().includes("invalid credentials") ||
+            error.message.toLowerCase().includes("wrong password")) {
+          friendlyError = "Incorrect email or password. Please try again.";
+        } else if (error.message.toLowerCase().includes("email not confirmed")) {
+          friendlyError = "Please confirm your email address first. Check your inbox for the verification link we sent you.";
+        } else if (error.message.toLowerCase().includes("rate limit") ||
+                   error.message.toLowerCase().includes("too many")) {
+          friendlyError = "Too many attempts. Please wait a moment and try again.";
+        }
+        setMessage(friendlyError);
         setMessageType("error");
         trackLoginError("email_login", error.message);
       } else if (data.session) {
