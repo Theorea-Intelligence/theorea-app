@@ -71,7 +71,7 @@ export default function RitualsPage() {
             </div>
           ))}
         </div>
-      </section>
-    </div>
+      </section>    </div>
+
   );
 }

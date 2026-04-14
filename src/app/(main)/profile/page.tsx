@@ -121,7 +121,7 @@ export default function ProfilePage() {
         className="w-full rounded-2xl bg-porcelain py-3.5 text-[14px] text-oolong-dark font-medium shadow-[0_1px_3px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform duration-200 animate-fade-in-up animation-delay-400"
       >
         {t.profile.signOut}
-      </button>
-    </div>
+      </button>    </div>
+
   );
 }

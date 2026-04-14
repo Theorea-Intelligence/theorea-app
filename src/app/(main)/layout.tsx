@@ -8,12 +8,8 @@ export default function MainLayout({
   return (
     <div className="min-h-screen bg-[#f7f7f3]">
       <Navigation />
-
-      {/* Main content — mobile-first, dark canvas */}
-      <main className="pb-28 md:pb-0 md:pl-56 safe-top">
-        <div className="mx-auto max-w-3xl px-4 pt-4 pb-4 md:px-8 md:py-8">
-          {children}
-        </div>
+      <main className="pb-[88px] md:pb-0 md:pl-56 safe-top">
+        {children}
       </main>
     </div>
   );

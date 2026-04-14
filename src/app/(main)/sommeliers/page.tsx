@@ -36,7 +36,7 @@ export default function SommeliersPage() {
             {t.sommeliers.notifyMe}
           </button>
         </div>
-      </section>
-    </div>
+      </section>    </div>
+
   );
 }
