@@ -16,7 +16,8 @@ const SANS  = '"Nunito Sans Variable", "Helvetica Neue", system-ui, sans-serif';
  * Falls back to a matching Unsplash photo until then.
  */
 const RITUALS_BG = "/images/rituals-bg.jpg";
-const RITUALS_BG_FALLBACK = "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=1200&q=85";
+/* Unsplash: soft window light, neutral tones — closest match to the ceramic chawan photo */
+const RITUALS_BG_FALLBACK = "https://images.unsplash.com/photo-1594906374908-8e70ceac65c3?w=1400&q=85";
 
 /* ── Tea recommendation carousel — same 3 teas as homepage ──────────────── */
 function TeaCarousel() {
@@ -329,15 +330,15 @@ export default function RitualsPage() {
     /* Full photo background — ceramic chawan / window light */
     <div style={{ position: "relative", minHeight: "100%" }}>
 
-      {/* Fixed background image behind all content */}
+      {/*
+       * Fixed background at z-index: 0 — paints ABOVE the layout's static
+       * bg-[#f7f7f3] parent div (non-positioned elements paint before z-index ≥ 0).
+       * All page content uses z-index: 1 to sit above this background.
+       */}
       <div style={{
         position: "fixed",
-        /* Offset for the desktop sidebar */
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        zIndex: -1,
+        inset: 0,
+        zIndex: 0,
         overflow: "hidden",
       }}>
         <Image
@@ -349,14 +350,17 @@ export default function RitualsPage() {
           unoptimized
           onError={() => setBgSrc(RITUALS_BG_FALLBACK)}
         />
-        {/* Warm frosted overlay — keeps text legible without hiding the photo */}
+        {/* Warm frosted overlay — keeps text legible, lets photo breathe */}
         <div style={{
           position: "absolute", inset: 0,
-          background: "rgba(247, 244, 238, 0.72)",
-          backdropFilter: "blur(2px)",
-          WebkitBackdropFilter: "blur(2px)",
+          background: "rgba(244, 241, 235, 0.68)",
+          backdropFilter: "blur(3px)",
+          WebkitBackdropFilter: "blur(3px)",
         }} />
       </div>
+
+      {/* All content sits above the background image */}
+      <div style={{ position: "relative", zIndex: 1 }}>
 
       {/* ── Page header ─────────────────────────────────────────────── */}
       <header style={{
@@ -484,6 +488,9 @@ export default function RitualsPage() {
 
         {/* Bottom spacer */}
         <div style={{ height: 32 }} />
+      </div>
+
+      {/* Close z-index: 1 content wrapper */}
       </div>
     </div>
   );
