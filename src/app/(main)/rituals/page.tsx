@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useTeaContext } from "@/lib/context/useTeaContext";
@@ -9,6 +9,14 @@ import { ALL_PRODUCTS, type TeaProduct } from "@/lib/data/products";
 
 const SERIF = '"Playfair Display Variable", "Georgia", serif';
 const SANS  = '"Nunito Sans Variable", "Helvetica Neue", system-ui, sans-serif';
+
+/*
+ * Rituals page background — the ceramic chawan / window light photo.
+ * Place the image at: public/images/rituals-bg.jpg
+ * Falls back to a matching Unsplash photo until then.
+ */
+const RITUALS_BG = "/images/rituals-bg.jpg";
+const RITUALS_BG_FALLBACK = "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=1200&q=85";
 
 /* ── Tea recommendation carousel — same 3 teas as homepage ──────────────── */
 function TeaCarousel() {
@@ -221,13 +229,15 @@ function RitualCard({
   return (
     <div
       style={{
-        background: "#ffffff",
+        background: "rgba(255, 252, 248, 0.82)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
         borderRadius: 16,
         padding: "16px 18px",
-        border: "1px solid rgba(34,47,38,0.07)",
+        border: "0.5px solid rgba(255,255,255,0.70)",
         boxShadow: [
           "inset 0 0.5px 0 rgba(255,255,255,0.90)",
-          "0 2px 12px rgba(34,47,38,0.07)",
+          "0 2px 16px rgba(34,47,38,0.09)",
         ].join(", "),
         cursor: "pointer",
         transition: "opacity 0.2s ease",
@@ -286,6 +296,7 @@ function RitualCard({
 export default function RitualsPage() {
   const { t } = useLocale();
   const [showForm, setShowForm] = useState(false);
+  const [bgSrc, setBgSrc] = useState(RITUALS_BG);
 
   const rituals = [
     {
@@ -315,11 +326,37 @@ export default function RitualsPage() {
   ];
 
   return (
-    /* Soft warm tearoom background — not a flat colour */
-    <div style={{
-      background: "linear-gradient(160deg, #f7f7f3 0%, #f0ece5 100%)",
-      minHeight: "100%",
-    }}>
+    /* Full photo background — ceramic chawan / window light */
+    <div style={{ position: "relative", minHeight: "100%" }}>
+
+      {/* Fixed background image behind all content */}
+      <div style={{
+        position: "fixed",
+        /* Offset for the desktop sidebar */
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        zIndex: -1,
+        overflow: "hidden",
+      }}>
+        <Image
+          src={bgSrc}
+          alt="Tearoom background"
+          fill
+          style={{ objectFit: "cover", objectPosition: "center 40%" }}
+          priority
+          unoptimized
+          onError={() => setBgSrc(RITUALS_BG_FALLBACK)}
+        />
+        {/* Warm frosted overlay — keeps text legible without hiding the photo */}
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "rgba(247, 244, 238, 0.72)",
+          backdropFilter: "blur(2px)",
+          WebkitBackdropFilter: "blur(2px)",
+        }} />
+      </div>
 
       {/* ── Page header ─────────────────────────────────────────────── */}
       <header style={{
