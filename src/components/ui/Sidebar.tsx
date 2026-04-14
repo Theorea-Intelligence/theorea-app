@@ -375,6 +375,10 @@ function DesktopNav() {
 }
 
 export default function Navigation() {
+  const pathname = usePathname();
+  // Dashboard is a single-screen view — the glass card CTA is the only portal.
+  // Hide the nav entirely so nothing competes with the full-bleed hero.
+  if (pathname === "/dashboard" || pathname === "/") return null;
   return (
     <>
       <MobileNav />

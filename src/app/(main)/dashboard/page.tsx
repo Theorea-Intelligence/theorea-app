@@ -1,19 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useTeaContext } from "@/lib/context/useTeaContext";
-import { useLocale } from "@/i18n/LocaleContext";
 import { ALL_PRODUCTS, type TeaProduct } from "@/lib/data/products";
 
-/* ── Font constants — hardcoded to bypass any CSS variable resolution issues ─ */
+/* ── Font constants — hardcoded, no CSS var() needed ─────────────────────── */
 const SERIF = '"Playfair Display Variable", "Georgia", serif';
 const SANS  = '"Nunito Sans Variable", "Helvetica Neue", system-ui, sans-serif';
 
 /* ── Weather icon ─────────────────────────────────────────────────────────── */
 function WeatherIcon({ code, isDay }: { code: number; isDay: boolean }) {
-  const s = 14;
+  const s = 13;
   if (code === 0) {
     return isDay ? (
       <svg xmlns="http://www.w3.org/2000/svg" width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -43,47 +42,66 @@ function WeatherIcon({ code, isDay }: { code: number; isDay: boolean }) {
   );
 }
 
-/* ── Quick action tile ────────────────────────────────────────────────────── */
-function ActionTile({ href, icon, label, sub, accentColor }: {
-  href: string; icon: React.ReactNode; label: string; sub: string; accentColor: string;
-}) {
+/* ── Individual tea slide inside the swipeable card ─────────────────────── */
+function TeaSlide({ product, reason }: { product: TeaProduct; reason: string }) {
   return (
-    <Link href={href}>
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        gap: 10,
-        padding: 16,
-        borderRadius: 16,
-        background: "#ffffff",
-        border: "1px solid rgba(34,47,38,0.08)",
-        boxShadow: "inset 0 0.5px 0 rgba(255,255,255,0.9), 0 1px 4px rgba(34,47,38,0.06)",
+    <div style={{
+      width: "100%",
+      flexShrink: 0,
+      scrollSnapAlign: "start",
+      padding: "0 24px",
+    }}>
+      {/* Tea type label */}
+      <p style={{
+        fontFamily: SANS,
+        fontSize: 9,
+        fontWeight: 600,
+        letterSpacing: "0.22em",
+        textTransform: "uppercase",
+        color: "rgba(147,163,141,0.75)",
+        marginBottom: 8,
       }}>
-        <div style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          height: 36, width: 36, borderRadius: 10,
-          background: `${accentColor}18`,
-        }}>
-          <span style={{ color: accentColor }}>{icon}</span>
-        </div>
-        <div>
-          <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: "#222f26" }}>{label}</p>
-          <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(34,47,38,0.35)", marginTop: 2 }}>{sub}</p>
-        </div>
-      </div>
-    </Link>
+        {product.type} · {product.origin}
+      </p>
+
+      {/* Tea name */}
+      <h2 style={{
+        fontFamily: SERIF,
+        fontSize: 30,
+        fontWeight: 400,
+        letterSpacing: "0.04em",
+        lineHeight: 1.1,
+        color: "#ffffff",
+        margin: 0,
+      }}>
+        {product.name}
+      </h2>
+
+      {/* Reason */}
+      <p style={{
+        fontFamily: SANS,
+        fontSize: 13,
+        fontWeight: 300,
+        color: "rgba(247,247,243,0.55)",
+        lineHeight: 1.65,
+        marginTop: 10,
+        letterSpacing: "0.01em",
+      }}>
+        {reason}
+      </p>
+    </div>
   );
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   Dashboard — image-first hero with greeting + tea suggestion card
+   Dashboard — full-bleed single screen. No navbar, no below-fold content.
+   position:fixed so the hero image bleeds behind the iOS status bar.
    ══════════════════════════════════════════════════════════════════════════════ */
 export default function Dashboard() {
   const { time, weather, recommendation, isLoading, locationName } = useTeaContext();
-  const { t } = useLocale();
   const [activeIndex, setActiveIndex] = useState(0);
   const [imgError, setImgError] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const primaryProduct =
     ALL_PRODUCTS.find((p) => p.name.toLowerCase() === recommendation.tea.toLowerCase()) ??
@@ -91,373 +109,272 @@ export default function Dashboard() {
   const others = ALL_PRODUCTS.filter((p) => p.id !== primaryProduct.id).slice(0, 2);
 
   const cards = [
-    { product: primaryProduct, reason: recommendation.reason },
+    {
+      product: primaryProduct,
+      reason: recommendation.reason,
+    },
     {
       product: others[0],
-      reason: "A floral, meditative choice — jasmine unfolds slowly in warm water, each infusion lighter than the last.",
+      reason:
+        "A floral, meditative choice — jasmine unfolds slowly in warm water, each infusion lighter than the last.",
     },
     {
       product: others[1],
-      reason: "Layered complexity born from patience. A journey through terroir, time, and quiet depth.",
+      reason:
+        "Layered complexity born from patience. A journey through terroir, time, and quiet depth.",
     },
   ];
 
-  const active = cards[activeIndex];
+  /* Track active dot as user swipes */
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const w = scrollRef.current.clientWidth;
+    if (w === 0) return;
+    const idx = Math.min(
+      Math.round(scrollRef.current.scrollLeft / w),
+      cards.length - 1
+    );
+    setActiveIndex(idx);
+  };
+
+  /* Tap a dot → scroll to that slide */
+  const scrollToSlide = (i: number) => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollTo({ left: i * scrollRef.current.clientWidth, behavior: "smooth" });
+    setActiveIndex(i);
+  };
+
+  /* Background image cycles with the active slide */
+  const bgImage = cards[activeIndex]?.product.imageUrl;
 
   return (
-    /* Full-bleed — no container padding, the layout's pb-[88px] handles nav space */
-    <div>
+    /*
+     * position:fixed + inset:0 → covers the full viewport including the iOS
+     * status bar area. The greeting overlay uses env(safe-area-inset-top) to
+     * push its text below the clock/wifi/battery icons.
+     */
+    <div style={{
+      position: "fixed",
+      inset: 0,
+      background: "#1a2019",
+      overflow: "hidden",
+    }}>
+
+      {/* ── Background tea image ──────────────────────────────────────── */}
+      {!imgError && bgImage ? (
+        <Image
+          key={activeIndex}
+          src={bgImage}
+          alt={cards[activeIndex].product.name}
+          fill
+          style={{ objectFit: "cover", objectPosition: "center" }}
+          priority
+          unoptimized
+          onError={() => setImgError(true)}
+        />
+      ) : (
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(145deg, #2f2d29 0%, #1a2019 100%)",
+        }} />
+      )}
+
+      {/* ── Top gradient — text legibility ───────────────────────────── */}
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        background: "linear-gradient(to bottom, rgba(16,24,18,0.80) 0%, rgba(16,24,18,0.25) 35%, transparent 55%)",
+      }} />
+
+      {/* ── Bottom gradient — card emergence ─────────────────────────── */}
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        background: "linear-gradient(to top, rgba(12,18,13,1.0) 0%, rgba(12,18,13,0.88) 24%, rgba(12,18,13,0.40) 44%, transparent 62%)",
+      }} />
 
       {/* ══════════════════════════════════════════════════════════════════
-          HERO — full viewport height, tea photo background
+          GREETING — top, respects safe-area-inset-top for notch/island
           ══════════════════════════════════════════════════════════════════ */}
-      <section style={{
-        position: "relative",
-        height: "calc(100svh - 88px)",
-        minHeight: 560,
-        overflow: "hidden",
-        background: "#222f26",
+      <div style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        /* Push text below the status bar (clock, wifi, battery) */
+        paddingTop: "max(28px, calc(env(safe-area-inset-top) + 10px))",
+        paddingLeft: 24,
+        paddingRight: 24,
       }}>
 
-        {/* ── Background image ─────────────────────────────────────── */}
-        {!imgError && active.product.imageUrl ? (
-          <Image
-            key={active.product.id}
-            src={active.product.imageUrl}
-            alt={active.product.name}
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-            priority
-            unoptimized
-            onError={() => setImgError(true)}
-          />
-        ) : (
+        {/* Weather row */}
+        {!isLoading && weather && (
           <div style={{
-            position: "absolute", inset: 0,
-            background: "linear-gradient(135deg, #2f2d29 0%, #222f26 100%)",
-          }} />
-        )}
-
-        {/* ── Top gradient — legible text over image ───────────────── */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(to bottom, rgba(22,32,26,0.78) 0%, rgba(22,32,26,0.30) 38%, transparent 58%)",
-          pointerEvents: "none",
-        }} />
-
-        {/* ── Bottom gradient — card emergence ─────────────────────── */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(to top, rgba(18,26,21,1.0) 0%, rgba(18,26,21,0.85) 22%, rgba(18,26,21,0.40) 42%, transparent 62%)",
-          pointerEvents: "none",
-        }} />
-
-        {/* ══════════════════════════════════════════════════════════════
-            GREETING — top-left overlay
-            ══════════════════════════════════════════════════════════════ */}
-        <div style={{
-          position: "absolute",
-          top: 28,
-          left: 24,
-          right: 24,
-        }}>
-          {/* Weather row */}
-          {!isLoading && weather && (
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              marginBottom: 14,
-              color: "rgba(247,247,243,0.52)",
-              fontFamily: SANS,
-              fontSize: 12,
-              letterSpacing: "0.04em",
-              fontWeight: 400,
-            }}>
-              <WeatherIcon code={weather.weatherCode} isDay={weather.isDay} />
-              <span>
-                {Math.round(weather.temperature)}°
-                {weather.description ? ` · ${weather.description}` : ""}
-                {locationName ? ` · ${locationName}` : ""}
-              </span>
-            </div>
-          )}
-
-          {/* Main greeting */}
-          <h1 style={{
-            fontFamily: SERIF,
-            fontSize: "clamp(36px, 9vw, 54px)",
-            fontWeight: 400,
-            letterSpacing: "0.04em",
-            lineHeight: 1.08,
-            color: "#ffffff",
-            margin: 0,
-          }}>
-            {time.greeting}
-          </h1>
-
-          {/* Date subline */}
-          <p style={{
+            display: "flex", alignItems: "center", gap: 6,
+            marginBottom: 14,
+            color: "rgba(247,247,243,0.48)",
             fontFamily: SANS,
             fontSize: 12,
-            letterSpacing: "0.05em",
-            color: "rgba(247,247,243,0.40)",
-            marginTop: 8,
-            fontWeight: 300,
-          }}>
-            {new Date().toLocaleDateString("en-GB", {
-              weekday: "long", day: "numeric", month: "long",
-            })}
-          </p>
-        </div>
-
-        {/* ══════════════════════════════════════════════════════════════
-            BOTTOM GLASS CARD — tea suggestion
-            ══════════════════════════════════════════════════════════════ */}
-        <div style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          background: "rgba(18, 26, 21, 0.82)",
-          backdropFilter: "blur(24px)",
-          WebkitBackdropFilter: "blur(24px)",
-          borderRadius: "24px 24px 0 0",
-          borderTop: "0.5px solid rgba(255,255,255,0.10)",
-          padding: "22px 24px 32px",
-          boxShadow: "inset 0 0.5px 0 rgba(255,255,255,0.10)",
-        }}>
-
-          {/* Label row */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-            <p style={{
-              fontFamily: SANS,
-              fontSize: 9,
-              fontWeight: 600,
-              letterSpacing: "0.20em",
-              textTransform: "uppercase",
-              color: "rgba(147,163,141,0.80)",
-            }}>
-              Lou suggests · {time.period}
-            </p>
-            <p style={{
-              fontFamily: SANS,
-              fontSize: 9,
-              fontWeight: 500,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "rgba(247,247,243,0.28)",
-            }}>
-              {active.product.type}
-            </p>
-          </div>
-
-          {/* Tea name */}
-          <h2 style={{
-            fontFamily: SERIF,
-            fontSize: 30,
-            fontWeight: 400,
             letterSpacing: "0.04em",
-            lineHeight: 1.1,
-            color: "#ffffff",
-            margin: 0,
+            fontWeight: 400,
           }}>
-            {active.product.name}
-          </h2>
+            <WeatherIcon code={weather.weatherCode} isDay={weather.isDay} />
+            <span>
+              {Math.round(weather.temperature)}°
+              {weather.description ? ` · ${weather.description}` : ""}
+              {locationName ? ` · ${locationName}` : ""}
+            </span>
+          </div>
+        )}
 
-          {/* Origin */}
+        {/* Greeting */}
+        <h1 style={{
+          fontFamily: SERIF,
+          fontSize: "clamp(34px, 9vw, 52px)",
+          fontWeight: 400,
+          letterSpacing: "0.04em",
+          lineHeight: 1.08,
+          color: "#ffffff",
+          margin: 0,
+        }}>
+          {time.greeting}
+        </h1>
+
+        {/* Date */}
+        <p style={{
+          fontFamily: SANS,
+          fontSize: 12,
+          letterSpacing: "0.05em",
+          color: "rgba(247,247,243,0.36)",
+          marginTop: 7,
+          fontWeight: 300,
+        }}>
+          {new Date().toLocaleDateString("en-GB", {
+            weekday: "long", day: "numeric", month: "long",
+          })}
+        </p>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════
+          BOTTOM GLASS CARD — swipeable tea suggestions
+          ══════════════════════════════════════════════════════════════════ */}
+      <div style={{
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        background: "rgba(12, 18, 13, 0.84)",
+        backdropFilter: "blur(28px)",
+        WebkitBackdropFilter: "blur(28px)",
+        borderRadius: "24px 24px 0 0",
+        borderTop: "0.5px solid rgba(255,255,255,0.10)",
+        boxShadow: "inset 0 0.5px 0 rgba(255,255,255,0.10)",
+        /* Respect home-indicator on modern iPhones */
+        paddingBottom: "max(28px, env(safe-area-inset-bottom))",
+      }}>
+
+        {/* Section label */}
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "20px 24px 14px",
+        }}>
           <p style={{
+            fontFamily: SANS,
+            fontSize: 9,
+            fontWeight: 600,
+            letterSpacing: "0.22em",
+            textTransform: "uppercase",
+            color: "rgba(147,163,141,0.70)",
+          }}>
+            Lou suggests · {time.period}
+          </p>
+          <Link href="/lou" style={{
             fontFamily: SANS,
             fontSize: 10,
-            letterSpacing: "0.08em",
-            color: "rgba(147,163,141,0.70)",
-            marginTop: 4,
-            fontWeight: 400,
+            fontWeight: 500,
+            letterSpacing: "0.10em",
+            textTransform: "uppercase",
+            color: "rgba(147,163,141,0.55)",
+            textDecoration: "none",
           }}>
-            {active.product.origin}
-          </p>
+            Ask Lou ↗
+          </Link>
+        </div>
 
-          {/* Reason */}
-          <p style={{
-            fontFamily: SANS,
-            fontSize: 13,
-            fontWeight: 300,
-            color: "rgba(247,247,243,0.58)",
-            lineHeight: 1.60,
-            marginTop: 10,
-            letterSpacing: "0.01em",
-          }}>
-            {active.reason}
-          </p>
-
-          {/* Dot indicators */}
-          <div style={{
+        {/* ── Swipeable slides ─────────────────────────────────────── */}
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          style={{
             display: "flex",
-            alignItems: "center",
-            gap: 5,
-            marginTop: 18,
-          }}>
-            {cards.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => { setActiveIndex(i); setImgError(false); }}
-                style={{
-                  width: i === activeIndex ? 20 : 5,
-                  height: 5,
-                  borderRadius: 99,
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                  background: i === activeIndex
-                    ? "rgba(255,255,255,0.85)"
-                    : "rgba(255,255,255,0.22)",
-                  transition: "all 0.3s ease",
-                }}
-              />
-            ))}
-          </div>
+            overflowX: "auto",
+            scrollSnapType: "x mandatory",
+            scrollBehavior: "smooth",
+            /* Hide scrollbar */
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
+            /* Negative horizontal padding trick so slides reach the edges */
+            gap: 0,
+          }}
+        >
+          {cards.map(({ product, reason }) => (
+            <TeaSlide key={product.id} product={product} reason={reason} />
+          ))}
+        </div>
 
-          {/* CTA */}
+        {/* ── Dot indicators ───────────────────────────────────────── */}
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 5,
+          padding: "14px 24px 0",
+        }}>
+          {cards.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => scrollToSlide(i)}
+              style={{
+                width: i === activeIndex ? 20 : 5,
+                height: 5,
+                borderRadius: 99,
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+                background: i === activeIndex
+                  ? "rgba(255,255,255,0.85)"
+                  : "rgba(255,255,255,0.20)",
+                transition: "all 0.3s ease",
+              }}
+            />
+          ))}
+        </div>
+
+        {/* ── CTA → Ritual ─────────────────────────────────────────── */}
+        <div style={{ padding: "14px 24px 0" }}>
           <Link
-            href="/marketplace"
+            href="/rituals"
             style={{
               display: "block",
-              marginTop: 18,
-              padding: "13px 0",
+              padding: "14px 0",
               borderRadius: 99,
               background: "#ffffff",
               fontFamily: SANS,
               fontSize: 13,
-              fontWeight: 600,
-              letterSpacing: "0.08em",
+              fontWeight: 700,
+              letterSpacing: "0.10em",
               textTransform: "uppercase",
-              color: "#222f26",
+              color: "#1a2019",
               textAlign: "center",
               textDecoration: "none",
-              boxShadow: "inset 0 0.5px 0 rgba(255,255,255,1), 0 4px 16px rgba(0,0,0,0.20)",
-              transition: "opacity 0.2s ease",
+              boxShadow: [
+                "inset 0 0.5px 0 rgba(255,255,255,1)",
+                "0 4px 20px rgba(0,0,0,0.30)",
+              ].join(", "),
             }}
           >
             Begin your ritual
           </Link>
         </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════
-          BELOW HERO — quick actions + rituals + marketplace
-          ══════════════════════════════════════════════════════════════════ */}
-      <div style={{
-        background: "#f7f7f3",
-        padding: "24px 20px 16px",
-      }}>
-
-        {/* Quick actions */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 24 }}>
-          <ActionTile
-            href="/rituals"
-            label={t.dashboard.logRitual}
-            sub={t.dashboard.recordSession}
-            accentColor="#537062"
-            icon={
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M17 8h1a4 4 0 110 8h-1" /><path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z" />
-              </svg>
-            }
-          />
-          <ActionTile
-            href="/lou"
-            label={t.dashboard.louSuggests}
-            sub={t.dashboard.startSession}
-            accentColor="#222f26"
-            icon={
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-              </svg>
-            }
-          />
-        </div>
-
-        {/* Recent rituals */}
-        <section style={{
-          borderRadius: 16,
-          background: "#ffffff",
-          border: "1px solid rgba(34,47,38,0.08)",
-          boxShadow: "inset 0 0.5px 0 rgba(255,255,255,0.9), 0 1px 4px rgba(34,47,38,0.06)",
-          marginBottom: 16,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px 10px" }}>
-            <p style={{ fontFamily: SANS, fontSize: 9, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(34,47,38,0.30)" }}>
-              {t.dashboard.recent}
-            </p>
-            <Link href="/rituals">
-              <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 500, color: "#537062" }}>{t.dashboard.seeAll}</span>
-            </Link>
-          </div>
-          {[
-            { tea: "Da Hong Pao",      time: `${t.dashboard.today}, 10:30`,     mood: t.dashboard.focused, note: "Roasted chestnut, lingering sweetness" },
-            { tea: "Jasmin Snow Buds", time: `${t.dashboard.yesterday}, 16:00`, mood: t.dashboard.calm,    note: "Floral, clean, meditative" },
-          ].map((r, i) => (
-            <div key={i} style={{
-              display: "flex", alignItems: "center",
-              padding: "10px 16px",
-              borderTop: i > 0 ? "1px solid rgba(34,47,38,0.05)" : undefined,
-            }}>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: "#222f26" }}>{r.tea}</p>
-                  <span style={{
-                    fontFamily: SANS, fontSize: 9, fontWeight: 600,
-                    padding: "2px 7px", borderRadius: 99,
-                    letterSpacing: "0.08em", textTransform: "uppercase",
-                    background: "rgba(83,112,98,0.10)", color: "#537062",
-                  }}>{r.mood}</span>
-                </div>
-                <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(34,47,38,0.30)", marginTop: 2 }}>{r.note}</p>
-              </div>
-              <span style={{ fontFamily: SANS, fontSize: 10, color: "rgba(34,47,38,0.20)", marginLeft: 12, flexShrink: 0 }}>{r.time}</span>
-            </div>
-          ))}
-        </section>
-
-        {/* Marketplace peek */}
-        <section style={{
-          borderRadius: 16,
-          background: "#ffffff",
-          border: "1px solid rgba(34,47,38,0.08)",
-          boxShadow: "inset 0 0.5px 0 rgba(255,255,255,0.9), 0 1px 4px rgba(34,47,38,0.06)",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px 10px" }}>
-            <p style={{ fontFamily: SANS, fontSize: 9, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(34,47,38,0.30)" }}>
-              {t.dashboard.marketplace}
-            </p>
-            <Link href="/marketplace">
-              <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 500, color: "#537062" }}>{t.dashboard.browse}</span>
-            </Link>
-          </div>
-          {[
-            { tea: "Da Hong Pao",      type: t.marketplace.oolong,          origin: "Wuyi, Fujian",  price: "£28" },
-            { tea: "Jasmin Snow Buds", type: t.marketplace.greenTeaScented, origin: "Fuding, Fujian", price: "£24" },
-          ].map((tea, i) => (
-            <div key={i} style={{
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-              padding: "10px 16px",
-              borderTop: i > 0 ? "1px solid rgba(34,47,38,0.05)" : undefined,
-            }}>
-              <div style={{ minWidth: 0 }}>
-                <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: "#222f26" }}>{tea.tea}</p>
-                <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(34,47,38,0.30)", marginTop: 2 }}>
-                  {tea.type} · {tea.origin}
-                </p>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: 12, flexShrink: 0 }}>
-                <span style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: "#222f26" }}>{tea.price}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(34,47,38,0.20)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
-              </div>
-            </div>
-          ))}
-        </section>
 
       </div>
     </div>
