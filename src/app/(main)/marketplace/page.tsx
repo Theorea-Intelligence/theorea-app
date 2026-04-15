@@ -1,16 +1,49 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useLocale } from "@/i18n/LocaleContext";
-import {
-  THEOREA_PRODUCTS,
-  PARTNER_PRODUCTS,
-  LONDON_TEA_VENUES,
-  type TeaProduct,
-  type TeaVenue,
-} from "@/lib/data/products";
+import { LONDON_TEA_VENUES, type TeaVenue } from "@/lib/data/products";
+import { supabase } from "@/lib/supabase/client";
+
+const SERIF = '"Playfair Display Variable", "Georgia", serif';
+const SANS  = '"Nunito Sans Variable", "Helvetica Neue", system-ui, sans-serif';
+
+/* ── Types ───────────────────────────────────────────────────────────────── */
+interface MarketProduct {
+  id: string;
+  brandName: string;
+  productName: string;
+  teaName: string;
+  pricePence: number | null;
+  weightG: number | null;
+  inStock: boolean;
+  imageUrl: string | null;
+  categorySlug: string;
+  categoryName: string;
+  originRegion: string;
+  flavorProfile: string[];
+  caffeineLevel: string | null;
+  sourcingNotes: string | null;
+}
+
+/* ── Helpers ─────────────────────────────────────────────────────────────── */
+const fmt = {
+  price: (p: number | null) => p ? `£${(p / 100).toFixed(2).replace(/\.00$/, "")}` : "TBC",
+  weight: (g: number | null) => g ? `${g}g` : "",
+  isApprox: (notes: string | null) => notes?.includes("APPROXIMATE") ?? false,
+};
+
+const CATEGORY_MAP: Record<string, string> = {
+  "black-tea":   "Black",
+  "oolong":      "Oolong",
+  "green-tea":   "Green",
+  "white-tea":   "White",
+  "scented-tea": "Scented",
+  "herbal":      "Herbal",
+  "pu-erh":      "Pu-erh",
+};
 
 /* ── Venue chip ──────────────────────────────────────────────────────────── */
 function VenueChip({ venue }: { venue: TeaVenue }) {
@@ -19,24 +52,27 @@ function VenueChip({ venue }: { venue: TeaVenue }) {
       href={`https://www.google.com/maps/search/${venue.mapsQuery}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="shrink-0 flex flex-col px-3.5 py-2.5 rounded-[14px] min-w-[140px] active:opacity-70 transition-opacity duration-200"
-      style={{ background: "#ffffff", border: "1px solid rgba(34,47,38,0.10)" }}
+      style={{
+        flexShrink: 0,
+        display: "flex",
+        flexDirection: "column",
+        padding: "10px 14px",
+        borderRadius: 14,
+        minWidth: 140,
+        background: "#ffffff",
+        border: "1px solid rgba(34,47,38,0.10)",
+        textDecoration: "none",
+        transition: "opacity 0.2s",
+      }}
     >
-      <div className="flex items-center justify-between mb-0.5">
-        <p className="text-[12px] font-medium leading-tight line-clamp-1" style={{ color: "#222f26" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 2 }}>
+        <p style={{ fontFamily: SANS, fontSize: 12, fontWeight: 600, color: "#222f26", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {venue.name}
         </p>
-        <span className="text-[10px] ml-1 shrink-0" style={{ color: "#222f26" }}>
-          ★ {venue.rating}
-        </span>
+        <span style={{ fontFamily: SANS, fontSize: 10, color: "#222f26", flexShrink: 0, marginLeft: 4 }}>★ {venue.rating}</span>
       </div>
-      <p className="text-[10px]" style={{ color: "rgba(34,47,38,0.35)" }}>
-        {venue.area} · {venue.distance}
-      </p>
-      <span
-        className="mt-1.5 text-[9px] uppercase tracking-[0.07em] font-medium"
-        style={{ color: "#6a9a7a" }}
-      >
+      <p style={{ fontFamily: SANS, fontSize: 10, color: "rgba(34,47,38,0.35)" }}>{venue.area} · {venue.distance}</p>
+      <span style={{ fontFamily: SANS, fontSize: 9, letterSpacing: "0.07em", textTransform: "uppercase", fontWeight: 600, color: "#6a9a7a", marginTop: 6 }}>
         {venue.type}
       </span>
     </a>
@@ -46,46 +82,31 @@ function VenueChip({ venue }: { venue: TeaVenue }) {
 /* ── Map section ─────────────────────────────────────────────────────────── */
 function MapSection() {
   return (
-    <section className="space-y-3 animate-fade-in-up animation-delay-100">
-      <div className="flex items-center justify-between">
+    <section style={{ marginBottom: 8 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
         <div>
-          <h2 className="font-serif text-[18px] font-light" style={{ color: "#222f26" }}>
-            Near You
-          </h2>
-          <p className="text-[11px] mt-0.5" style={{ color: "rgba(34,47,38,0.35)" }}>
-            Tea rooms and specialist shops
-          </p>
+          <h2 style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 400, letterSpacing: "0.03em", color: "#222f26", margin: 0 }}>Near You</h2>
+          <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(34,47,38,0.35)", marginTop: 3 }}>Tea rooms and specialist shops</p>
         </div>
         <a
           href="https://www.google.com/maps/search/tea+rooms+near+me"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[11px] font-medium active:opacity-60"
-          style={{ color: "#222f26" }}
+          style={{ fontFamily: SANS, fontSize: 11, fontWeight: 500, color: "#222f26" }}
         >
           Open Maps →
         </a>
       </div>
-
-      <div className="relative w-full overflow-hidden" style={{ borderRadius: 16 }}>
+      <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 12 }}>
         <iframe
           title="Tea rooms near you"
           src="https://maps.google.com/maps?q=tea+rooms+London&output=embed&z=13"
-          className="w-full"
-          style={{ height: 190, border: 0, filter: "grayscale(40%) contrast(0.85) brightness(0.7)" }}
+          style={{ width: "100%", height: 190, border: 0, filter: "grayscale(40%) contrast(0.85) brightness(0.7)", display: "block" }}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
         />
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            borderRadius: 16,
-            border: "1px solid rgba(83,112,98,0.20)",
-          }}
-        />
       </div>
-
-      <div className="flex gap-2.5 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" }}>
         {LONDON_TEA_VENUES.map((venue) => (
           <VenueChip key={venue.name} venue={venue} />
         ))}
@@ -94,112 +115,97 @@ function MapSection() {
   );
 }
 
-/* ── Product card — full-bleed gallery style ─────────────────────────────── */
-function ProductCard({ tea, onAdd }: { tea: TeaProduct; onAdd: (t: TeaProduct) => void }) {
+/* ── Product card ────────────────────────────────────────────────────────── */
+function ProductCard({ tea, onAdd }: { tea: MarketProduct; onAdd: (name: string) => void }) {
   const [imgError, setImgError] = useState(false);
+  const isTheorea  = tea.brandName === "Maison Théorea";
+  const isApprox   = fmt.isApprox(tea.sourcingNotes);
+  const displayCat = CATEGORY_MAP[tea.categorySlug] ?? tea.categoryName;
 
   return (
-    <div
-      className="overflow-hidden active:opacity-90 transition-opacity duration-200"
-      style={{ borderRadius: 16, background: "#ffffff" }}
-    >
-      {/* Full-bleed photo */}
-      <div className="relative w-full overflow-hidden" style={{ height: 200 }}>
-        {!imgError ? (
-          <Image
-            src={tea.imageUrl}
-            alt={tea.name}
-            fill
-            className="object-cover"
-            unoptimized
-            onError={() => setImgError(true)}
-          />
+    <div style={{ borderRadius: 16, overflow: "hidden", background: "#ffffff",
+      boxShadow: "inset 0 0.5px 0 rgba(255,255,255,0.9), 0 2px 12px rgba(34,47,38,0.08)" }}>
+
+      {/* Photo */}
+      <div style={{ position: "relative", height: 200, overflow: "hidden" }}>
+        {!imgError && tea.imageUrl ? (
+          <Image src={tea.imageUrl} alt={tea.teaName} fill style={{ objectFit: "cover" }} unoptimized onError={() => setImgError(true)} />
         ) : (
-          <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(135deg, #f7f7f3, #f7f7f3)" }}
-          />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #f5f5f1, #ededea)" }} />
         )}
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(34,47,38,0.85) 0%, transparent 55%)" }} />
 
-        {/* Gradient */}
-        <div
-          className="absolute inset-0"
-          style={{ background: "linear-gradient(to top, rgba(34,47,38,0.85) 0%, rgba(247,247,243,0.1) 60%, transparent 100%)" }}
-        />
-
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex gap-1.5">
-          {tea.brandTag === "theorea" && (
-            <span
-              className="text-[9px] tracking-[0.08em] uppercase font-medium px-2 py-1 rounded-full"
-              style={{ background: "rgba(247,247,243,0.75)", color: "#222f26", backdropFilter: "blur(8px)" }}
-            >
-              Théorea
-            </span>
-          )}
-          {!tea.available && (
-            <span
-              className="text-[9px] tracking-[0.07em] uppercase px-2 py-1 rounded-full"
-              style={{ background: "rgba(247,247,243,0.7)", color: "rgba(34,47,38,0.5)", backdropFilter: "blur(8px)" }}
-            >
-              Soon
+        {/* Brand badge */}
+        <div style={{ position: "absolute", top: 12, left: 12, display: "flex", gap: 6 }}>
+          <span style={{
+            fontFamily: SANS, fontSize: 9, fontWeight: 600, letterSpacing: "0.08em",
+            textTransform: "uppercase", padding: "4px 8px", borderRadius: 99,
+            background: "rgba(247,247,243,0.82)", color: "#222f26", backdropFilter: "blur(8px)",
+          }}>
+            {isTheorea ? "Théorea" : tea.brandName}
+          </span>
+          {isApprox && (
+            <span style={{
+              fontFamily: SANS, fontSize: 9, fontWeight: 500, padding: "4px 8px", borderRadius: 99,
+              background: "rgba(230,180,100,0.25)", color: "rgba(180,120,40,0.90)",
+              backdropFilter: "blur(8px)",
+            }}>
+              Approx. price
             </span>
           )}
         </div>
 
-        {/* Name overlaid on image */}
-        <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
-          <p
-            className="text-[10px] tracking-[0.1em] uppercase mb-1"
-            style={{ color: "#222f26" }}
-          >
-            {tea.brand}
+        {/* Tea name overlaid */}
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "0 16px 16px" }}>
+          <p style={{ fontFamily: SANS, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(247,247,243,0.65)", marginBottom: 4, fontWeight: 500 }}>
+            {displayCat}
           </p>
-          <h3
-            className="font-serif text-[20px] font-light leading-tight"
-            style={{ color: "#222f26" }}
-          >
-            {tea.name}
+          <h3 style={{ fontFamily: SERIF, fontSize: 21, fontWeight: 400, letterSpacing: "0.04em", lineHeight: 1.1, color: "#ffffff", margin: 0 }}>
+            {tea.teaName}
           </h3>
         </div>
       </div>
 
-      {/* Info below */}
-      <div className="px-4 pt-3 pb-4">
-        <p className="text-[11px] mb-1" style={{ color: "rgba(34,47,38,0.3)" }}>
-          {tea.type} · {tea.origin}
+      {/* Info */}
+      <div style={{ padding: "14px 16px 16px" }}>
+        <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(34,47,38,0.35)", marginBottom: 5 }}>
+          {tea.originRegion}
         </p>
-        <p className="text-[13px] leading-relaxed" style={{ color: "#537062" }}>
-          {tea.profile}
+        <p style={{ fontFamily: SANS, fontSize: 13, color: "#537062", lineHeight: 1.5, fontWeight: 300 }}>
+          {(tea.flavorProfile ?? []).slice(0, 3).join(" · ")}
         </p>
 
-        <div
-          className="flex items-center justify-between mt-3.5 pt-3.5"
-          style={{ borderTop: "1px solid rgba(34,47,38,0.09)" }}
-        >
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 14, paddingTop: 14, borderTop: "1px solid rgba(34,47,38,0.08)" }}>
           <div>
-            <span className="text-[16px] font-medium" style={{ color: "#222f26" }}>{tea.price}</span>
-            <span className="text-[11px] ml-1.5" style={{ color: "rgba(34,47,38,0.3)" }}>{tea.weight}</span>
+            <span style={{ fontFamily: SANS, fontSize: 17, fontWeight: 700, color: "#222f26" }}>
+              {fmt.price(tea.pricePence)}
+            </span>
+            {isApprox && <span style={{ fontFamily: SANS, fontSize: 9, color: "rgba(180,120,40,0.80)", marginLeft: 4 }}>est.</span>}
+            <span style={{ fontFamily: SANS, fontSize: 11, color: "rgba(34,47,38,0.30)", marginLeft: 6 }}>
+              {fmt.weight(tea.weightG)}
+            </span>
           </div>
 
-          {tea.available ? (
+          {tea.inStock ? (
             <button
-              onClick={() => onAdd(tea)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-[12px] font-medium active:opacity-70 transition-opacity duration-200"
+              onClick={() => onAdd(tea.teaName)}
               style={{
-                background: "rgba(83,112,98,0.20)",
-                border: "1px solid rgba(83,112,98,0.28)",
+                fontFamily: SANS, fontSize: 12, fontWeight: 600,
+                padding: "8px 18px", borderRadius: 10, border: "none",
+                cursor: "pointer", letterSpacing: "0.04em",
+                background: "rgba(83,112,98,0.14)",
                 color: "#222f26",
+                transition: "opacity 0.2s",
               }}
             >
               Add to Bag
             </button>
           ) : (
             <button
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-[12px] font-medium"
               style={{
-                background: "rgba(34,47,38,0.10)",
-                color: "rgba(34,47,38,0.3)",
+                fontFamily: SANS, fontSize: 12, fontWeight: 500,
+                padding: "8px 18px", borderRadius: 10, border: "none",
+                background: "rgba(34,47,38,0.07)", color: "rgba(34,47,38,0.30)",
               }}
             >
               Notify me
@@ -211,207 +217,238 @@ function ProductCard({ tea, onAdd }: { tea: TeaProduct; onAdd: (t: TeaProduct) =
   );
 }
 
-/* ── Filter pills ────────────────────────────────────────────────────────── */
-const FILTERS = ["All", "Oolong", "Green", "White", "Pu-erh"] as const;
-type Filter = (typeof FILTERS)[number];
-
 /* ── Toast ───────────────────────────────────────────────────────────────── */
 function BagToast({ name, onClose }: { name: string; onClose: () => void }) {
   return (
     <div
-      className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3 animate-fade-in-up"
+      className="animate-fade-in-up"
       style={{
-        background: "#f5f5f1",
+        position: "fixed", bottom: 120, left: "50%", transform: "translateX(-50%)",
+        zIndex: 50, display: "flex", alignItems: "center", gap: 12,
+        padding: "12px 20px", borderRadius: 20,
+        background: "rgba(247,247,243,0.92)", backdropFilter: "blur(20px)",
         border: "1px solid rgba(83,112,98,0.28)",
-        borderRadius: 20,
-        boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
-        color: "#222f26",
-        backdropFilter: "blur(16px)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
+        fontFamily: SANS, color: "#222f26",
       }}
     >
-      <span className="text-[13px] font-light">
-        <span className="font-medium">{name}</span> added to your bag
+      <span style={{ fontSize: 13, fontWeight: 300 }}>
+        <strong style={{ fontWeight: 600 }}>{name}</strong> added to your bag
       </span>
-      <button
-        onClick={onClose}
-        className="text-[16px] leading-none active:opacity-60"
-        style={{ color: "rgba(34,47,38,0.4)" }}
-      >
-        ×
-      </button>
+      <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 18, color: "rgba(34,47,38,0.35)", lineHeight: 1 }}>×</button>
     </div>
   );
 }
 
 /* ── Main page ───────────────────────────────────────────────────────────── */
 export default function MarketplacePage() {
-  const { t } = useLocale();
-  const router = useRouter();
-  const [activeFilter, setActiveFilter] = useState<Filter>("All");
-  const [bagToast, setBagToast] = useState<string | null>(null);
+  const { t }    = useLocale();
+  const router   = useRouter();
+  const [products, setProducts]       = useState<MarketProduct[]>([]);
+  const [isLoading, setIsLoading]     = useState(true);
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [bagToast, setBagToast]       = useState<string | null>(null);
 
-  const handleAdd = (tea: TeaProduct) => {
-    setBagToast(tea.name);
+  /* ── Fetch all products from Supabase ─────────────────────────────── */
+  useEffect(() => {
+    async function load() {
+      const { data, error } = await supabase
+        .from("tea_products")
+        .select(`
+          id, brand_name, product_name, price_pence, weight_g, in_stock, image_url, sourcing_notes,
+          teas (
+            name, origin_region, flavor_profile, caffeine_level, body,
+            tea_categories ( name, slug )
+          )
+        `)
+        .eq("in_stock", true)
+        .order("brand_name")
+        .order("product_name");
+
+      if (!error && data) {
+        const mapped: MarketProduct[] = (data as Array<Record<string, unknown>>).map((row) => {
+          const tea = row.teas as Record<string, unknown>;
+          const cat = tea?.tea_categories as Record<string, unknown>;
+          return {
+            id:            row.id as string,
+            brandName:     row.brand_name as string,
+            productName:   row.product_name as string,
+            teaName:       tea?.name as string ?? "",
+            pricePence:    row.price_pence as number | null,
+            weightG:       row.weight_g as number | null,
+            inStock:       row.in_stock as boolean,
+            imageUrl:      row.image_url as string | null,
+            categorySlug:  cat?.slug as string ?? "",
+            categoryName:  cat?.name as string ?? "",
+            originRegion:  tea?.origin_region as string ?? "",
+            flavorProfile: (tea?.flavor_profile as string[]) ?? [],
+            caffeineLevel: tea?.caffeine_level as string | null,
+            sourcingNotes: row.sourcing_notes as string | null,
+          };
+        });
+        setProducts(mapped);
+      }
+      setIsLoading(false);
+    }
+    load();
+  }, []);
+
+  /* ── Filter categories derived from live data ─────────────────────── */
+  const categories = [
+    "All",
+    ...Array.from(new Set(products.map((p) => CATEGORY_MAP[p.categorySlug] ?? p.categoryName)))
+      .filter(Boolean)
+      .sort(),
+  ];
+
+  const filtered = activeFilter === "All"
+    ? products
+    : products.filter((p) => (CATEGORY_MAP[p.categorySlug] ?? p.categoryName) === activeFilter);
+
+  /* ── Group by brand ───────────────────────────────────────────────── */
+  const brands = Array.from(new Set(filtered.map((p) => p.brandName)));
+
+  const handleAdd = (name: string) => {
+    setBagToast(name);
     setTimeout(() => setBagToast(null), 3000);
   };
 
-  const filterTea = (tea: TeaProduct) => {
-    if (activeFilter === "All") return true;
-    const type = tea.type.toLowerCase();
-    if (activeFilter === "Oolong") return type.includes("oolong");
-    if (activeFilter === "Green")  return type.includes("green");
-    if (activeFilter === "White")  return type.includes("white");
-    if (activeFilter === "Pu-erh") return type.includes("pu-erh") || type.includes("puerh");
-    return true;
-  };
-
-  const availableTeas = THEOREA_PRODUCTS.filter(filterTea);
-  const partnerTeas   = PARTNER_PRODUCTS.filter(filterTea);
-
   return (
-    <div className="space-y-7 pb-4">
+    <div style={{ display: "flex", flexDirection: "column", gap: 28, paddingBottom: 16 }}>
 
-      {/* ── Header ─────────────────────────────────────────────────────── */}
-      <header className="animate-fade-in-up">
-        <p
-          className="text-[10px] tracking-[0.14em] uppercase font-medium mb-1"
-          style={{ color: "rgba(34,47,38,0.3)" }}
-        >
-          Maison Théorea
+      {/* Header */}
+      <header>
+        <p style={{ fontFamily: SANS, fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 600, color: "rgba(34,47,38,0.30)", marginBottom: 4 }}>
+          The Collection
         </p>
-        <h1
-          className="font-serif font-light"
-          style={{ fontSize: 30, color: "#222f26" }}
-        >
+        <h1 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 30, letterSpacing: "0.04em", color: "#222f26", margin: 0 }}>
           {t.marketplace.title}
         </h1>
+        {!isLoading && (
+          <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(34,47,38,0.35)", marginTop: 4 }}>
+            {products.length} teas · {brands.length} brands
+          </p>
+        )}
       </header>
 
-      {/* ── Search ─────────────────────────────────────────────────────── */}
-      <div
-        className="flex items-center gap-2 px-4 py-3 animate-fade-in-up animation-delay-75"
-        style={{
-          background: "#ffffff",
-          border: "1px solid rgba(34,47,38,0.10)",
-          borderRadius: 14,
-        }}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(34,47,38,0.25)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+      {/* Search */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "12px 14px", borderRadius: 14,
+        background: "#ffffff", border: "1px solid rgba(34,47,38,0.10)",
+        boxShadow: "inset 0 0.5px 0 rgba(255,255,255,0.9)",
+      }}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(34,47,38,0.25)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
           <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
         <input
           type="text"
           placeholder={t.marketplace.searchPlaceholder}
-          className="flex-1 bg-transparent text-[14px] focus:outline-none"
-          style={{ color: "#222f26" }}
+          style={{ flex: 1, background: "transparent", border: "none", outline: "none", fontFamily: SANS, fontSize: 14, color: "#222f26" }}
         />
       </div>
 
-      {/* ── Map ────────────────────────────────────────────────────────── */}
+      {/* Map */}
       <MapSection />
 
-      {/* ── Filters ────────────────────────────────────────────────────── */}
-      <div className="flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden animate-fade-in-up animation-delay-200">
-        {FILTERS.map((f) => (
+      {/* Category filters — derived from live data */}
+      <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 2, scrollbarWidth: "none" }}>
+        {categories.map((cat) => (
           <button
-            key={f}
-            onClick={() => setActiveFilter(f)}
-            className="shrink-0 px-4 py-1.5 rounded-full text-[11px] font-medium tracking-wide transition-all duration-200 active:opacity-70"
-            style={
-              activeFilter === f
-                ? {
-                    background: "rgba(83,112,98,0.24)",
-                    border: "1px solid rgba(83,112,98,0.48)",
-                    color: "#222f26",
-                  }
-                : {
-                    background: "#ffffff",
-                    border: "1px solid rgba(34,47,38,0.10)",
-                    color: "rgba(34,47,38,0.4)",
-                  }
-            }
+            key={cat}
+            onClick={() => setActiveFilter(cat)}
+            style={{
+              flexShrink: 0,
+              padding: "6px 16px",
+              borderRadius: 99,
+              border: "none",
+              cursor: "pointer",
+              fontFamily: SANS,
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.04em",
+              transition: "all 0.2s ease",
+              ...(activeFilter === cat
+                ? { background: "rgba(83,112,98,0.20)", color: "#222f26", boxShadow: "0 0 0 1px rgba(83,112,98,0.40)" }
+                : { background: "#ffffff", color: "rgba(34,47,38,0.40)", boxShadow: "0 0 0 1px rgba(34,47,38,0.10)" }),
+            }}
           >
-            {f}
+            {cat}
           </button>
         ))}
       </div>
 
-      {/* ── Available teas ─────────────────────────────────────────────── */}
-      {availableTeas.length > 0 && (
-        <section className="space-y-4 animate-fade-in-up animation-delay-250">
-          <div className="flex items-center justify-between">
-            <p
-              className="text-[10px] tracking-[0.1em] uppercase font-medium"
-              style={{ color: "rgba(34,47,38,0.3)" }}
-            >
-              {t.marketplace.available}
-            </p>
-            <span
-              className="text-[10px] tracking-wide font-medium"
-              style={{ color: "#222f26" }}
-            >
-              Maison Théorea
-            </span>
-          </div>
-          <div className="space-y-4">
-            {availableTeas.map((tea) => (
-              <ProductCard key={tea.id} tea={tea} onAdd={handleAdd} />
-            ))}
-          </div>
-        </section>
+      {/* Loading shimmer */}
+      {isLoading && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="animate-shimmer" style={{ height: 280, borderRadius: 16 }} />
+          ))}
+        </div>
       )}
 
-      {/* ── Partner / coming soon ───────────────────────────────────────── */}
-      {(activeFilter === "All" || partnerTeas.length > 0) && (
-        <section className="space-y-4 animate-fade-in-up animation-delay-300">
-          <div className="flex items-center justify-between">
-            <p
-              className="text-[10px] tracking-[0.1em] uppercase font-medium"
-              style={{ color: "rgba(34,47,38,0.3)" }}
-            >
-              {t.marketplace.comingSoon}
-            </p>
-            <span className="text-[10px]" style={{ color: "rgba(34,47,38,0.2)" }}>
-              Curated partners
-            </span>
-          </div>
-          <div className="space-y-4">
-            {(partnerTeas.length > 0 ? partnerTeas : PARTNER_PRODUCTS).map((tea) => (
+      {/* Products grouped by brand */}
+      {!isLoading && brands.map((brand) => {
+        const brandProducts = filtered.filter((p) => p.brandName === brand);
+        if (brandProducts.length === 0) return null;
+        const isTheorea = brand === "Maison Théorea";
+
+        return (
+          <section key={brand} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {/* Brand header */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div>
+                <p style={{ fontFamily: SANS, fontSize: 9, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(34,47,38,0.30)" }}>
+                  {isTheorea ? "Our teas" : "Partner brand"}
+                </p>
+                <p style={{ fontFamily: SERIF, fontSize: 16, fontWeight: 400, letterSpacing: "0.04em", color: "#222f26", marginTop: 2 }}>
+                  {brand}
+                </p>
+              </div>
+              <span style={{ fontFamily: SANS, fontSize: 10, color: "rgba(34,47,38,0.25)" }}>
+                {brandProducts.length} teas
+              </span>
+            </div>
+
+            {/* Product cards */}
+            {brandProducts.map((tea) => (
               <ProductCard key={tea.id} tea={tea} onAdd={handleAdd} />
             ))}
-          </div>
-        </section>
+          </section>
+        );
+      })}
+
+      {/* Empty state */}
+      {!isLoading && filtered.length === 0 && (
+        <div style={{ textAlign: "center", padding: "40px 20px" }}>
+          <p style={{ fontFamily: SERIF, fontSize: 18, color: "#537062" }}>No teas in this category yet</p>
+          <p style={{ fontFamily: SANS, fontSize: 13, color: "rgba(34,47,38,0.40)", marginTop: 8 }}>More are being curated</p>
+        </div>
       )}
 
-      {/* ── Lou shortcut ───────────────────────────────────────────────── */}
+      {/* Ask Lou */}
       <button
         onClick={() => router.push("/lou")}
-        className="w-full flex items-center gap-3 p-4 active:opacity-80 transition-opacity duration-200 animate-fade-in-up animation-delay-400"
         style={{
+          width: "100%", display: "flex", alignItems: "center", gap: 12,
+          padding: 16, borderRadius: 16, border: "none", cursor: "pointer",
           background: "#ffffff",
-          border: "1px solid rgba(83,112,98,0.20)",
-          borderRadius: 16,
+          boxShadow: "0 0 0 1px rgba(83,112,98,0.20), 0 2px 12px rgba(34,47,38,0.06)",
+          transition: "opacity 0.2s",
         }}
       >
-        <div
-          className="flex h-9 w-9 items-center justify-center rounded-full shrink-0"
-          style={{ background: "rgba(83,112,98,0.1)" }}
-        >
+        <div style={{ height: 36, width: 36, borderRadius: "50%", background: "rgba(83,112,98,0.10)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
           <svg width="14" height="14" viewBox="0 0 48 48" fill="none">
             <path d="M24 6C18 12 12 20 14 32C16 38 20 42 24 44" stroke="#222f26" strokeWidth="1.5" fill="#8a6a4a" fillOpacity="0.3" strokeLinecap="round" />
             <path d="M24 6C30 12 36 20 34 32C32 38 28 42 24 44" stroke="rgba(34,47,38,0.3)" strokeWidth="1.5" fill="rgba(34,47,38,0.1)" strokeLinecap="round" />
             <line x1="24" y1="10" x2="24" y2="44" stroke="#222f26" strokeWidth="0.8" strokeLinecap="round" />
           </svg>
         </div>
-        <div className="flex-1 text-left min-w-0">
-          <p className="text-[13px] font-medium" style={{ color: "#222f26" }}>
-            Not sure what to choose?
-          </p>
-          <p className="text-[11px] mt-0.5" style={{ color: "rgba(34,47,38,0.3)" }}>
-            Ask Lou — your personal tea sommelier
-          </p>
+        <div style={{ flex: 1, textAlign: "left" }}>
+          <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: "#222f26", margin: 0 }}>Not sure what to choose?</p>
+          <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(34,47,38,0.30)", marginTop: 2 }}>Ask Lou — your personal tea sommelier</p>
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(34,47,38,0.2)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(34,47,38,0.2)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
           <polyline points="9 18 15 12 9 6" />
         </svg>
       </button>
