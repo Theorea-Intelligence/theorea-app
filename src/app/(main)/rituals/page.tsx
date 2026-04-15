@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTeaContext } from "@/lib/context/useTeaContext";
 import { useLocale } from "@/i18n/LocaleContext";
-import { ALL_PRODUCTS, type TeaProduct } from "@/lib/data/products";
 
 const SERIF = '"Playfair Display Variable", "Georgia", serif';
 const SANS  = '"Nunito Sans Variable", "Helvetica Neue", system-ui, sans-serif';
@@ -19,35 +18,18 @@ const RITUALS_BG = "/images/rituals-bg.jpg";
 /* Unsplash: soft window light, neutral tones — closest match to the ceramic chawan photo */
 const RITUALS_BG_FALLBACK = "https://images.unsplash.com/photo-1594906374908-8e70ceac65c3?w=1400&q=85";
 
-/* ── Tea recommendation carousel — same 3 teas as homepage ──────────────── */
+/* ── Tea recommendation carousel — live from Supabase via useTeaContext ───── */
 function TeaCarousel() {
-  const { recommendation, time, isLoading } = useTeaContext();
+  const { recommendations, time, isLoading } = useTeaContext();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [imgError, setImgError] = useState(false);
+  const [imgError, setImgError]       = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const primaryProduct =
-    ALL_PRODUCTS.find((p) => p.name.toLowerCase() === recommendation.tea.toLowerCase()) ??
-    ALL_PRODUCTS[0];
-  const others = ALL_PRODUCTS.filter((p) => p.id !== primaryProduct.id).slice(0, 2);
-
-  const cards = [
-    { product: primaryProduct, reason: recommendation.reason },
-    {
-      product: others[0],
-      reason: "A floral, meditative choice — jasmine unfolds slowly in warm water.",
-    },
-    {
-      product: others[1],
-      reason: "Layered complexity born from patience. A journey through terroir and time.",
-    },
-  ];
 
   const handleScroll = () => {
     if (!scrollRef.current) return;
     const w = scrollRef.current.clientWidth;
     if (w === 0) return;
-    setActiveIndex(Math.min(Math.round(scrollRef.current.scrollLeft / w), cards.length - 1));
+    setActiveIndex(Math.min(Math.round(scrollRef.current.scrollLeft / w), recommendations.length - 1));
   };
 
   const scrollTo = (i: number) => {
@@ -55,15 +37,16 @@ function TeaCarousel() {
     setActiveIndex(i);
   };
 
-  if (isLoading) {
+  if (isLoading || recommendations.length === 0) {
     return (
       <div style={{
-        height: 240, borderRadius: 20,
-        background: "linear-gradient(135deg, #f5f5f1, #ededea)",
-        animation: "pulse 2s ease-in-out infinite",
+        height: 240, borderRadius: 20, marginBottom: 32,
+        background: "linear-gradient(135deg, rgba(83,112,98,0.12), rgba(34,47,38,0.08))",
       }} />
     );
   }
+
+  const active = recommendations[activeIndex];
 
   return (
     <div style={{ marginBottom: 32 }}>
@@ -86,54 +69,45 @@ function TeaCarousel() {
 
       {/* Swipeable card */}
       <div style={{
-        position: "relative",
-        borderRadius: 20,
-        overflow: "hidden",
-        height: 248,
+        position: "relative", borderRadius: 20, overflow: "hidden", height: 248,
         boxShadow: "0 8px 32px rgba(34,47,38,0.18), 0 2px 8px rgba(34,47,38,0.10)",
       }}>
-        {/* Background image — updates with active slide */}
-        {!imgError && cards[activeIndex]?.product.imageUrl ? (
+        {/* Background image — switches with active slide */}
+        {!imgError && active?.imageUrl ? (
           <Image
-            key={activeIndex}
-            src={cards[activeIndex].product.imageUrl}
-            alt={cards[activeIndex].product.name}
+            key={active.productId}
+            src={active.imageUrl}
+            alt={active.teaName}
             fill
             style={{ objectFit: "cover", objectPosition: "center" }}
-            priority
-            unoptimized
+            priority unoptimized
             onError={() => setImgError(true)}
           />
         ) : (
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #537062, #222f26)" }} />
         )}
 
-        {/* Gradient overlay */}
+        {/* Gradient */}
         <div style={{
           position: "absolute", inset: 0,
           background: "linear-gradient(to top, rgba(20,28,22,0.95) 0%, rgba(20,28,22,0.50) 50%, rgba(20,28,22,0.15) 100%)",
         }} />
 
-        {/* Swipeable text content */}
+        {/* Swipeable slides */}
         <div
           ref={scrollRef}
           onScroll={handleScroll}
           style={{
             position: "absolute", inset: 0,
-            display: "flex",
-            overflowX: "auto",
+            display: "flex", overflowX: "auto",
             scrollSnapType: "x mandatory",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
+            scrollbarWidth: "none", msOverflowStyle: "none",
           }}
         >
-          {cards.map(({ product, reason }) => (
-            <div key={product.id} style={{
-              width: "100%", flexShrink: 0,
-              scrollSnapAlign: "start",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
+          {recommendations.map((card) => (
+            <div key={card.productId} style={{
+              width: "100%", flexShrink: 0, scrollSnapAlign: "start",
+              display: "flex", flexDirection: "column", justifyContent: "flex-end",
               padding: "0 20px 16px",
             }}>
               <p style={{
@@ -141,56 +115,60 @@ function TeaCarousel() {
                 letterSpacing: "0.20em", textTransform: "uppercase",
                 color: "rgba(201,217,201,0.70)", marginBottom: 5,
               }}>
-                {product.type} · {product.origin}
+                {card.type} · {card.origin}
               </p>
               <h2 style={{
-                fontFamily: SERIF,
-                fontSize: 26, fontWeight: 400,
+                fontFamily: SERIF, fontSize: 26, fontWeight: 400,
                 letterSpacing: "0.04em", lineHeight: 1.15,
                 color: "#ffffff", margin: 0,
               }}>
-                {product.name}
+                {card.teaName}
               </h2>
+              {card.brandTag === "partner" && (
+                <p style={{
+                  fontFamily: SANS, fontSize: 9, fontWeight: 500,
+                  letterSpacing: "0.08em", textTransform: "uppercase",
+                  color: "rgba(201,217,201,0.55)", marginTop: 3,
+                }}>
+                  {card.brandName}
+                </p>
+              )}
               <p style={{
                 fontFamily: SANS, fontSize: 12, fontWeight: 300,
                 color: "rgba(247,247,243,0.55)", lineHeight: 1.55,
                 marginTop: 6, letterSpacing: "0.01em",
               }}>
-                {reason}
+                {card.reason}
               </p>
+              {card.caffeineWarning && (
+                <p style={{
+                  fontFamily: SANS, fontSize: 10, fontWeight: 500,
+                  color: "rgba(230,180,100,0.80)", marginTop: 4,
+                }}>
+                  ⚠ {card.caffeineWarning}
+                </p>
+              )}
 
               {/* Bottom row: Shop Now + dots */}
-              <div style={{
-                display: "flex", alignItems: "center",
-                justifyContent: "space-between", marginTop: 14,
-              }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 14 }}>
                 <Link href="/marketplace" style={{
-                  display: "inline-block",
-                  padding: "9px 22px",
-                  borderRadius: 99,
-                  background: "#ffffff",
-                  fontFamily: SANS, fontSize: 11,
-                  fontWeight: 700, letterSpacing: "0.10em",
-                  textTransform: "uppercase",
+                  display: "inline-block", padding: "9px 22px", borderRadius: 99,
+                  background: "#ffffff", fontFamily: SANS, fontSize: 11,
+                  fontWeight: 700, letterSpacing: "0.10em", textTransform: "uppercase",
                   color: "#1a2019", textDecoration: "none",
                   boxShadow: "0 2px 12px rgba(0,0,0,0.20)",
                 }}>
                   Shop now
                 </Link>
-
-                {/* Dots */}
                 <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
-                  {cards.map((_, i) => (
+                  {recommendations.map((_, i) => (
                     <button
                       key={i}
                       onClick={() => { scrollTo(i); setImgError(false); }}
                       style={{
                         width: i === activeIndex ? 18 : 5, height: 5,
-                        borderRadius: 99, border: "none", cursor: "pointer",
-                        padding: 0,
-                        background: i === activeIndex
-                          ? "rgba(255,255,255,0.90)"
-                          : "rgba(255,255,255,0.30)",
+                        borderRadius: 99, border: "none", cursor: "pointer", padding: 0,
+                        background: i === activeIndex ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.30)",
                         transition: "all 0.3s ease",
                       }}
                     />

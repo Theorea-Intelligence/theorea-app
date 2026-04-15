@@ -3,8 +3,7 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useTeaContext } from "@/lib/context/useTeaContext";
-import { ALL_PRODUCTS, type TeaProduct } from "@/lib/data/products";
+import { useTeaContext, type RecommendationCard } from "@/lib/context/useTeaContext";
 
 /* ── Font constants — hardcoded, no CSS var() needed ─────────────────────── */
 const SERIF = '"Playfair Display Variable", "Georgia", serif';
@@ -43,7 +42,7 @@ function WeatherIcon({ code, isDay }: { code: number; isDay: boolean }) {
 }
 
 /* ── Individual tea slide inside the swipeable card ─────────────────────── */
-function TeaSlide({ product, reason }: { product: TeaProduct; reason: string }) {
+function TeaSlide({ card }: { card: RecommendationCard }) {
   return (
     <div style={{
       width: "100%",
@@ -51,7 +50,7 @@ function TeaSlide({ product, reason }: { product: TeaProduct; reason: string }) 
       scrollSnapAlign: "start",
       padding: "0 24px",
     }}>
-      {/* Tea type label */}
+      {/* Type · origin */}
       <p style={{
         fontFamily: SANS,
         fontSize: 9,
@@ -61,7 +60,7 @@ function TeaSlide({ product, reason }: { product: TeaProduct; reason: string }) 
         color: "rgba(147,163,141,0.75)",
         marginBottom: 8,
       }}>
-        {product.type} · {product.origin}
+        {card.type} · {card.origin}
       </p>
 
       {/* Tea name */}
@@ -74,10 +73,25 @@ function TeaSlide({ product, reason }: { product: TeaProduct; reason: string }) 
         color: "#ffffff",
         margin: 0,
       }}>
-        {product.name}
+        {card.teaName}
       </h2>
 
-      {/* Reason */}
+      {/* Brand tag (Twinings, etc.) */}
+      {card.brandTag === "partner" && (
+        <p style={{
+          fontFamily: SANS,
+          fontSize: 9,
+          fontWeight: 500,
+          letterSpacing: "0.10em",
+          color: "rgba(147,163,141,0.55)",
+          marginTop: 4,
+          textTransform: "uppercase",
+        }}>
+          {card.brandName}
+        </p>
+      )}
+
+      {/* Narrative reason */}
       <p style={{
         fontFamily: SANS,
         fontSize: 13,
@@ -87,8 +101,22 @@ function TeaSlide({ product, reason }: { product: TeaProduct; reason: string }) 
         marginTop: 10,
         letterSpacing: "0.01em",
       }}>
-        {reason}
+        {card.reason}
       </p>
+
+      {/* Caffeine warning — shown as an amber note */}
+      {card.caffeineWarning && (
+        <p style={{
+          fontFamily: SANS,
+          fontSize: 10,
+          fontWeight: 500,
+          color: "rgba(230,180,100,0.75)",
+          marginTop: 6,
+          letterSpacing: "0.02em",
+        }}>
+          ⚠ {card.caffeineWarning}
+        </p>
+      )}
     </div>
   );
 }
@@ -98,43 +126,17 @@ function TeaSlide({ product, reason }: { product: TeaProduct; reason: string }) 
    position:fixed so the hero image bleeds behind the iOS status bar.
    ══════════════════════════════════════════════════════════════════════════════ */
 export default function Dashboard() {
-  const { time, weather, recommendation, isLoading, locationName } = useTeaContext();
+  const { time, weather, recommendations, isLoading, locationName } = useTeaContext();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [imgError, setImgError] = useState(false);
+  const [imgError, setImgError]       = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const primaryProduct =
-    ALL_PRODUCTS.find((p) => p.name.toLowerCase() === recommendation.tea.toLowerCase()) ??
-    ALL_PRODUCTS[0];
-  const others = ALL_PRODUCTS.filter((p) => p.id !== primaryProduct.id).slice(0, 2);
-
-  const cards = [
-    {
-      product: primaryProduct,
-      reason: recommendation.reason,
-    },
-    {
-      product: others[0],
-      reason:
-        "A floral, meditative choice — jasmine unfolds slowly in warm water, each infusion lighter than the last.",
-    },
-    {
-      product: others[1],
-      reason:
-        "Layered complexity born from patience. A journey through terroir, time, and quiet depth.",
-    },
-  ];
 
   /* Track active dot as user swipes */
   const handleScroll = () => {
     if (!scrollRef.current) return;
     const w = scrollRef.current.clientWidth;
     if (w === 0) return;
-    const idx = Math.min(
-      Math.round(scrollRef.current.scrollLeft / w),
-      cards.length - 1
-    );
-    setActiveIndex(idx);
+    setActiveIndex(Math.min(Math.round(scrollRef.current.scrollLeft / w), recommendations.length - 1));
   };
 
   /* Tap a dot → scroll to that slide */
@@ -145,7 +147,7 @@ export default function Dashboard() {
   };
 
   /* Background image cycles with the active slide */
-  const bgImage = cards[activeIndex]?.product.imageUrl;
+  const bgImage = recommendations[activeIndex]?.imageUrl;
 
   return (
     /*
@@ -165,7 +167,7 @@ export default function Dashboard() {
         <Image
           key={activeIndex}
           src={bgImage}
-          alt={cards[activeIndex].product.name}
+          alt={recommendations[activeIndex]?.teaName ?? "Tea"}
           fill
           style={{ objectFit: "cover", objectPosition: "center" }}
           priority
@@ -317,8 +319,8 @@ export default function Dashboard() {
             gap: 0,
           }}
         >
-          {cards.map(({ product, reason }) => (
-            <TeaSlide key={product.id} product={product} reason={reason} />
+          {recommendations.map((card, i) => (
+            <TeaSlide key={card.productId || i} card={card} />
           ))}
         </div>
 
@@ -329,7 +331,7 @@ export default function Dashboard() {
           gap: 5,
           padding: "14px 24px 0",
         }}>
-          {cards.map((_, i) => (
+          {recommendations.map((_, i) => (
             <button
               key={i}
               onClick={() => scrollToSlide(i)}
