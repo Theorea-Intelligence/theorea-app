@@ -125,7 +125,7 @@ Tea sommeliers and experts can create profiles, share tasting notes, publish bre
 - **Reviews** — tea ratings, tasting reviews from users and sommeliers
 - **Posts** — sommelier knowledge shares, brewing guides, articles
 
-### Recommended Project Structure
+### Project Structure
 
 ```
 theorea-app/
@@ -156,10 +156,69 @@ theorea-app/
 │   │   ├── payments/           # Stripe integration
 │   │   └── analytics/          # GA4 event tracking
 │   └── styles/                 # Global styles & Tailwind config
+├── algorithm/                  # Python tea recommendation engine (see algorithm/README.md)
+├── notebooks/                  # Colab/Jupyter ML experiments and research (see notebooks/README.md)
+├── supabase/                   # Database migrations and edge functions (see supabase/README.md)
+│   ├── migrations/             # SQL migration files — version-controlled schema
+│   └── functions/              # Supabase Edge Functions (serverless)
+├── scripts/                    # One-off utility scripts (data seeding, icon generation, etc.)
 ├── public/                     # Static assets
-├── prisma/                     # Database schema & migrations
+├── prisma/                     # Prisma ORM schema (if used alongside Supabase)
 └── tests/                      # Test suites
 ```
+
+---
+
+## Repository Navigation — Where to Find Things
+
+> Quick reference for Claude and collaborators. When working on a topic, go directly to the relevant folder.
+
+| Topic | Folder | Notes |
+|---|---|---|
+| Frontend UI, pages, routing | `src/app/` | Next.js App Router |
+| Shared components, design system | `src/components/` | UI primitives in `src/components/ui/` |
+| Lou AI companion logic | `src/lib/ai/` + `src/app/api/lou/` | Claude API integration |
+| Database queries, Supabase client | `src/lib/db/` | Thin query layer |
+| Authentication | `src/lib/auth/` | Supabase Auth |
+| Payments | `src/lib/payments/` | Stripe integration |
+| **Tea recommendation algorithm** | **`algorithm/`** | Python scoring engine — see `algorithm/README.md` |
+| **ML experiments, data exploration** | **`notebooks/`** | Colab/Jupyter — see `notebooks/README.md` |
+| **Database schema, migrations** | **`supabase/migrations/`** | SQL files — apply with `supabase db push` |
+| **Serverless edge functions** | **`supabase/functions/`** | Deno — deploy with `supabase functions deploy` |
+| Utility and setup scripts | `scripts/` | Non-production tooling |
+| Static assets, fonts, icons | `public/` | Served at root URL |
+| Tests | `tests/` | Unit and integration tests |
+
+---
+
+## Tea Sommelier Algorithm
+
+Lou's recommendation engine lives in `algorithm/`. It is a **Python rule-based scoring system** that:
+
+1. Takes a **context object** as input: time of day, weather, mood, food pairing, caffeine sensitivity, flavour preferences
+2. Reads the approved **tea catalogue** from Supabase (`teas` table)
+3. Scores each tea against the context using weighted rules encoding sommelier expertise
+4. Returns a **ranked shortlist** with human-readable reasoning for each recommendation
+
+### Key Feature Dimensions (Tea Schema)
+
+**Flavour profile (scored 0–5):** astringency, bitterness, sweetness, umami, floral, vegetal, earthy, smoky, roasted, fruity
+
+**Health & energy:** caffeine level (0–5), L-theanine level (0–5) — the ratio between these is more important than caffeine alone
+
+**Tea characteristics:** type (green / oolong / black / white / pu-erh / herbal), oxidation level (0–100), roast level, processing method, origin, body (light / medium / full), brew temperature, steep time
+
+**Context inputs:** time of day, weather, mood/intention, food pairing, caffeine sensitivity, personal flavour preferences (learned over time)
+
+### Algorithm Evolution
+
+- **Phase 1 (current):** Rule-based scoring — explainable, expert-encoded, no training data required
+- **Phase 3:** Layer in content-based filtering using the tea feature vectors
+- **Phase 5:** Collaborative filtering once user interaction data is sufficient
+
+### B2B Quality Control Flow
+
+Tea businesses upload products via the B2B portal → stored in `tea_submissions` table with `status: pending` → reviewed and tasted by Théorea QC team → approved into the `teas` table → algorithm picks them up automatically
 
 ### Build Phases
 
@@ -192,4 +251,9 @@ Recommendation engine refinement. Search optimisation. Performance tuning. BigQu
 
 ## Status
 
-Repository is in early setup. GCP infrastructure configured. Next step: initialise Next.js project and begin Phase 1.
+- GCP infrastructure configured ✓
+- Next.js project initialised ✓
+- Vercel deployment connected ✓
+- Supabase connected ✓
+- Folder structure established: `algorithm/`, `notebooks/`, `supabase/` ✓
+- Next step: define tea feature schema → create first Supabase migration → seed with Da Hong Pao and Jasmin Snow Buds as reference entries
