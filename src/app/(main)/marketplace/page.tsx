@@ -20,6 +20,7 @@ interface MarketProduct {
   weightG: number | null;
   inStock: boolean;
   imageUrl: string | null;
+  purchaseUrl: string | null;
   categorySlug: string;
   categoryName: string;
   originRegion: string;
@@ -115,6 +116,13 @@ function MapSection() {
   );
 }
 
+/* ── Buy label helper ─────────────────────────────────────────────────────── */
+function buyLabel(brandName: string): string {
+  if (brandName === "Mariage Frères") return "Buy at Mariage Frères";
+  if (brandName === "Twinings")       return "Buy at Twinings";
+  return `Buy at ${brandName}`;
+}
+
 /* ── Product card ────────────────────────────────────────────────────────── */
 function ProductCard({ tea, onAdd }: { tea: MarketProduct; onAdd: (name: string) => void }) {
   const [imgError, setImgError] = useState(false);
@@ -186,20 +194,40 @@ function ProductCard({ tea, onAdd }: { tea: MarketProduct; onAdd: (name: string)
             </span>
           </div>
 
-          {tea.inStock ? (
+          {/* CTA — external buy link for partners, Add to Bag for Théorea */}
+          {isTheorea ? (
             <button
               onClick={() => onAdd(tea.teaName)}
               style={{
                 fontFamily: SANS, fontSize: 12, fontWeight: 600,
                 padding: "8px 18px", borderRadius: 10, border: "none",
                 cursor: "pointer", letterSpacing: "0.04em",
-                background: "rgba(83,112,98,0.14)",
-                color: "#222f26",
+                background: "rgba(83,112,98,0.14)", color: "#222f26",
                 transition: "opacity 0.2s",
               }}
             >
               Add to Bag
             </button>
+          ) : tea.purchaseUrl ? (
+            <a
+              href={tea.purchaseUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 5,
+                fontFamily: SANS, fontSize: 12, fontWeight: 600,
+                padding: "8px 14px", borderRadius: 10,
+                letterSpacing: "0.04em", textDecoration: "none",
+                background: "#222f26", color: "#f7f7f3",
+                transition: "opacity 0.2s",
+              }}
+            >
+              {buyLabel(tea.brandName)}
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                <polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
           ) : (
             <button
               style={{
@@ -255,7 +283,7 @@ export default function MarketplacePage() {
       const { data, error } = await supabase
         .from("tea_products")
         .select(`
-          id, brand_name, product_name, price_pence, weight_g, in_stock, image_url, sourcing_notes,
+          id, brand_name, product_name, price_pence, weight_g, in_stock, image_url, sourcing_notes, purchase_url,
           teas (
             name, origin_region, flavor_profile, caffeine_level, body,
             tea_categories ( name, slug )
@@ -278,6 +306,7 @@ export default function MarketplacePage() {
             weightG:       row.weight_g as number | null,
             inStock:       row.in_stock as boolean,
             imageUrl:      row.image_url as string | null,
+            purchaseUrl:   row.purchase_url as string | null,
             categorySlug:  cat?.slug as string ?? "",
             categoryName:  cat?.name as string ?? "",
             originRegion:  tea?.origin_region as string ?? "",
