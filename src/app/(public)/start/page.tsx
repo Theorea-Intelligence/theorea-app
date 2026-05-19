@@ -168,21 +168,6 @@ export default function StartPage() {
         justifyContent: "center",
       }}
     >
-      {/* ── Noise grain overlay ─────────────────────────────────────────── */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 10,
-          pointerEvents: "none",
-          opacity: 0.04,
-          backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)'/%3E%3C/svg%3E\")",
-          backgroundRepeat: "repeat",
-          backgroundSize: "300px 300px",
-        }}
-      />
-
       {/* ── Scattered photo collage ─────────────────────────────────────── */}
       {PHOTOS.map((photo, i) => (
         <div
@@ -191,9 +176,8 @@ export default function StartPage() {
             ...photo.style,
             overflow: "hidden",
             boxShadow: [
-              "0 8px 32px rgba(34,47,38,0.22)",
-              "0 2px 8px rgba(34,47,38,0.12)",
-              /* Rim light */
+              "0 2px 12px rgba(26,20,16,0.18)",
+              "0 1px 4px rgba(26,20,16,0.10)",
               "inset 0 0.5px 0 rgba(255,255,255,0.60)",
             ].join(", "),
           }}
@@ -244,7 +228,7 @@ export default function StartPage() {
             fontWeight: 500,
             letterSpacing: "0.28em",
             textTransform: "uppercase",
-            color: "rgba(83,112,98,0.70)",
+            color: "rgba(58,48,40,0.55)",
             marginBottom: 18,
           }}
         >
@@ -271,7 +255,7 @@ export default function StartPage() {
           style={{
             fontFamily: "var(--nf-sans)",
             fontSize: 14,
-            fontWeight: 300,
+            fontWeight: 400,
             letterSpacing: "0.06em",
             color: "rgba(34,47,38,0.55)",
             marginTop: 20,
@@ -289,15 +273,10 @@ export default function StartPage() {
             marginTop: 44,
             padding: "14px 52px",
             borderRadius: 99,
-            background: "rgba(83, 112, 98, 0.88)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            /* Rim light on button */
+            background: "#3A3028",
             boxShadow: [
-              "inset 0 0.5px 0 rgba(255,255,255,0.22)",
-              "inset 0 -0.5px 0 rgba(0,0,0,0.10)",
-              "0 8px 32px rgba(83,112,98,0.35)",
-              "0 2px 8px rgba(83,112,98,0.20)",
+              "inset 0 1px 0 rgba(255,255,255,0.10)",
+              "0 4px 12px rgba(26,20,16,0.30)",
             ].join(", "),
             fontFamily: "var(--nf-sans)",
             fontSize: 13,
@@ -328,7 +307,7 @@ export default function StartPage() {
           right: 0,
           height: 120,
           zIndex: 4,
-          background: "linear-gradient(to top, rgba(83,112,98,0.08) 0%, transparent 100%)",
+          background: "linear-gradient(to top, rgba(184,149,106,0.08) 0%, transparent 100%)",
           pointerEvents: "none",
         }}
       />

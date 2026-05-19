@@ -276,7 +276,7 @@ export default function LouPage() {
             className="w-full mx-4 rounded-3xl px-7 py-8 flex flex-col items-center text-center"
             style={{
               background: "rgba(34,47,38,0.96)",
-              border: "1px solid rgba(83,112,98,0.1)",
+              border: "0.5px solid rgba(184,149,106,0.15)",
               maxWidth: 360,
               margin: "0 auto",
             }}
@@ -288,8 +288,8 @@ export default function LouPage() {
                 width: 40,
                 height: 40,
                 borderRadius: "50%",
-                background: "rgba(83,112,98,0.14)",
-                border: "1px solid rgba(83,112,98,0.24)",
+                background: "rgba(184,149,106,0.10)",
+                border: "0.5px solid rgba(184,149,106,0.20)",
               }}
             >
               <svg width="18" height="18" viewBox="0 0 48 48" fill="none">
@@ -313,7 +313,7 @@ export default function LouPage() {
                 <button
                   onClick={() => router.push("/welcome")}
                   className="w-full py-4 rounded-2xl text-[13px] font-medium tracking-[0.05em] transition-all duration-200 active:scale-[0.98]"
-                  style={{ background: "#222f26", color: "#f7f7f3" }}
+                  style={{ background: "#222f26", color: "#FAF8F5", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)" }}
                 >
                   {t.lou.signInButton}
                 </button>
@@ -335,7 +335,7 @@ export default function LouPage() {
                 <button
                   onClick={() => router.push("/profile")}
                   className="w-full py-4 rounded-2xl text-[13px] font-medium tracking-[0.05em] transition-all duration-200 active:scale-[0.98] mb-3"
-                  style={{ background: "#222f26", color: "#f7f7f3" }}
+                  style={{ background: "#222f26", color: "#FAF8F5", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)" }}
                 >
                   {t.lou.becomeMember}
                 </button>
@@ -366,7 +366,7 @@ export default function LouPage() {
             {/* Eyebrow label */}
             <p
               className="text-[10px] tracking-[0.22em] uppercase font-medium mb-4"
-              style={{ color: "rgba(83,112,98,0.62)" }}
+              style={{ color: "rgba(58,48,40,0.50)" }}
             >
               Your Tea Sommelier
             </p>
@@ -375,7 +375,7 @@ export default function LouPage() {
             <h1
               className="font-serif font-light leading-[1.1] mb-5"
               style={{
-                fontSize: "clamp(34px, 10vw, 48px)",
+                fontSize: "clamp(26px, 7vw, 32px)",
                 color: "#222f26",
                 letterSpacing: "-0.025em",
                 maxWidth: 300,
@@ -418,8 +418,8 @@ export default function LouPage() {
                       
                       lineHeight: 1.5,
                       color: i === 0
-                        ? "#537062"
-                        : "#92a38d",
+                        ? "rgba(58,48,40,0.75)"
+                        : "rgba(58,48,40,0.45)",
                       letterSpacing: "0.01em",
                       transition: "color 150ms",
                     }}

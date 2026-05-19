@@ -61,19 +61,19 @@ function VenueChip({ venue }: { venue: TeaVenue }) {
         borderRadius: 14,
         minWidth: 140,
         background: "#ffffff",
-        border: "1px solid rgba(34,47,38,0.10)",
+        border: "0.5px solid rgba(26,20,16,0.10)",
         textDecoration: "none",
         transition: "opacity 0.2s",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 2 }}>
-        <p style={{ fontFamily: SANS, fontSize: 12, fontWeight: 600, color: "#222f26", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <p style={{ fontFamily: SANS, fontSize: 12, fontWeight: 500, color: "#222f26", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {venue.name}
         </p>
         <span style={{ fontFamily: SANS, fontSize: 10, color: "#222f26", flexShrink: 0, marginLeft: 4 }}>★ {venue.rating}</span>
       </div>
       <p style={{ fontFamily: SANS, fontSize: 10, color: "rgba(34,47,38,0.35)" }}>{venue.area} · {venue.distance}</p>
-      <span style={{ fontFamily: SANS, fontSize: 9, letterSpacing: "0.07em", textTransform: "uppercase", fontWeight: 600, color: "#6a9a7a", marginTop: 6 }}>
+      <span style={{ fontFamily: SANS, fontSize: 9, letterSpacing: "0.07em", textTransform: "uppercase", fontWeight: 500, color: "#6a9a7a", marginTop: 6 }}>
         {venue.type}
       </span>
     </a>
@@ -146,7 +146,7 @@ function ProductCard({ tea, onAdd }: { tea: MarketProduct; onAdd: (name: string)
         {/* Brand badge */}
         <div style={{ position: "absolute", top: 12, left: 12, display: "flex", gap: 6 }}>
           <span style={{
-            fontFamily: SANS, fontSize: 9, fontWeight: 600, letterSpacing: "0.08em",
+            fontFamily: SANS, fontSize: 9, fontWeight: 500, letterSpacing: "0.08em",
             textTransform: "uppercase", padding: "4px 8px", borderRadius: 99,
             background: "rgba(247,247,243,0.82)", color: "#222f26", backdropFilter: "blur(8px)",
           }}>
@@ -179,13 +179,13 @@ function ProductCard({ tea, onAdd }: { tea: MarketProduct; onAdd: (name: string)
         <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(34,47,38,0.35)", marginBottom: 5 }}>
           {tea.originRegion}
         </p>
-        <p style={{ fontFamily: SANS, fontSize: 13, color: "#537062", lineHeight: 1.5, fontWeight: 300 }}>
+        <p style={{ fontFamily: SANS, fontSize: 13, color: "rgba(58,48,40,0.65)", lineHeight: 1.5, fontWeight: 400 }}>
           {(tea.flavorProfile ?? []).slice(0, 3).join(" · ")}
         </p>
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 14, paddingTop: 14, borderTop: "1px solid rgba(34,47,38,0.08)" }}>
           <div>
-            <span style={{ fontFamily: SANS, fontSize: 17, fontWeight: 700, color: "#222f26" }}>
+            <span style={{ fontFamily: SANS, fontSize: 17, fontWeight: 500, color: "#222f26" }}>
               {fmt.price(tea.pricePence)}
             </span>
             {isApprox && <span style={{ fontFamily: SANS, fontSize: 9, color: "rgba(180,120,40,0.80)", marginLeft: 4 }}>est.</span>}
@@ -199,10 +199,10 @@ function ProductCard({ tea, onAdd }: { tea: MarketProduct; onAdd: (name: string)
             <button
               onClick={() => onAdd(tea.teaName)}
               style={{
-                fontFamily: SANS, fontSize: 12, fontWeight: 600,
-                padding: "8px 18px", borderRadius: 10, border: "none",
+                fontFamily: SANS, fontSize: 12, fontWeight: 500,
+                padding: "8px 18px", borderRadius: 99, border: "none",
                 cursor: "pointer", letterSpacing: "0.04em",
-                background: "rgba(83,112,98,0.14)", color: "#222f26",
+                background: "#B8956A", color: "#FAF8F5",
                 transition: "opacity 0.2s",
               }}
             >
@@ -215,10 +215,10 @@ function ProductCard({ tea, onAdd }: { tea: MarketProduct; onAdd: (name: string)
               rel="noopener noreferrer"
               style={{
                 display: "inline-flex", alignItems: "center", gap: 5,
-                fontFamily: SANS, fontSize: 12, fontWeight: 600,
-                padding: "8px 14px", borderRadius: 10,
+                fontFamily: SANS, fontSize: 12, fontWeight: 500,
+                padding: "8px 14px", borderRadius: 99,
                 letterSpacing: "0.04em", textDecoration: "none",
-                background: "#222f26", color: "#f7f7f3",
+                background: "#3A3028", color: "#FAF8F5",
                 transition: "opacity 0.2s",
               }}
             >
@@ -232,8 +232,8 @@ function ProductCard({ tea, onAdd }: { tea: MarketProduct; onAdd: (name: string)
             <button
               style={{
                 fontFamily: SANS, fontSize: 12, fontWeight: 500,
-                padding: "8px 18px", borderRadius: 10, border: "none",
-                background: "rgba(34,47,38,0.07)", color: "rgba(34,47,38,0.30)",
+                padding: "8px 18px", borderRadius: 99, border: "none",
+                background: "rgba(212,196,168,0.25)", color: "rgba(58,48,40,0.40)",
               }}
             >
               Notify me
@@ -255,13 +255,13 @@ function BagToast({ name, onClose }: { name: string; onClose: () => void }) {
         zIndex: 50, display: "flex", alignItems: "center", gap: 12,
         padding: "12px 20px", borderRadius: 20,
         background: "rgba(247,247,243,0.92)", backdropFilter: "blur(20px)",
-        border: "1px solid rgba(83,112,98,0.28)",
+        border: "0.5px solid rgba(184,149,106,0.30)",
         boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
         fontFamily: SANS, color: "#222f26",
       }}
     >
-      <span style={{ fontSize: 13, fontWeight: 300 }}>
-        <strong style={{ fontWeight: 600 }}>{name}</strong> added to your bag
+      <span style={{ fontSize: 13, fontWeight: 400 }}>
+        <strong style={{ fontWeight: 500 }}>{name}</strong> added to your bag
       </span>
       <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 18, color: "rgba(34,47,38,0.35)", lineHeight: 1 }}>×</button>
     </div>
@@ -347,7 +347,7 @@ export default function MarketplacePage() {
 
       {/* Header */}
       <header>
-        <p style={{ fontFamily: SANS, fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 600, color: "rgba(34,47,38,0.30)", marginBottom: 4 }}>
+        <p style={{ fontFamily: SANS, fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 500, color: "rgba(34,47,38,0.30)", marginBottom: 4 }}>
           The Collection
         </p>
         <h1 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 30, letterSpacing: "0.04em", color: "#222f26", margin: 0 }}>
@@ -363,9 +363,12 @@ export default function MarketplacePage() {
       {/* Search */}
       <div style={{
         display: "flex", alignItems: "center", gap: 10,
-        padding: "12px 14px", borderRadius: 14,
-        background: "#ffffff", border: "1px solid rgba(34,47,38,0.10)",
-        boxShadow: "inset 0 0.5px 0 rgba(255,255,255,0.9)",
+        padding: "12px 16px", borderRadius: 23,
+        height: 46,
+        background: "rgba(237,230,220,0.6)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        border: "0.5px solid rgba(237,230,220,0.4)",
       }}>
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(34,47,38,0.25)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
           <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -394,12 +397,13 @@ export default function MarketplacePage() {
               cursor: "pointer",
               fontFamily: SANS,
               fontSize: 11,
-              fontWeight: 600,
+              fontWeight: 500,
               letterSpacing: "0.04em",
               transition: "all 0.2s ease",
+              height: 38,
               ...(activeFilter === cat
-                ? { background: "rgba(83,112,98,0.20)", color: "#222f26", boxShadow: "0 0 0 1px rgba(83,112,98,0.40)" }
-                : { background: "#ffffff", color: "rgba(34,47,38,0.40)", boxShadow: "0 0 0 1px rgba(34,47,38,0.10)" }),
+                ? { background: "#3A3028", color: "#FAF8F5", boxShadow: "none" }
+                : { background: "transparent", color: "rgba(58,48,40,0.55)", boxShadow: "0 0 0 0.5px rgba(212,196,168,0.6)" }),
             }}
           >
             {cat}
@@ -427,7 +431,7 @@ export default function MarketplacePage() {
             {/* Brand header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div>
-                <p style={{ fontFamily: SANS, fontSize: 9, fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(34,47,38,0.30)" }}>
+                <p style={{ fontFamily: SANS, fontSize: 9, fontWeight: 500, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(34,47,38,0.30)" }}>
                   {isTheorea ? "Our teas" : "Partner brand"}
                 </p>
                 <p style={{ fontFamily: SERIF, fontSize: 16, fontWeight: 400, letterSpacing: "0.04em", color: "#222f26", marginTop: 2 }}>
@@ -474,7 +478,7 @@ export default function MarketplacePage() {
           </svg>
         </div>
         <div style={{ flex: 1, textAlign: "left" }}>
-          <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 600, color: "#222f26", margin: 0 }}>Not sure what to choose?</p>
+          <p style={{ fontFamily: SANS, fontSize: 13, fontWeight: 500, color: "#222f26", margin: 0 }}>Not sure what to choose?</p>
           <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(34,47,38,0.30)", marginTop: 2 }}>Ask Lou — your personal tea sommelier</p>
         </div>
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(34,47,38,0.2)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>

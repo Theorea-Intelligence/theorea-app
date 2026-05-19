@@ -176,7 +176,10 @@ function WelcomeContent() {
   const isForgot = mode === "forgot";
 
   return (
-    <main className="flex min-h-[100dvh] flex-col items-center justify-between px-8 py-12 safe-top safe-bottom bg-parchment">
+    <main
+      className="flex min-h-[100dvh] flex-col items-center justify-between px-8 py-12 safe-top safe-bottom"
+      style={{ background: "linear-gradient(180deg, #F2EDE8 0%, #FAF8F5 40%, #E8E2DB 75%, #D4C4A8 100%)" }}
+    >
       <div />
 
       {/* Centre: Brand */}
@@ -214,7 +217,7 @@ function WelcomeContent() {
             <button
               onClick={handleGoogleAuth}
               disabled={loading !== null}
-              className="flex w-full items-center justify-center gap-3 rounded-2xl bg-porcelain px-4 py-3.5 text-[14px] font-medium text-ink shadow-[0_1px_3px_rgba(0,0,0,0.06)] active:scale-[0.98] transition-all duration-200 disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-3 rounded-full px-4 py-3.5 text-[14px] font-medium text-ink active:scale-[0.98] transition-all duration-200 disabled:opacity-50" style={{ background: "rgba(250,248,245,0.85)" }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -246,7 +249,7 @@ function WelcomeContent() {
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               placeholder={t.welcome.yourName}
-              className="w-full px-4 py-3.5 bg-porcelain border border-black/[0.06] rounded-2xl text-[14px] text-ink text-center placeholder:text-ink-muted/40 focus:outline-none focus:border-oolong/40 transition-colors duration-200"
+              className="w-full px-4 py-3.5 bg-[rgba(250,248,245,0.80)] border border-black/[0.06] rounded-full text-[14px] text-ink text-center placeholder:text-ink-muted/40 focus:outline-none focus:border-[#B8956A]/60 transition-colors duration-200"
               disabled={loading !== null}
             />
           )}
@@ -256,7 +259,7 @@ function WelcomeContent() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={t.welcome.emailAddress}
-            className="w-full px-4 py-3.5 bg-porcelain border border-black/[0.06] rounded-2xl text-[14px] text-ink text-center placeholder:text-ink-muted/40 focus:outline-none focus:border-oolong/40 transition-colors duration-200"
+            className="w-full px-4 py-3.5 bg-[rgba(250,248,245,0.80)] border border-black/[0.06] rounded-full text-[14px] text-ink text-center placeholder:text-ink-muted/40 focus:outline-none focus:border-[#B8956A]/60 transition-colors duration-200"
             required
             disabled={loading !== null}
           />
@@ -269,7 +272,7 @@ function WelcomeContent() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={t.welcome.password}
-                className="w-full px-4 py-3.5 bg-porcelain border border-black/[0.06] rounded-2xl text-[14px] text-ink text-center placeholder:text-ink-muted/40 focus:outline-none focus:border-oolong/40 transition-colors duration-200 pr-12"
+                className="w-full px-4 py-3.5 bg-[rgba(250,248,245,0.80)] border border-black/[0.06] rounded-full text-[14px] text-ink text-center placeholder:text-ink-muted/40 focus:outline-none focus:border-[#B8956A]/60 transition-colors duration-200 pr-12"
                 required
                 minLength={8}
                 disabled={loading !== null}
@@ -302,7 +305,7 @@ function WelcomeContent() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder={t.welcome.confirmPassword}
-              className="w-full px-4 py-3.5 bg-porcelain border border-black/[0.06] rounded-2xl text-[14px] text-ink text-center placeholder:text-ink-muted/40 focus:outline-none focus:border-oolong/40 transition-colors duration-200"
+              className="w-full px-4 py-3.5 bg-[rgba(250,248,245,0.80)] border border-black/[0.06] rounded-full text-[14px] text-ink text-center placeholder:text-ink-muted/40 focus:outline-none focus:border-[#B8956A]/60 transition-colors duration-200"
               required
               minLength={8}
               disabled={loading !== null}
@@ -330,7 +333,7 @@ function WelcomeContent() {
               <button
                 type="button"
                 onClick={() => switchMode("forgot")}
-                className="text-[12px] text-oolong-dark font-medium active:text-oolong transition-colors"
+                className="text-[12px] text-[#B8956A] font-medium active:opacity-70 transition-opacity"
               >
                 {t.welcome.forgotPassword}
               </button>
@@ -340,7 +343,7 @@ function WelcomeContent() {
           <button
             type="submit"
             disabled={loading !== null}
-            className="w-full px-4 py-3.5 bg-ink text-porcelain text-[14px] font-medium rounded-2xl transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
+            className="w-full px-4 py-3.5 text-[#FAF8F5] text-[14px] font-medium rounded-full transition-all duration-200 active:scale-[0.98] disabled:opacity-50" style={{ background: "#3A3028", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)" }}
           >
             {loading === "email"
               ? t.welcome.sending
@@ -369,7 +372,7 @@ function WelcomeContent() {
             <>
               <button
                 onClick={() => switchMode("login")}
-                className="text-oolong-dark font-medium active:text-oolong transition-colors"
+                className="text-[#B8956A] font-medium active:opacity-70 transition-opacity"
               >
                 {t.welcome.backToSignIn}
               </button>
@@ -379,7 +382,7 @@ function WelcomeContent() {
               {t.welcome.alreadyHaveAccount}{" "}
               <button
                 onClick={() => switchMode("login")}
-                className="text-oolong-dark font-medium active:text-oolong transition-colors"
+                className="text-[#B8956A] font-medium active:opacity-70 transition-opacity"
               >
                 {t.welcome.signIn}
               </button>
@@ -389,7 +392,7 @@ function WelcomeContent() {
               {t.welcome.newToTheorea}{" "}
               <button
                 onClick={() => switchMode("signup")}
-                className="text-oolong-dark font-medium active:text-oolong transition-colors"
+                className="text-[#B8956A] font-medium active:opacity-70 transition-opacity"
               >
                 {t.welcome.createAccount}
               </button>

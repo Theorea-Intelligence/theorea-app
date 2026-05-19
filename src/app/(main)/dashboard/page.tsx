@@ -54,10 +54,10 @@ function TeaSlide({ card }: { card: RecommendationCard }) {
       <p style={{
         fontFamily: SANS,
         fontSize: 9,
-        fontWeight: 600,
+        fontWeight: 500,
         letterSpacing: "0.22em",
         textTransform: "uppercase",
-        color: "rgba(147,163,141,0.75)",
+        color: "rgba(250,248,245,0.45)",
         marginBottom: 8,
       }}>
         {card.type} · {card.origin}
@@ -95,8 +95,8 @@ function TeaSlide({ card }: { card: RecommendationCard }) {
       <p style={{
         fontFamily: SANS,
         fontSize: 13,
-        fontWeight: 300,
-        color: "rgba(247,247,243,0.55)",
+        fontWeight: 400,
+        color: "rgba(250,248,245,0.55)",
         lineHeight: 1.65,
         marginTop: 10,
         letterSpacing: "0.01em",
@@ -158,7 +158,7 @@ export default function Dashboard() {
     <div style={{
       position: "fixed",
       inset: 0,
-      background: "#1a2019",
+      background: "#1A1A1A",
       overflow: "hidden",
     }}>
 
@@ -177,20 +177,20 @@ export default function Dashboard() {
       ) : (
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(145deg, #2f2d29 0%, #1a2019 100%)",
+          background: "linear-gradient(145deg, #3A3028 0%, #1A1A1A 100%)",
         }} />
       )}
 
       {/* ── Top gradient — text legibility ───────────────────────────── */}
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none",
-        background: "linear-gradient(to bottom, rgba(16,24,18,0.80) 0%, rgba(16,24,18,0.25) 35%, transparent 55%)",
+        background: "linear-gradient(to bottom, rgba(26,20,16,0.85) 0%, rgba(26,20,16,0.25) 35%, transparent 55%)",
       }} />
 
       {/* ── Bottom gradient — card emergence ─────────────────────────── */}
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none",
-        background: "linear-gradient(to top, rgba(12,18,13,1.0) 0%, rgba(12,18,13,0.88) 24%, rgba(12,18,13,0.40) 44%, transparent 62%)",
+        background: "linear-gradient(to top, rgba(26,20,16,0.98) 0%, rgba(26,20,16,0.88) 24%, rgba(26,20,16,0.40) 44%, transparent 62%)",
       }} />
 
       {/* ══════════════════════════════════════════════════════════════════
@@ -234,7 +234,7 @@ export default function Dashboard() {
           fontWeight: 400,
           letterSpacing: "0.04em",
           lineHeight: 1.08,
-          color: "#ffffff",
+          color: "#FAF8F5",
           margin: 0,
         }}>
           {time.greeting}
@@ -245,9 +245,9 @@ export default function Dashboard() {
           fontFamily: SANS,
           fontSize: 12,
           letterSpacing: "0.05em",
-          color: "rgba(247,247,243,0.36)",
+          color: "rgba(250,248,245,0.36)",
           marginTop: 7,
-          fontWeight: 300,
+          fontWeight: 400,
         }}>
           {new Date().toLocaleDateString("en-GB", {
             weekday: "long", day: "numeric", month: "long",
@@ -263,12 +263,12 @@ export default function Dashboard() {
         bottom: 0,
         left: 0,
         right: 0,
-        background: "rgba(12, 18, 13, 0.84)",
+        background: "rgba(44, 44, 44, 0.82)",
         backdropFilter: "blur(28px)",
         WebkitBackdropFilter: "blur(28px)",
         borderRadius: "24px 24px 0 0",
-        borderTop: "0.5px solid rgba(255,255,255,0.10)",
-        boxShadow: "inset 0 0.5px 0 rgba(255,255,255,0.10)",
+        borderTop: "0.5px solid rgba(250,248,245,0.08)",
+        boxShadow: "inset 0 0.5px 0 rgba(250,248,245,0.08)",
         /* Respect home-indicator on modern iPhones */
         paddingBottom: "max(28px, env(safe-area-inset-bottom))",
       }}>
@@ -283,10 +283,10 @@ export default function Dashboard() {
           <p style={{
             fontFamily: SANS,
             fontSize: 9,
-            fontWeight: 600,
+            fontWeight: 500,
             letterSpacing: "0.22em",
             textTransform: "uppercase",
-            color: "rgba(147,163,141,0.70)",
+            color: "rgba(250,248,245,0.50)",
           }}>
             Lou suggests · {time.period}
           </p>
@@ -296,7 +296,7 @@ export default function Dashboard() {
             fontWeight: 500,
             letterSpacing: "0.10em",
             textTransform: "uppercase",
-            color: "rgba(147,163,141,0.55)",
+            color: "rgba(184,149,106,0.70)",
             textDecoration: "none",
           }}>
             Ask Lou ↗
@@ -343,8 +343,8 @@ export default function Dashboard() {
                 cursor: "pointer",
                 padding: 0,
                 background: i === activeIndex
-                  ? "rgba(255,255,255,0.85)"
-                  : "rgba(255,255,255,0.20)",
+                  ? "rgba(184,149,106,0.90)"
+                  : "rgba(250,248,245,0.20)",
                 transition: "all 0.3s ease",
               }}
             />
@@ -359,18 +359,18 @@ export default function Dashboard() {
               display: "block",
               padding: "14px 0",
               borderRadius: 99,
-              background: "#ffffff",
+              background: "#B8956A",
               fontFamily: SANS,
               fontSize: 13,
-              fontWeight: 700,
+              fontWeight: 500,
               letterSpacing: "0.10em",
               textTransform: "uppercase",
-              color: "#1a2019",
+              color: "#FAF8F5",
               textAlign: "center",
               textDecoration: "none",
               boxShadow: [
-                "inset 0 0.5px 0 rgba(255,255,255,1)",
-                "0 4px 20px rgba(0,0,0,0.30)",
+                "inset 0 1px 2px rgba(255,255,255,0.2)",
+                "0 2px 8px rgba(184,149,106,0.3)",
               ].join(", "),
             }}
           >

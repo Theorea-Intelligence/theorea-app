@@ -71,6 +71,16 @@
   /* ── Border ──────────────────────────────────────────────────────────── */
   --color-border:         rgba(34, 47, 38, 0.10);
 
+  /* ── Gold accent (framework primary) ────────────────────────────────────── */
+  --color-gold:           #B8956A;
+  --color-gold-light:     #C9A87E;
+  --color-gold-muted:     #D4C4A8;
+
+  /* ── Stone (framework dark surfaces) ────────────────────────────────────── */
+  --color-stone:          #2C2C2C;
+  --color-stone-warm:     #3A3028;
+  --color-stone-mid:      #5C4A38;
+
   /* ── Typography ──────────────────────────────────────────────────────── */
   /*
    * @fontsource-variable packages bundle @font-face rules directly into the
@@ -341,6 +351,24 @@ input::placeholder {
 }
 
 .animate-float-in { animation: float-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+
+/* ── Screen vignette — edge darkening on light screens ───────────────────── */
+.screen-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(58,48,40,0.06) 100%);
+}
+
+/* ── Screen ambient glow — warm light at top of light screens ────────────── */
+.screen-ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(ellipse at 50% 20%, rgba(184,149,106,0.08), transparent 60%);
+}
 
 /* ── Reduced motion ───────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {

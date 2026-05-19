@@ -33,7 +33,7 @@ export default function ProfilePage() {
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" style={{ position: "relative", zIndex: 2 }}>
       {/* Profile header card */}
       <section className="rounded-2xl bg-porcelain p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] animate-fade-in-up">
         <div className="flex items-center gap-3.5">
@@ -44,7 +44,10 @@ export default function ProfilePage() {
               className="h-14 w-14 rounded-full object-cover"
             />
           ) : (
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-oolong to-oolong-dark text-porcelain font-serif text-lg">
+            <div
+              className="flex h-14 w-14 items-center justify-center rounded-full font-serif text-lg"
+              style={{ background: "linear-gradient(135deg, #B8956A, #C9A87E)", color: "#FAF8F5" }}
+            >
               {initial}
             </div>
           )}
@@ -118,7 +121,7 @@ export default function ProfilePage() {
       {/* Sign out */}
       <button
         onClick={handleSignOut}
-        className="w-full rounded-2xl bg-porcelain py-3.5 text-[14px] text-oolong-dark font-medium shadow-[0_1px_3px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform duration-200 animate-fade-in-up animation-delay-400"
+        className="w-full rounded-2xl bg-porcelain py-3.5 text-[14px] text-[#5C5650] font-medium shadow-[0_1px_3px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform duration-200 animate-fade-in-up animation-delay-400"
       >
         {t.profile.signOut}
       </button>    </div>

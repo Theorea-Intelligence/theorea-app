@@ -6,14 +6,16 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#f7f7f3]">
+    <div
+      className="min-h-screen"
+      style={{
+        background: "linear-gradient(180deg, #EDE6DC 0%, #F5F0EA 30%, #FAF8F5 60%, #F5F0EA 100%)",
+      }}
+    >
+      <div className="screen-ambient" aria-hidden />
+      <div className="screen-vignette" aria-hidden />
       <Navigation />
-      {/*
-       * The dashboard page uses position:fixed and is completely independent
-       * of this container — it covers the full viewport regardless.
-       * All other pages get proper padding and max-width from the inner div.
-       */}
-      <main className="pb-[88px] md:pb-0 md:pl-56 safe-top">
+      <main className="pb-[88px] md:pb-0 md:pl-56 safe-top" style={{ position: "relative", zIndex: 2 }}>
         <div className="mx-auto max-w-2xl px-5 pt-5 pb-8 md:px-10 md:py-8">
           {children}
         </div>

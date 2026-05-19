@@ -53,7 +53,7 @@ function TeaCarousel() {
       {/* Section label */}
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 12 }}>
         <p style={{
-          fontFamily: SANS, fontSize: 10, fontWeight: 700,
+          fontFamily: SANS, fontSize: 10, fontWeight: 500,
           letterSpacing: "0.18em", textTransform: "uppercase",
           color: "rgba(34,47,38,0.35)",
         }}>
@@ -70,7 +70,7 @@ function TeaCarousel() {
       {/* Swipeable card */}
       <div style={{
         position: "relative", borderRadius: 20, overflow: "hidden", height: 248,
-        boxShadow: "0 8px 32px rgba(34,47,38,0.18), 0 2px 8px rgba(34,47,38,0.10)",
+        boxShadow: "0 2px 12px rgba(26,20,16,0.12), inset 0 0.5px 0 rgba(255,255,255,0.10)",
       }}>
         {/* Background image — switches with active slide */}
         {!imgError && active?.imageUrl ? (
@@ -111,7 +111,7 @@ function TeaCarousel() {
               padding: "0 20px 16px",
             }}>
               <p style={{
-                fontFamily: SANS, fontSize: 9, fontWeight: 600,
+                fontFamily: SANS, fontSize: 9, fontWeight: 500,
                 letterSpacing: "0.20em", textTransform: "uppercase",
                 color: "rgba(201,217,201,0.70)", marginBottom: 5,
               }}>
@@ -134,7 +134,7 @@ function TeaCarousel() {
                 </p>
               )}
               <p style={{
-                fontFamily: SANS, fontSize: 12, fontWeight: 300,
+                fontFamily: SANS, fontSize: 12, fontWeight: 400,
                 color: "rgba(247,247,243,0.55)", lineHeight: 1.55,
                 marginTop: 6, letterSpacing: "0.01em",
               }}>
@@ -154,7 +154,7 @@ function TeaCarousel() {
                 <Link href="/marketplace" style={{
                   display: "inline-block", padding: "9px 22px", borderRadius: 99,
                   background: "#ffffff", fontFamily: SANS, fontSize: 11,
-                  fontWeight: 700, letterSpacing: "0.10em", textTransform: "uppercase",
+                  fontWeight: 500, letterSpacing: "0.10em", textTransform: "uppercase",
                   color: "#1a2019", textDecoration: "none",
                   boxShadow: "0 2px 12px rgba(0,0,0,0.20)",
                 }}>
@@ -187,7 +187,7 @@ function TeaCarousel() {
 function MoodBadge({ label }: { label: string }) {
   return (
     <span style={{
-      fontFamily: SANS, fontSize: 9, fontWeight: 600,
+      fontFamily: SANS, fontSize: 9, fontWeight: 500,
       letterSpacing: "0.10em", textTransform: "uppercase",
       padding: "3px 8px", borderRadius: 99,
       background: "rgba(83,112,98,0.10)",
@@ -228,7 +228,7 @@ function RitualCard({
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 8 }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-            <p style={{ fontFamily: SANS, fontSize: 14, fontWeight: 700, color: "#222f26" }}>{tea}</p>
+            <p style={{ fontFamily: SANS, fontSize: 14, fontWeight: 500, color: "#222f26" }}>{tea}</p>
             <MoodBadge label={mood} />
           </div>
           <div style={{
@@ -259,7 +259,7 @@ function RitualCard({
 
       {/* Notes */}
       <p style={{
-        fontFamily: SANS, fontSize: 13, fontWeight: 300,
+        fontFamily: SANS, fontSize: 13, fontWeight: 400,
         color: "rgba(34,47,38,0.60)", lineHeight: 1.65,
         letterSpacing: "0.01em",
       }}>
@@ -357,7 +357,7 @@ export default function RitualsPage() {
             {t.rituals.title}
           </h1>
           <p style={{
-            fontFamily: SANS, fontSize: 12, fontWeight: 300,
+            fontFamily: SANS, fontSize: 12, fontWeight: 400,
             color: "rgba(34,47,38,0.40)", marginTop: 3,
             letterSpacing: "0.02em",
           }}>
@@ -372,13 +372,13 @@ export default function RitualsPage() {
             display: "flex", alignItems: "center", gap: 6,
             padding: "10px 18px", borderRadius: 99,
             border: "none", cursor: "pointer",
-            background: "#537062",
+            background: "#B8956A",
             fontFamily: SANS, fontSize: 12,
-            fontWeight: 700, letterSpacing: "0.08em",
-            textTransform: "uppercase", color: "#ffffff",
+            fontWeight: 500, letterSpacing: "0.08em",
+            textTransform: "uppercase", color: "#FAF8F5",
             boxShadow: [
-              "inset 0 0.5px 0 rgba(255,255,255,0.18)",
-              "0 4px 14px rgba(83,112,98,0.35)",
+              "inset 0 1px 2px rgba(255,255,255,0.2)",
+              "0 2px 8px rgba(184,149,106,0.3)",
             ].join(", "),
             transition: "opacity 0.2s ease",
           }}
@@ -410,7 +410,7 @@ export default function RitualsPage() {
               <line x1="14" y1="2" x2="14" y2="4" />
             </svg>
             <p style={{
-              fontFamily: SANS, fontSize: 10, fontWeight: 700,
+              fontFamily: SANS, fontSize: 10, fontWeight: 500,
               letterSpacing: "0.16em", textTransform: "uppercase",
               color: "rgba(34,47,38,0.35)",
             }}>
@@ -437,13 +437,13 @@ export default function RitualsPage() {
           <div style={{
             textAlign: "center", padding: "48px 24px",
             background: "#ffffff", borderRadius: 20,
-            border: "1px solid rgba(34,47,38,0.07)",
+            border: "0.5px solid rgba(26,20,16,0.07)",
           }}>
             <p style={{ fontFamily: SERIF, fontSize: 20, color: "#537062", marginBottom: 8 }}>
               Begin your first ritual
             </p>
             <p style={{
-              fontFamily: SANS, fontSize: 13, fontWeight: 300,
+              fontFamily: SANS, fontSize: 13, fontWeight: 400,
               color: "rgba(34,47,38,0.45)", lineHeight: 1.65, marginBottom: 20,
             }}>
               Each session is a moment of presence. Record the tea, the temperature, the feeling.
@@ -453,10 +453,10 @@ export default function RitualsPage() {
               style={{
                 padding: "12px 28px", borderRadius: 99,
                 border: "none", cursor: "pointer",
-                background: "#537062",
-                fontFamily: SANS, fontSize: 12, fontWeight: 700,
+                background: "#B8956A",
+                fontFamily: SANS, fontSize: 12, fontWeight: 500,
                 letterSpacing: "0.08em", textTransform: "uppercase",
-                color: "#ffffff",
+                color: "#FAF8F5",
               }}
             >
               Log a ritual

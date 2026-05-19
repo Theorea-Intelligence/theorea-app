@@ -24,8 +24,11 @@ function makeNavItems(nav: {
       label: nav.lou,
       href: "/lou",
       icon: (
+        /* Sparkles — ti-sparkles */
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+          <path d="M12 3L13.5 8.5L19 10L13.5 11.5L12 17L10.5 11.5L5 10L10.5 8.5L12 3Z"/>
+          <path d="M19 3L19.75 5.25L22 6L19.75 6.75L19 9L18.25 6.75L16 6L18.25 5.25L19 3Z"/>
+          <path d="M5 17L5.75 19.25L8 20L5.75 20.75L5 23L4.25 20.75L2 20L4.25 19.25L5 17Z"/>
         </svg>
       ),
     },
@@ -33,12 +36,12 @@ function makeNavItems(nav: {
       label: nav.rituals,
       href: "/rituals",
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M17 8h1a4 4 0 110 8h-1" />
-          <path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z" />
-          <line x1="6" y1="2" x2="6" y2="4" />
-          <line x1="10" y1="2" x2="10" y2="4" />
-          <line x1="14" y1="2" x2="14" y2="4" />
+        /* Teapot — framework spec */
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M6 14c0 3.3 2.7 6 6 6s6-2.7 6-6V10H6v4z"/>
+          <path d="M18 11c2 0 3 1 3 2.5S20 16 18 16"/>
+          <path d="M6 10s-1-4 6-4 6 4 6 4"/>
+          <path d="M10 4c0-1 .5-2 2-2s2 1 2 2"/>
         </svg>
       ),
     },
@@ -84,7 +87,7 @@ function makeDesktopOnlyItems(nav: { sommeliers: string }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   Mobile bottom navigation — solid sage green bar, glassmorphism, rim light
+   Mobile bottom navigation — dark stone pill, gold active state
    ══════════════════════════════════════════════════════════════════════════════ */
 function MobileNav() {
   const pathname = usePathname();
@@ -93,26 +96,24 @@ function MobileNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden safe-bottom">
-      <div className="mx-3 mb-3">
+      <div className="mx-7 mb-5">
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-around",
-            borderRadius: 24,
+            borderRadius: 28,
             paddingTop: 10,
             paddingBottom: 10,
             paddingLeft: 4,
             paddingRight: 4,
-            background: "rgba(83, 112, 98, 0.92)",
+            background: "rgba(44, 44, 44, 0.90)",
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
-            /* Rim light — 0.5px white at 15% */
+            border: "0.5px solid rgba(250,248,245,0.08)",
             boxShadow: [
-              "inset 0 0.5px 0 rgba(255,255,255,0.18)",
-              "inset 0 -0.5px 0 rgba(0,0,0,0.10)",
-              "0 8px 32px rgba(34,47,38,0.28)",
-              "0 2px 8px rgba(34,47,38,0.14)",
+              "inset 0 0.5px 0 rgba(250,248,245,0.08)",
+              "0 4px 24px rgba(0,0,0,0.15)",
             ].join(", "),
           }}
         >
@@ -134,10 +135,10 @@ function MobileNav() {
                   padding: "6px 16px",
                   borderRadius: 16,
                   transition: "all 0.25s ease",
-                  color: isActive ? "#ffffff" : "rgba(255,255,255,0.45)",
-                  background: isActive ? "rgba(255,255,255,0.12)" : "transparent",
+                  color: isActive ? "#B8956A" : "rgba(156,150,144,0.6)",
+                  background: isActive ? "rgba(184,149,106,0.15)" : "transparent",
                   boxShadow: isActive
-                    ? "inset 0 0.5px 0 rgba(255,255,255,0.25)"
+                    ? "inset 0 0.5px 0 rgba(255,255,255,0.10)"
                     : "none",
                 }}
               >
@@ -147,7 +148,7 @@ function MobileNav() {
                     transition: "transform 0.25s ease, filter 0.25s ease",
                     transform: isActive ? "scale(1.08)" : "scale(1)",
                     filter: isActive
-                      ? "drop-shadow(0 0 6px rgba(255,255,255,0.35))"
+                      ? "drop-shadow(0 0 6px rgba(184,149,106,0.50))"
                       : "none",
                   }}
                 >
@@ -155,8 +156,8 @@ function MobileNav() {
                 </span>
                 <span
                   style={{
-                    fontSize: 8,
-                    letterSpacing: "0.10em",
+                    fontSize: 9,
+                    letterSpacing: "0.02em",
                     textTransform: "uppercase",
                     fontWeight: 500,
                     fontFamily: "var(--nf-sans)",
@@ -175,7 +176,7 @@ function MobileNav() {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   Desktop sidebar — sage green with glassmorphism, white text/icons
+   Desktop sidebar — dark stone with glassmorphism, gold active state
    ══════════════════════════════════════════════════════════════════════════════ */
 function DesktopNav() {
   const pathname = usePathname();
@@ -196,14 +197,13 @@ function DesktopNav() {
         collapsed ? "w-16" : "w-56"
       }`}
       style={{
-        background: "rgba(83, 112, 98, 0.88)",
+        background: "rgba(44, 44, 44, 0.90)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
-        /* Rim light on right edge + elevation */
-        borderRight: "0.5px solid rgba(255, 255, 255, 0.12)",
+        borderRight: "0.5px solid rgba(250,248,245,0.08)",
         boxShadow: [
-          "inset -0.5px 0 0 rgba(255,255,255,0.10)",
-          "4px 0 24px rgba(34,47,38,0.18)",
+          "inset -0.5px 0 0 rgba(250,248,245,0.06)",
+          "4px 0 24px rgba(0,0,0,0.18)",
         ].join(", "),
       }}
     >
@@ -215,7 +215,7 @@ function DesktopNav() {
           alignItems: "center",
           justifyContent: collapsed ? "center" : "space-between",
           padding: "0 16px",
-          borderBottom: "0.5px solid rgba(255,255,255,0.10)",
+          borderBottom: "0.5px solid rgba(250,248,245,0.08)",
         }}
       >
         {!collapsed && (
@@ -225,7 +225,7 @@ function DesktopNav() {
               fontFamily: "var(--nf-serif)",
               fontSize: 16,
               letterSpacing: "0.08em",
-              color: "#ffffff",
+              color: "#FAF8F5",
               textDecoration: "none",
             }}
           >
@@ -242,18 +242,18 @@ function DesktopNav() {
             justifyContent: "center",
             borderRadius: 8,
             border: "none",
-            background: "rgba(255,255,255,0.08)",
+            background: "rgba(250,248,245,0.08)",
             cursor: "pointer",
-            color: "rgba(255,255,255,0.60)",
+            color: "rgba(250,248,245,0.50)",
             transition: "all 0.2s ease",
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.16)";
-            (e.currentTarget as HTMLButtonElement).style.color = "#ffffff";
+            (e.currentTarget as HTMLButtonElement).style.background = "rgba(250,248,245,0.14)";
+            (e.currentTarget as HTMLButtonElement).style.color = "#FAF8F5";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.08)";
-            (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.60)";
+            (e.currentTarget as HTMLButtonElement).style.background = "rgba(250,248,245,0.08)";
+            (e.currentTarget as HTMLButtonElement).style.color = "rgba(250,248,245,0.50)";
           }}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
@@ -297,15 +297,12 @@ function DesktopNav() {
                     letterSpacing: "0.025em",
                     textDecoration: "none",
                     transition: "all 0.2s ease",
-                    color: isActive ? "#ffffff" : "rgba(255,255,255,0.55)",
+                    color: isActive ? "#B8956A" : "rgba(250,248,245,0.50)",
                     background: isActive
-                      ? "rgba(255,255,255,0.14)"
+                      ? "rgba(184,149,106,0.15)"
                       : "transparent",
                     boxShadow: isActive
-                      ? [
-                          "inset 0 0.5px 0 rgba(255,255,255,0.22)",
-                          "inset 0 -0.5px 0 rgba(0,0,0,0.06)",
-                        ].join(", ")
+                      ? "inset 0 0.5px 0 rgba(255,255,255,0.10)"
                       : "none",
                   }}
                 >
@@ -313,7 +310,7 @@ function DesktopNav() {
                     style={{
                       flexShrink: 0,
                       filter: isActive
-                        ? "drop-shadow(0 0 5px rgba(255,255,255,0.30))"
+                        ? "drop-shadow(0 0 5px rgba(184,149,106,0.50))"
                         : "none",
                       transition: "filter 0.2s ease",
                     }}
@@ -334,7 +331,7 @@ function DesktopNav() {
       <div
         style={{
           padding: "8px",
-          borderTop: "0.5px solid rgba(255,255,255,0.10)",
+          borderTop: "0.5px solid rgba(250,248,245,0.08)",
         }}
       >
         {(() => {
@@ -357,10 +354,10 @@ function DesktopNav() {
                 letterSpacing: "0.025em",
                 textDecoration: "none",
                 transition: "all 0.2s ease",
-                color: isActive ? "#ffffff" : "rgba(255,255,255,0.55)",
-                background: isActive ? "rgba(255,255,255,0.14)" : "transparent",
+                color: isActive ? "#B8956A" : "rgba(250,248,245,0.50)",
+                background: isActive ? "rgba(184,149,106,0.15)" : "transparent",
                 boxShadow: isActive
-                  ? "inset 0 0.5px 0 rgba(255,255,255,0.22)"
+                  ? "inset 0 0.5px 0 rgba(255,255,255,0.10)"
                   : "none",
               }}
             >
@@ -376,8 +373,6 @@ function DesktopNav() {
 
 export default function Navigation() {
   const pathname = usePathname();
-  // Dashboard is a single-screen view — the glass card CTA is the only portal.
-  // Hide the nav entirely so nothing competes with the full-bleed hero.
   if (pathname === "/dashboard" || pathname === "/") return null;
   return (
     <>
