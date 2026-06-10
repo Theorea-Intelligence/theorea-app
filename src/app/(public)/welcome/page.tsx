@@ -409,8 +409,11 @@ function WelcomeContent() {
         </button>
 
         {/* Legal */}
-        <p className="text-[10px] text-ink-muted/25 text-center mt-3 leading-relaxed">
-          {t.welcome.legal}
+        <p className="text-[10px] text-center mt-3 leading-relaxed" style={{ color: "rgba(58,48,40,0.28)" }}>
+          By continuing you agree to our{" "}
+          <a href="/terms" className="underline" style={{ color: "rgba(58,48,40,0.45)" }}>Terms of Service</a>
+          {" "}and{" "}
+          <a href="/privacy" className="underline" style={{ color: "rgba(58,48,40,0.45)" }}>Privacy Policy</a>.
         </p>
       </div>
     </main>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { supabase, signOut } from "@/lib/supabase/client";
 import { useLocale } from "@/i18n/LocaleContext";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
@@ -124,7 +125,18 @@ export default function ProfilePage() {
         className="w-full rounded-2xl bg-porcelain py-3.5 text-[14px] text-[#5C5650] font-medium shadow-[0_1px_3px_rgba(0,0,0,0.04)] active:scale-[0.98] transition-transform duration-200 animate-fade-in-up animation-delay-400"
       >
         {t.profile.signOut}
-      </button>    </div>
+      </button>
+
+      {/* Legal links */}
+      <div className="flex justify-center gap-5 pb-2 animate-fade-in-up animation-delay-400">
+        <Link href="/privacy" className="text-[11px]" style={{ color: "rgba(58,48,40,0.35)" }}>
+          Privacy Policy
+        </Link>
+        <Link href="/terms" className="text-[11px]" style={{ color: "rgba(58,48,40,0.35)" }}>
+          Terms of Service
+        </Link>
+      </div>
+    </div>
 
   );
 }

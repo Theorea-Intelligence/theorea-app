@@ -4,8 +4,8 @@
   "description": "Your pocket tea sommelier. Discover exceptional teas, deepen your ritual.",
   "start_url": "/dashboard",
   "display": "standalone",
-  "background_color": "#faf8f5",
-  "theme_color": "#5a7a6a",
+  "background_color": "#FAF8F5",
+  "theme_color": "#2C2C2C",
   "orientation": "portrait",
   "icons": [
     {
@@ -23,6 +23,11 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
     }
   ]
 }
