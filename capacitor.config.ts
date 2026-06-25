@@ -21,12 +21,8 @@ const config: CapacitorConfig = {
     scrollEnabled: false,
     // Match the app background so there's no white flash during launch
     backgroundColor: '#1A1A1A',
-    // Allow inline media playback (tea video content later)
-    allowsInlineMediaPlayback: true,
     // Limit to portrait — the app is designed for portrait only
     preferredContentMode: 'mobile',
-    // Minimum iOS version to align with App Store submission
-    minimumOSVersion: '16.0',
   },
 };
 

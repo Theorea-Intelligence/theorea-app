@@ -55,7 +55,7 @@ export default function TermsPage() {
 
           <Section title="Acceptance">
             <p>
-              By accessing or using the Théorea application ("the Service"), you agree to be
+              By accessing or using the Théorea application (&ldquo;the Service&rdquo;), you agree to be
               bound by these Terms of Service and our{" "}
               <Link href="/privacy" className="underline" style={{ color: "#B8956A" }}>
                 Privacy Policy
@@ -112,7 +112,7 @@ export default function TermsPage() {
             </p>
             <ul className="mt-3 space-y-2 list-disc pl-5">
               <li>Payments are processed securely by Stripe. We do not store payment card details.</li>
-              <li>Théorea's own products (Da Hong Pao, Jasmin Snow Buds) are sold directly by {COMPANY}.</li>
+              <li>Th&eacute;orea&apos;s own products (Da Hong Pao, Jasmin Snow Buds) are sold directly by {COMPANY}.</li>
               <li>Third-party products are sold by the listed seller. {COMPANY} acts as an intermediary and is not responsible for third-party product quality beyond our verification process.</li>
               <li>Returns and refunds are handled in accordance with UK consumer law.</li>
             </ul>
@@ -120,7 +120,7 @@ export default function TermsPage() {
 
           <Section title="User content">
             <p>
-              You may submit tasting notes, reviews, and other content ("User Content"). By
+              You may submit tasting notes, reviews, and other content (&ldquo;User Content&rdquo;). By
               submitting User Content you grant us a non-exclusive, royalty-free, worldwide
               licence to display and distribute it within the Service.
             </p>
@@ -152,7 +152,7 @@ export default function TermsPage() {
               works without our written permission.
             </p>
             <p className="mt-3">
-              "Théorea", "Maison Théorea", and "Lou" are trademarks of {COMPANY}.
+              &ldquo;Théorea&rdquo;, &ldquo;Maison Théorea&rdquo;, and &ldquo;Lou&rdquo; are trademarks of {COMPANY}.
               Trademark registration is pending.
             </p>
           </Section>
@@ -170,7 +170,7 @@ export default function TermsPage() {
 
           <Section title="Disclaimers and limitation of liability">
             <p>
-              The Service is provided "as is" without warranties of any kind, express or implied.
+              The Service is provided &ldquo;as is&rdquo; without warranties of any kind, express or implied.
               To the fullest extent permitted by law, {COMPANY} excludes liability for indirect,
               incidental, or consequential losses arising from your use of the Service.
             </p>

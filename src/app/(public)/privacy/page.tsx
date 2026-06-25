@@ -57,8 +57,8 @@ export default function PrivacyPage() {
           <Section title="Who we are">
             <p>
               {COMPANY} is registered in {COMPANY_REGISTERED}. We operate the Théorea
-              application and website (collectively, "the Service"). References to "we",
-              "us", or "our" in this policy refer to {COMPANY}.
+              application and website (collectively, &ldquo;the Service&rdquo;). References to &ldquo;we&rdquo;,
+              &ldquo;us&rdquo;, or &ldquo;our&rdquo; in this policy refer to {COMPANY}.
             </p>
             <p className="mt-3">
               Questions about this policy or your data may be directed to{" "}
@@ -85,7 +85,7 @@ export default function PrivacyPage() {
             <p>We use your personal data to:</p>
             <ul className="mt-3 space-y-2 list-disc pl-5">
               <li>Create and manage your account and authenticate your identity.</li>
-              <li>Provide Lou's personalised tea recommendations based on your preferences and ritual history.</li>
+              <li>Provide Lou&apos;s personalised tea recommendations based on your preferences and ritual history.</li>
               <li>Process marketplace orders and fulfil purchases.</li>
               <li>Improve the Service through aggregated usage analysis.</li>
               <li>Send service communications (account updates, order confirmations).</li>
@@ -144,7 +144,7 @@ export default function PrivacyPage() {
             <ul className="mt-3 space-y-2 list-disc pl-5">
               <li><strong className="font-medium">Access</strong> — request a copy of the data we hold about you.</li>
               <li><strong className="font-medium">Rectification</strong> — correct inaccurate data.</li>
-              <li><strong className="font-medium">Erasure</strong> — request deletion of your data ("right to be forgotten").</li>
+              <li><strong className="font-medium">Erasure</strong> — request deletion of your data (&ldquo;right to be forgotten&rdquo;).</li>
               <li><strong className="font-medium">Restriction</strong> — limit how we process your data in certain circumstances.</li>
               <li><strong className="font-medium">Portability</strong> — receive your data in a machine-readable format.</li>
               <li><strong className="font-medium">Objection</strong> — object to processing based on legitimate interests.</li>
@@ -154,7 +154,7 @@ export default function PrivacyPage() {
               <a href={`mailto:${CONTACT_EMAIL}`} className="underline" style={{ color: "#B8956A" }}>
                 {CONTACT_EMAIL}
               </a>. We will respond within one calendar month.
-              You also have the right to lodge a complaint with the Information Commissioner's
+              You also have the right to lodge a complaint with the Information Commissioner&apos;s
               Office (ICO) at{" "}
               <a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "#B8956A" }}>
                 ico.org.uk
@@ -167,7 +167,7 @@ export default function PrivacyPage() {
               We use Google Analytics 4 to understand how the Service is used. GA4 uses
               first-party cookies and does not use advertising identifiers. You may opt out
               of analytics by using the Google Analytics Opt-out Browser Add-on or by
-              enabling a "Do Not Track" signal in your browser.
+              enabling a &ldquo;Do Not Track&rdquo; signal in your browser.
             </p>
             <p className="mt-3">
               We use a session cookie for authentication purposes. This cookie is strictly
